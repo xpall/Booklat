@@ -1,3 +1,5 @@
+import csv
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.views.decorators.http import require_http_methods
@@ -124,3 +126,13 @@ def _import_books(records, actor):
         except Exception as e:
             errors.append(f"Row {i}: {isbn} - {str(e)}")
     return imported, errors
+
+
+@permission_required("system.import_data")
+def book_sample_csv(request):
+    response = HttpResponse(content_type="text/csv")
+    response["Content-Disposition"] = 'attachment; filename="books_sample.csv"'
+    writer = csv.writer(response)
+    writer.writerow(["isbn", "title", "subtitle", "authors", "publisher", "publication_year", "description", "categories", "cover_image"])
+    writer.writerow(["978-0-7475-3269-9", "Harry Potter and the Philosopher's Stone", "", "J.K. Rowling", "Bloomsbury", "1997", "A young wizard discovers his magical heritage.", "Fantasy", ""])
+    return response

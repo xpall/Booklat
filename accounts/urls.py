@@ -15,5 +15,5 @@ urlpatterns = [
     path("<int:user_id>/suspend/", views.user_suspend_view, name="user_suspend"),
     path("<int:user_id>/activate/", views.user_activate_view, name="user_activate"),
     path("<int:user_id>/password-reset/", views.password_reset_view, name="password_reset"),
-    path("import/", views.user_import_view, name="user_import"),
+    path("import/sample/", views.user_sample_csv, name="user_import_sample"),
 ]

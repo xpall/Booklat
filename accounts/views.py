@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import login as auth_login, logout as auth_logout, update_session_auth_hash
@@ -240,3 +241,13 @@ def _import_users(records, actor):
         except Exception as e:
             errors.append(f"Row {i}: {lrn} - {str(e)}")
     return imported, errors
+
+
+@permission_required("system.import_data")
+def user_sample_csv(request):
+    response = HttpResponse(content_type="text/csv")
+    response["Content-Disposition"] = 'attachment; filename="users_sample.csv"'
+    writer = csv.writer(response)
+    writer.writerow(["first_name", "last_name", "lrn", "password"])
+    writer.writerow(["Juan", "Dela Cruz", "LRN123456", "SecurePass1!"])
+    return response

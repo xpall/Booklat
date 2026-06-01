@@ -7,6 +7,7 @@
     <label>CSV File <input type="file" name="csv_file" accept=".csv" required></label>
     <button type="submit" name="preview">Preview</button>
 </form>
+<p><a href="{% url 'inventory:copy_import_sample' %}">Download sample CSV</a></p>
 {% else %}
 <h2>Preview</h2>
 <table>

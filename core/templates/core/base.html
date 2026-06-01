@@ -1,10 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Booklat — {{ title|default:"Library Management" }}</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    <style>
+        :root {
+            --pico-primary: #6C5CE7;
+            --pico-primary-hover: #5A4BD6;
+            --pico-primary-focus: rgba(108, 92, 231, 0.25);
+            --pico-primary-inverse: #FFFFFF;
+            --pico-background-color: #F7F7FB;
+            --pico-card-background-color: #FFFFFF;
+            --pico-color: #1F1F2E;
+            --pico-muted-color: #6B6B7A;
+            --pico-form-element-background-color: #FFFFFF;
+            --pico-form-element-border-color: #D1D1E0;
+            --pico-form-element-active-border-color: #6C5CE7;
+            --pico-form-element-color: #1F1F2E;
+            --pico-form-element-placeholder-color: #6B6B7A;
+        }
+        article {
+            background: var(--pico-card-background-color);
+            border: 1px solid #E8E8F0;
+            border-radius: 12px;
+        }
+        [role="button"], button, input[type="submit"] {
+            border-radius: 8px;
+        }
+        table {
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        nav {
+            background: var(--pico-card-background-color);
+            border-radius: 0 0 12px 12px;
+            padding: 0.75rem 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+        .stat-card {
+            text-align: center;
+            padding: 1.5rem 1rem;
+        }
+        .stat-card h5 {
+            font-size: 2rem;
+            margin-bottom: 0.25rem;
+            color: var(--pico-primary);
+        }
+        .alert-error { background: #FDE8E8; border-color: #E74C3C; color: #1F1F2E; }
+        .alert-success { background: #E8F8EF; border-color: #2ECC71; color: #1F1F2E; }
+        .alert-warning { background: #FEF3E0; border-color: #F39C12; color: #1F1F2E; }
+        .badge-success { background: #2ECC71; color: #fff; padding: 0.15rem 0.5rem; border-radius: 999px; font-size: 0.75rem; }
+        .badge-warning { background: #F39C12; color: #fff; padding: 0.15rem 0.5rem; border-radius: 999px; font-size: 0.75rem; }
+        .badge-danger { background: #E74C3C; color: #fff; padding: 0.15rem 0.5rem; border-radius: 999px; font-size: 0.75rem; }
+    </style>
 </head>
 <body>
     <header class="container">

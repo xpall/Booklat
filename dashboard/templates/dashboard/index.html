@@ -4,37 +4,17 @@
 
 <h2>Statistics</h2>
 <div class="grid">
-    <article>
+    <article class="stat-card">
         <h5>{{ total_titles }}</h5>
         <small>Total Titles</small>
     </article>
-    <article>
-        <h5>{{ total_copies }}</h5>
-        <small>Total Copies</small>
-    </article>
-    <article>
-        <h5>{{ available_copies }}</h5>
-        <small>Available</small>
-    </article>
-    <article>
+    <article class="stat-card">
         <h5>{{ borrowed_copies }}</h5>
         <small>Borrowed</small>
     </article>
-    <article>
-        <h5>{{ reserved_copies }}</h5>
-        <small>Reserved</small>
-    </article>
-    <article>
-        <h5>{{ lost_copies }}</h5>
-        <small>Lost</small>
-    </article>
-    <article>
-        <h5>{{ damaged_copies }}</h5>
-        <small>Damaged</small>
-    </article>
-    <article>
-        <h5>{{ total_members }}</h5>
-        <small>Total Members</small>
+    <article class="stat-card">
+        <h5>{{ overdue_count }}</h5>
+        <small>Overdue</small>
     </article>
 </div>
 
@@ -118,21 +98,4 @@
     </tbody>
 </table>
 
-<h3>New Users</h3>
-<table>
-    <thead>
-        <tr><th>LRN</th><th>Name</th><th>Created</th></tr>
-    </thead>
-    <tbody>
-        {% for user in new_users %}
-        <tr>
-            <td>{{ user.lrn }}</td>
-            <td>{{ user.get_full_name }}</td>
-            <td>{{ user.created_at|date:"Y-m-d" }}</td>
-        </tr>
-        {% empty %}
-        <tr><td colspan="3">No new users.</td></tr>
-        {% endfor %}
-    </tbody>
-</table>
 {% endblock %}

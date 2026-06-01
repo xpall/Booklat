@@ -1,3 +1,5 @@
+import csv
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.views.decorators.http import require_http_methods
@@ -162,3 +164,13 @@ def _import_copies(records, actor):
         except Exception as e:
             errors.append(f"Row {i}: {isbn} - {str(e)}")
     return imported, errors
+
+
+@permission_required("system.import_data")
+def copy_sample_csv(request):
+    response = HttpResponse(content_type="text/csv")
+    response["Content-Disposition"] = 'attachment; filename="copies_sample.csv"'
+    writer = csv.writer(response)
+    writer.writerow(["isbn", "shelf_location", "acquisition_date", "notes"])
+    writer.writerow(["978-0-7475-3269-9", "A-01-02", "2024-01-15", "Good condition"])
+    return response
