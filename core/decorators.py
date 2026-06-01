@@ -9,13 +9,12 @@ def permission_required(perm_codename):
         def wrapper(request, *args, **kwargs):
             if not request.user.is_authenticated:
                 return redirect("accounts:login")
-            roles = request.user.roles.all()
-            if not roles:
+            if request.user.role is None:
                 raise PermissionDenied
             from accounts.models import RolePermission
 
             has_perm = RolePermission.objects.filter(
-                role__in=roles, permission__codename=perm_codename
+                role=request.user.role, permission__codename=perm_codename
             ).exists()
             if not has_perm:
                 raise PermissionDenied
@@ -32,14 +31,13 @@ def any_permission_required(*perm_codenames):
         def wrapper(request, *args, **kwargs):
             if not request.user.is_authenticated:
                 return redirect("accounts:login")
-            roles = request.user.roles.all()
-            if not roles:
+            if request.user.role is None:
                 raise PermissionDenied
             from accounts.models import RolePermission
 
             for codename in perm_codenames:
                 if RolePermission.objects.filter(
-                    role__in=roles, permission__codename=codename
+                    role=request.user.role, permission__codename=codename
                 ).exists():
                     return view_func(request, *args, **kwargs)
             raise PermissionDenied
@@ -54,7 +52,7 @@ def admin_or_staff_required(view_func):
     def wrapper(request, *args, **kwargs):
         if not request.user.is_authenticated:
             return redirect("accounts:login")
-        if request.user.role.name not in ("Administrator", "Staff"):
+        if request.user.role is None or request.user.role.name not in ("Administrator", "Staff"):
             raise PermissionDenied
         return view_func(request, *args, **kwargs)
 

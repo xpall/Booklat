@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from django.contrib.auth import login as auth_login, logout as auth_logout
+from django.contrib.auth import login as auth_login, logout as auth_logout, update_session_auth_hash
 from django.contrib.auth import password_validation
 from django.views.decorators.http import require_http_methods
 from django.utils import timezone
@@ -58,6 +58,7 @@ def password_change_view(request):
             request.user.set_password(form.cleaned_data["new_password"])
             request.user.must_change_password = False
             request.user.save()
+            update_session_auth_hash(request, request.user)
             log_action(request.user, "PASSWORD_CHANGED", "User", request.user.lrn)
             messages.success(request, "Password changed successfully.")
             return redirect("dashboard:index")
