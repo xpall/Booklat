@@ -79,17 +79,19 @@ def checkout_confirm(request):
             messages.error(request, "Copy is not available.")
             return redirect("loans:checkout")
         today = timezone.localdate()
+        due_str = request.POST.get("due_date", "")
+        due_date = timezone.datetime.strptime(due_str, "%Y-%m-%d").date() if due_str else today + timedelta(days=7)
         loan = Loan(
             user=user,
             book_copy=copy,
             checkout_date=today,
-            due_date=today + timedelta(days=7),
+            due_date=due_date,
             processed_by=request.user,
         )
         loan.save()
         copy.status = BookCopy.Status.BORROWED
         copy.save()
-        CopyHistory.objects.create(book_copy=copy, event="Borrowed", notes=f"Checked out by {user.lrn}")
+        CopyHistory.objects.create(book_copy=copy, event="Borrowed", notes=f"Checked out by {user.lrn}", actor=request.user)
         log_action(request.user, "LOAN_CREATED", "Loan", str(loan.pk), metadata={
             "user_lrn": user.lrn,
             "copy_id": copy.copy_id,
@@ -99,7 +101,10 @@ def checkout_confirm(request):
         request.session.pop("checkout_copy_id", None)
         messages.success(request, f"Book checked out to {user.get_full_name()}.")
         return redirect("loans:loan_list")
-    return render(request, "loans/checkout_confirm.html", {"user": user, "copy": copy})
+    return render(request, "loans/checkout_confirm.html", {
+        "user": user, "copy": copy,
+        "default_due_date": timezone.localdate() + timedelta(days=7),
+    })
 
 
 @require_http_methods(["GET", "POST"])
@@ -117,7 +122,7 @@ def return_book_view(request):
             loan.save()
             copy.status = BookCopy.Status.AVAILABLE
             copy.save()
-            CopyHistory.objects.create(book_copy=copy, event="Returned")
+            CopyHistory.objects.create(book_copy=copy, event="Returned", actor=request.user)
             log_action(request.user, "LOAN_RETURNED", "Loan", str(loan.pk), metadata={
                 "user_lrn": loan.user.lrn,
                 "copy_id": copy.copy_id,

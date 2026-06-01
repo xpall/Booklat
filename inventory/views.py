@@ -37,7 +37,7 @@ def copy_list_view(request):
 @any_permission_required("copies.view")
 def copy_detail_view(request, copy_id):
     copy = get_object_or_404(BookCopy.objects.select_related("book"), pk=copy_id)
-    history = copy.history.all()
+    history = copy.history.select_related("actor").all()
     return render(request, "inventory/copy_detail.html", {"copy": copy, "history": history})
 
 
@@ -50,7 +50,7 @@ def copy_create_view(request):
             copy = form.save(commit=False)
             copy.copy_id = _generate_copy_id()
             copy.save()
-            CopyHistory.objects.create(book_copy=copy, event="Created")
+            CopyHistory.objects.create(book_copy=copy, event="Created", actor=request.user)
             log_action(request.user, "COPY_CREATED", "BookCopy", copy.copy_id)
             messages.success(request, f"Copy {copy.copy_id} created.")
             return redirect("inventory:copy_detail", copy_id=copy.pk)
@@ -86,7 +86,7 @@ def copy_status_change_view(request, copy_id):
         copy.status = new_status
         copy.save()
         event = f"Status changed: {old_status} → {copy.get_status_display()}"
-        CopyHistory.objects.create(book_copy=copy, event=event, notes=notes)
+        CopyHistory.objects.create(book_copy=copy, event=event, notes=notes, actor=request.user)
         log_action(request.user, "COPY_STATUS_CHANGED", "BookCopy", copy.copy_id, metadata={
             "old_status": old_status,
             "new_status": copy.get_status_display(),
@@ -103,7 +103,7 @@ def copy_archive_view(request, copy_id):
     copy.is_archived = True
     copy.status = BookCopy.Status.ARCHIVED
     copy.save()
-    CopyHistory.objects.create(book_copy=copy, event="Archived")
+    CopyHistory.objects.create(book_copy=copy, event="Archived", actor=request.user)
     log_action(request.user, "COPY_ARCHIVED", "BookCopy", copy.copy_id)
     messages.success(request, f"Copy {copy.copy_id} archived.")
     return redirect("inventory:copy_list")
@@ -156,7 +156,7 @@ def _import_copies(records, actor):
                 notes=r.get("notes", "").strip(),
             )
             copy.save()
-            CopyHistory.objects.create(book_copy=copy, event="Created (CSV import)")
+            CopyHistory.objects.create(book_copy=copy, event="Created (CSV import)", actor=actor)
             log_action(actor, "COPY_CREATED", "BookCopy", copy.copy_id, metadata={"source": "csv_import"})
             imported += 1
         except Exception as e:

@@ -75,17 +75,18 @@ def process_request_view(request, request_id):
                 copy = form.cleaned_data["copy"]
                 if copy:
                     today = timezone.localdate()
+                    due_date = form.cleaned_data.get("due_date") or today + timedelta(days=7)
                     loan = Loan(
                         user=req.user,
                         book_copy=copy,
                         checkout_date=today,
-                        due_date=today + timedelta(days=7),
+                        due_date=due_date,
                         processed_by=request.user,
                     )
                     loan.save()
                     copy.status = BookCopy.Status.BORROWED
                     copy.save()
-                    CopyHistory.objects.create(book_copy=copy, event="Borrowed", notes=f"Approved request by {req.user.lrn}")
+                    CopyHistory.objects.create(book_copy=copy, event="Borrowed", notes=f"Approved request by {req.user.lrn}", actor=request.user)
                     req.status = CheckoutRequest.Status.FULFILLED
                     req.notes = form.cleaned_data.get("notes", "")
                     req.processed_by = request.user
