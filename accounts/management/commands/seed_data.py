@@ -19,7 +19,10 @@ STAFF_PERMISSIONS = [
     "requests.process", "requests.view",
 ]
 
-MEMBER_PERMISSIONS = []
+MEMBER_PERMISSIONS = [
+    "books.view",
+    "requests.view",
+]
 
 
 class Command(BaseCommand):
@@ -50,6 +53,8 @@ class Command(BaseCommand):
             name="Member",
             defaults={"description": "Library user"},
         )
+        for codename in MEMBER_PERMISSIONS:
+            RolePermission.objects.get_or_create(role=member_role, permission=permissions[codename])
 
         if not User.objects.filter(lrn="ADMIN").exists():
             admin = User(

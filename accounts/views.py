@@ -17,10 +17,16 @@ from core.decorators import permission_required, any_permission_required, admin_
 from core.utils import log_action, parse_csv_upload
 
 
+def _get_success_redirect(user):
+    if user.is_member:
+        return redirect("books:book_list")
+    return redirect("dashboard:index")
+
+
 @require_http_methods(["GET", "POST"])
 def login_view(request):
     if request.user.is_authenticated and request.user.status == User.Status.ACTIVE:
-        return redirect("dashboard:index")
+        return _get_success_redirect(request.user)
     if request.method == "POST":
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -38,7 +44,7 @@ def login_view(request):
                 auth_login(request, user)
                 if user.must_change_password:
                     return redirect("accounts:password_change")
-                return redirect("dashboard:index")
+                return _get_success_redirect(user)
             messages.error(request, "Invalid LRN or password.")
     else:
         form = LoginForm()
@@ -61,6 +67,8 @@ def password_change_view(request):
             update_session_auth_hash(request, request.user)
             log_action(request.user, "PASSWORD_CHANGED", "User", request.user.lrn)
             messages.success(request, "Password changed successfully.")
+            if request.user.is_member:
+                return redirect("books:book_list")
             return redirect("dashboard:index")
     else:
         form = PasswordChangeForm()
