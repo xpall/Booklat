@@ -30,7 +30,7 @@
     </tbody>
 </table>
 {% if errors %}<h3>Errors</h3><ul>{% for err in errors %}<li style="color: var(--pico-del-color);">{{ err }}</li>{% endfor %}</ul>{% endif %}
-<form method="post" enctype="multipart/form-data">
+<form method="post">
     {% csrf_token %}
     <button type="submit" name="confirm">Confirm Import</button>
 </form>

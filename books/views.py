@@ -73,22 +73,30 @@ def book_archive_view(request, book_id):
 def book_import_view(request):
     preview_data = None
     errors = []
+    form = None
     if request.method == "POST":
-        form = BookImportForm(request.POST, request.FILES)
-        if form.is_valid():
-            records = parse_csv_upload(request.FILES["csv_file"])
-            if "preview" in request.POST:
-                preview_data = records
-            elif "confirm" in request.POST:
+        if "confirm" in request.POST:
+            records = request.session.pop("import_preview_data", None)
+            if records:
                 imported, errors = _import_books(records, request.user)
                 if imported:
                     messages.success(request, f"Imported {imported} books.")
                     return redirect("books:book_list")
                 preview_data = records
+            else:
+                messages.error(request, "Import session expired. Please upload the file again.")
+                form = BookImportForm()
+        else:
+            form = BookImportForm(request.POST, request.FILES)
+            if form.is_valid():
+                records = parse_csv_upload(request.FILES["csv_file"])
+                preview_data = records
+                request.session["import_preview_data"] = records
     else:
         form = BookImportForm()
+        request.session.pop("import_preview_data", None)
     return render(request, "books/import.html", {
-        "form": form,
+        "form": form if not preview_data else None,
         "preview_data": preview_data,
         "errors": errors,
         "title": "Import Books",
