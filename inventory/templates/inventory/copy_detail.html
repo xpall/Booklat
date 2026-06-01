@@ -1,0 +1,53 @@
+{% extends "core/base.html" %}
+{% block content %}
+<h1>{{ copy.copy_id }}</h1>
+<p><strong>Book:</strong> <a href="{% url 'books:book_detail' copy.book.pk %}">{{ copy.book.title }}</a></p>
+<p><strong>Status:</strong> {{ copy.get_status_display }}</p>
+<p><strong>Shelf Location:</strong> {{ copy.shelf_location|default:"—" }}</p>
+<p><strong>Acquisition Date:</strong> {{ copy.acquisition_date|date:"Y-m-d"|default:"—" }}</p>
+<p><strong>Notes:</strong> {{ copy.notes|default:"—" }}</p>
+
+<p>
+    <a href="{% url 'inventory:copy_edit' copy.pk %}" role="button">Edit</a>
+    <form method="post" action="{% url 'inventory:copy_archive' copy.pk %}" style="display:inline">
+        {% csrf_token %}
+        <button type="submit" class="contrast" onclick="return confirm('Archive this copy?')">Archive</button>
+    </form>
+</p>
+
+<h2>Change Status</h2>
+<form method="post" action="{% url 'inventory:copy_status_change' copy.pk %}">
+    {% csrf_token %}
+    <select name="status">
+        <option value="available" {% if copy.status == 'available' %}selected{% endif %}>Available</option>
+        <option value="reserved" {% if copy.status == 'reserved' %}selected{% endif %}>Reserved</option>
+        <option value="lost" {% if copy.status == 'lost' %}selected{% endif %}>Lost</option>
+        <option value="damaged" {% if copy.status == 'damaged' %}selected{% endif %}>Damaged</option>
+        <option value="under_repair" {% if copy.status == 'under_repair' %}selected{% endif %}>Under Repair</option>
+    </select>
+    <label>Notes <input type="text" name="notes"></label>
+    <button type="submit">Update Status</button>
+</form>
+
+<h2>History</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Event</th>
+            <th>Notes</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for h in history %}
+        <tr>
+            <td>{{ h.timestamp|date:"Y-m-d H:i" }}</td>
+            <td>{{ h.event }}</td>
+            <td>{{ h.notes }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="3">No history.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

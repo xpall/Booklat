@@ -1,0 +1,40 @@
+{% extends "core/base.html" %}
+{% block content %}
+<h1>{{ title }}</h1>
+<form method="post">
+    {% csrf_token %}
+    {% if form.lrn %}
+    <label>
+        LRN
+        {{ form.lrn }}
+    </label>
+    {% endif %}
+    <label>
+        First Name
+        {{ form.first_name }}
+    </label>
+    <label>
+        Last Name
+        {{ form.last_name }}
+    </label>
+    <label>
+        Role
+        {{ form.role }}
+    </label>
+    {% if form.password %}
+    <label>
+        Password
+        {{ form.password }}
+    </label>
+    <small>{{ form.password.help_text }}</small>
+    {% endif %}
+    {% if form.errors %}
+    {% for field, error_list in form.errors.items %}
+    {% for error in error_list %}
+    <p style="color: var(--pico-del-color);">{{ error }}</p>
+    {% endfor %}
+    {% endfor %}
+    {% endif %}
+    <button type="submit">Save</button>
+</form>
+{% endblock %}

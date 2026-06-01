@@ -1,0 +1,24 @@
+{% extends "core/base.html" %}
+{% block content %}
+<h1>{{ title }}</h1>
+<form method="post">
+    {% csrf_token %}
+    <label>ISBN {{ form.isbn }}</label>
+    <label>Title {{ form.title }}</label>
+    <label>Subtitle {{ form.subtitle }}</label>
+    <label>Authors {{ form.authors }}</label>
+    <label>Publisher {{ form.publisher }}</label>
+    <label>Publication Year {{ form.publication_year }}</label>
+    <label>Description {{ form.description }}</label>
+    <label>Categories {{ form.categories }}</label>
+    <label>Cover Image URL {{ form.cover_image }}</label>
+    {% if form.errors %}
+    {% for field, error_list in form.errors.items %}
+    {% for error in error_list %}
+    <p style="color: var(--pico-del-color);">{{ error }}</p>
+    {% endfor %}
+    {% endfor %}
+    {% endif %}
+    <button type="submit">Save</button>
+</form>
+{% endblock %}

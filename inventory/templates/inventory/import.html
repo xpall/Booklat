@@ -1,0 +1,33 @@
+{% extends "core/base.html" %}
+{% block content %}
+<h1>{{ title }}</h1>
+{% if not preview_data %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label>CSV File <input type="file" name="csv_file" accept=".csv" required></label>
+    <button type="submit" name="preview">Preview</button>
+</form>
+{% else %}
+<h2>Preview</h2>
+<table>
+    <thead>
+        <tr>{% for col in columns %}<th>{{ col }}</th>{% endfor %}</tr>
+    </thead>
+    <tbody>
+        {% for row in preview_data %}
+        <tr>
+            <td>{{ row.isbn }}</td>
+            <td>{{ row.shelf_location }}</td>
+            <td>{{ row.acquisition_date }}</td>
+            <td>{{ row.notes }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% if errors %}<h3>Errors</h3><ul>{% for err in errors %}<li style="color: var(--pico-del-color);">{{ err }}</li>{% endfor %}</ul>{% endif %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <button type="submit" name="confirm">Confirm Import</button>
+</form>
+{% endif %}
+{% endblock %}

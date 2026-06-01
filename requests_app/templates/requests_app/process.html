@@ -1,0 +1,48 @@
+{% extends "core/base.html" %}
+{% block content %}
+<h1>Process Request</h1>
+<p><strong>User:</strong> {{ request_obj.user.get_full_name }} ({{ request_obj.user.lrn }})</p>
+<p><strong>Book:</strong> {{ request_obj.book.title }}</p>
+<p><strong>Requested:</strong> {{ request_obj.requested_at|date:"Y-m-d H:i" }}</p>
+
+{% if request_obj.status == 'pending' %}
+<form method="post">
+    {% csrf_token %}
+    <fieldset>
+        <legend>Action</legend>
+        <label><input type="radio" name="action" value="approve" checked> Approve</label>
+        <label><input type="radio" name="action" value="reject"> Reject</label>
+    </fieldset>
+
+    <div id="copy-select">
+        <label>Select Copy
+            <select name="copy">
+                <option value="">Choose a copy...</option>
+                {% for c in available_copies %}
+                <option value="{{ c.pk }}">{{ c.copy_id }} — {{ c.shelf_location|default:"No location" }}</option>
+                {% empty %}
+                <option value="">No available copies</option>
+                {% endfor %}
+            </select>
+        </label>
+    </div>
+
+    <label>Notes
+        <textarea name="notes" rows="3"></textarea>
+    </label>
+
+    {% if form.errors %}
+    {% for field, error_list in form.errors.items %}
+    {% for error in error_list %}
+    <p style="color: var(--pico-del-color);">{{ error }}</p>
+    {% endfor %}
+    {% endfor %}
+    {% endif %}
+
+    <button type="submit">Submit</button>
+    <a href="{% url 'requests_app:request_list' %}" class="secondary">Cancel</a>
+</form>
+{% else %}
+<p>This request has already been processed ({{ request_obj.get_status_display }}).</p>
+{% endif %}
+{% endblock %}

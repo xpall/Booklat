@@ -1,0 +1,47 @@
+services:
+  web:
+    build: .
+    container_name: booklat-web
+    restart: unless-stopped
+    ports:
+      - '8000:8000'
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - staticfiles:/app/staticfiles
+    entrypoint: ["./entrypoint.sh"]
+
+  db:
+    image: postgres:16-alpine
+    container_name: booklat-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: booklat
+      POSTGRES_USER: booklat
+      POSTGRES_PASSWORD: booklat
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U booklat"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: booklat-redis
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:
+  staticfiles:

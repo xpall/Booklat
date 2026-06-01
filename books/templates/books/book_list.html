@@ -1,0 +1,36 @@
+{% extends "core/base.html" %}
+{% block content %}
+<h1>Books</h1>
+<form method="get" style="margin-bottom: 1rem;">
+    <input type="search" name="q" value="{{ query }}" placeholder="Search by title, author, or ISBN...">
+    <button type="submit">Search</button>
+</form>
+{% if user.is_admin or user.is_staff_user %}
+<p>
+    <a href="{% url 'books:book_create' %}" role="button">Create Book</a>
+    <a href="{% url 'books:book_import' %}" role="button" class="secondary">Import CSV</a>
+</p>
+{% endif %}
+<table>
+    <thead>
+        <tr>
+            <th>ISBN</th>
+            <th>Title</th>
+            <th>Authors</th>
+            <th>Categories</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for book in books %}
+        <tr>
+            <td>{{ book.isbn }}</td>
+            <td><a href="{% url 'books:book_detail' book.pk %}">{{ book.title }}</a></td>
+            <td>{{ book.authors }}</td>
+            <td>{{ book.categories }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4">No books found.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

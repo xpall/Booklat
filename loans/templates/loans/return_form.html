@@ -1,0 +1,17 @@
+{% extends "core/base.html" %}
+{% block content %}
+<h1>Return Book</h1>
+<form method="post">
+    {% csrf_token %}
+    <label>
+        Borrowed Copy
+        <select name="copy" required>
+            <option value="">Select copy...</option>
+            {% for c in form.copy.field.queryset %}
+            <option value="{{ c.pk }}">{{ c.copy_id }} — {{ c.book.title }}</option>
+            {% endfor %}
+        </select>
+    </label>
+    <button type="submit">Return Book</button>
+</form>
+{% endblock %}

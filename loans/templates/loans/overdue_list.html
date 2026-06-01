@@ -1,0 +1,32 @@
+{% extends "core/base.html" %}
+{% block content %}
+<h1>Overdue Loans</h1>
+<table>
+    <thead>
+        <tr>
+            <th>User</th>
+            <th>Copy ID</th>
+            <th>Book</th>
+            <th>Due Date</th>
+            <th>Days Overdue</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for loan in loans %}
+        <tr>
+            <td><a href="{% url 'accounts:user_detail' loan.user.pk %}">{{ loan.user.get_full_name }}</a></td>
+            <td><a href="{% url 'inventory:copy_detail' loan.book_copy.pk %}">{{ loan.book_copy.copy_id }}</a></td>
+            <td>{{ loan.book_copy.book.title }}</td>
+            <td>{{ loan.due_date|date:"Y-m-d" }}</td>
+            <td>{{ loan.days_overdue }}</td>
+            <td>
+                <a href="{% url 'loans:return_book' %}" role="button" class="secondary">Mark Returned</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6">No overdue loans.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

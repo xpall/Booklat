@@ -1,0 +1,53 @@
+{% extends "core/base.html" %}
+{% block content %}
+<h1>{{ book.title }}</h1>
+{% if book.subtitle %}<h4>{{ book.subtitle }}</h4>{% endif %}
+<p><strong>ISBN:</strong> {{ book.isbn }}</p>
+<p><strong>Authors:</strong> {{ book.authors }}</p>
+<p><strong>Publisher:</strong> {{ book.publisher|default:"—" }}</p>
+<p><strong>Year:</strong> {{ book.publication_year|default:"—" }}</p>
+<p><strong>Categories:</strong> {{ book.categories|default:"—" }}</p>
+{% if book.cover_image %}<img src="{{ book.cover_image }}" alt="Cover" style="max-width:200px;">{% endif %}
+{% if book.description %}<p>{{ book.description }}</p>{% endif %}
+
+{% if user.is_admin or user.is_staff_user %}
+<p>
+    <a href="{% url 'books:book_edit' book.pk %}" role="button">Edit</a>
+    <form method="post" action="{% url 'books:book_archive' book.pk %}" style="display:inline">
+        {% csrf_token %}
+        <button type="submit" class="contrast" onclick="return confirm('Archive this book?')">Archive</button>
+    </form>
+</p>
+{% endif %}
+
+{% if user.is_member %}
+<form method="post" action="{% url 'requests_app:request_checkout' book.pk %}">
+    {% csrf_token %}
+    <button type="submit">Request Checkout</button>
+</form>
+{% endif %}
+
+{% if user.is_admin or user.is_staff_user %}
+<h2>Copies</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Copy ID</th>
+            <th>Status</th>
+            <th>Shelf Location</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for copy in copies %}
+        <tr>
+            <td><a href="{% url 'inventory:copy_detail' copy.pk %}">{{ copy.copy_id }}</a></td>
+            <td>{{ copy.get_status_display }}</td>
+            <td>{{ copy.shelf_location|default:"—" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="3">No copies.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+{% endblock %}

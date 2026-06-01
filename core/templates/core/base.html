@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booklat — {{ title|default:"Library Management" }}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+</head>
+<body>
+    <header class="container">
+        <nav>
+            <ul>
+                <li><a href="{% url 'dashboard:index' %}" aria-label="Dashboard"><strong>Booklat</strong></a></li>
+                {% if user.is_admin or user.is_staff_user %}
+                <li><a href="{% url 'books:book_list' %}">Books</a></li>
+                <li><a href="{% url 'inventory:copy_list' %}">Copies</a></li>
+                <li><a href="{% url 'loans:loan_list' %}">Loans</a></li>
+                <li><a href="{% url 'requests_app:request_list' %}">Requests</a></li>
+                {% endif %}
+                {% if user.is_member %}
+                <li><a href="{% url 'books:book_list' %}">Search Books</a></li>
+                <li><a href="{% url 'requests_app:request_list' %}">My Requests</a></li>
+                {% endif %}
+            </ul>
+            <ul>
+                {% if user.is_admin or user.is_staff_user %}
+                <li><a href="{% url 'accounts:user_list' %}">Users</a></li>
+                {% endif %}
+                {% if user.is_admin %}
+                <li><a href="{% url 'audit:log_list' %}">Audit</a></li>
+                <li><a href="{% url 'core:export' %}">Export</a></li>
+                {% endif %}
+                <li><details class="dropdown">
+                    <summary>{{ user.get_full_name }}</summary>
+                    <ul>
+                        <li><a href="{% url 'accounts:password_change' %}">Change Password</a></li>
+                        <li><a href="{% url 'accounts:logout' %}">Logout</a></li>
+                    </ul>
+                </details></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        {% if messages %}
+        {% for message in messages %}
+        <article class="{% if message.tags == 'error' %}alert-error{% elif message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% endif %}">
+            {{ message }}
+        </article>
+        {% endfor %}
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="container" style="text-align: center; padding: 2rem 0;">
+        <small>Booklat — Library Management System</small>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,53 @@
+{% extends "core/base.html" %}
+{% block content %}
+<h1>{% if user.is_member %}My Requests{% else %}Checkout Requests{% endif %}</h1>
+<form method="get" style="margin-bottom: 1rem;">
+    <select name="status">
+        <option value="">All Statuses</option>
+        {% for value, label in status_choices %}
+        <option value="{{ value }}" {% if status_filter == value %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit">Filter</button>
+</form>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            {% if not user.is_member %}<th>User</th>{% endif %}
+            <th>Book</th>
+            <th>Status</th>
+            <th>Requested</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for req in requests %}
+        <tr>
+            <td>{{ req.pk }}</td>
+            {% if not user.is_member %}
+            <td><a href="{% url 'accounts:user_detail' req.user.pk %}">{{ req.user.get_full_name }}</a></td>
+            {% endif %}
+            <td><a href="{% url 'books:book_detail' req.book.pk %}">{{ req.book.title }}</a></td>
+            <td>{{ req.get_status_display }}</td>
+            <td>{{ req.requested_at|date:"Y-m-d H:i" }}</td>
+            <td>
+                {% if user.is_member and req.status == 'pending' %}
+                <form method="post" action="{% url 'requests_app:cancel_request' req.pk %}" style="display:inline">
+                    {% csrf_token %}
+                    <button type="submit" class="secondary">Cancel</button>
+                </form>
+                {% endif %}
+                {% if user.is_admin or user.is_staff_user %}
+                    {% if req.status == 'pending' %}
+                    <a href="{% url 'requests_app:process_request' req.pk %}" role="button">Process</a>
+                    {% endif %}
+                {% endif %}
+            </td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6">No requests found.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

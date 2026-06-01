@@ -1,0 +1,11 @@
+{% extends "core/base.html" %}
+{% block content %}
+<h1>Confirm Checkout</h1>
+<p>User: <strong>{{ user.get_full_name }} ({{ user.lrn }})</strong></p>
+<p>Copy: <strong>{{ copy.copy_id }}</strong> — {{ copy.book.title }}</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Confirm Checkout</button>
+    <a href="{% url 'loans:checkout' %}" class="secondary">Cancel</a>
+</form>
+{% endblock %}

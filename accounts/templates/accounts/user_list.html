@@ -1,0 +1,30 @@
+{% extends "core/base.html" %}
+{% block content %}
+<h1>Users</h1>
+<p>
+    <a href="{% url 'accounts:user_create' %}" role="button">Create User</a>
+    <a href="{% url 'accounts:user_import' %}" role="button" class="secondary">Import CSV</a>
+</p>
+<table>
+    <thead>
+        <tr>
+            <th>LRN</th>
+            <th>Name</th>
+            <th>Role</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for u in users %}
+        <tr>
+            <td><a href="{% url 'accounts:user_detail' u.pk %}">{{ u.lrn }}</a></td>
+            <td>{{ u.get_full_name }}</td>
+            <td>{{ u.role.name|default:"—" }}</td>
+            <td>{{ u.get_status_display }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4">No users found.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

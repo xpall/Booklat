@@ -1,0 +1,80 @@
+from django import forms
+from django.contrib.auth import password_validation
+from django.core.exceptions import ValidationError
+from .models import User
+
+
+class LoginForm(forms.Form):
+    lrn = forms.CharField(label="LRN", max_length=64, widget=forms.TextInput(attrs={"autofocus": True}))
+    password = forms.CharField(label="Password", widget=forms.PasswordInput)
+
+
+class PasswordChangeForm(forms.Form):
+    new_password = forms.CharField(
+        label="New Password",
+        widget=forms.PasswordInput,
+        help_text="Minimum 16 characters. Must include uppercase, lowercase, number, and special character.",
+    )
+    confirm_password = forms.CharField(label="Confirm Password", widget=forms.PasswordInput)
+
+    def clean_new_password(self):
+        password = self.cleaned_data.get("new_password")
+        password_validation.validate_password(password)
+        return password
+
+    def clean(self):
+        cleaned_data = super().clean()
+        p1 = cleaned_data.get("new_password")
+        p2 = cleaned_data.get("confirm_password")
+        if p1 and p2 and p1 != p2:
+            raise ValidationError("Passwords do not match.")
+        return cleaned_data
+
+
+class PasswordResetForm(forms.Form):
+    new_password = forms.CharField(
+        label="New Password",
+        widget=forms.PasswordInput,
+        help_text="Minimum 16 characters. Must include uppercase, lowercase, number, and special character.",
+    )
+    confirm_password = forms.CharField(label="Confirm Password", widget=forms.PasswordInput)
+
+    def clean_new_password(self):
+        password = self.cleaned_data.get("new_password")
+        password_validation.validate_password(password)
+        return password
+
+    def clean(self):
+        cleaned_data = super().clean()
+        p1 = cleaned_data.get("new_password")
+        p2 = cleaned_data.get("confirm_password")
+        if p1 and p2 and p1 != p2:
+            raise ValidationError("Passwords do not match.")
+        return cleaned_data
+
+
+class UserForm(forms.ModelForm):
+    password = forms.CharField(
+        label="Password",
+        widget=forms.PasswordInput,
+        help_text="Minimum 16 characters. Must include uppercase, lowercase, number, and special character.",
+    )
+
+    class Meta:
+        model = User
+        fields = ["lrn", "first_name", "last_name", "role"]
+
+    def clean_password(self):
+        password = self.cleaned_data.get("password")
+        password_validation.validate_password(password)
+        return password
+
+
+class UserUpdateForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ["first_name", "last_name", "role"]
+
+
+class CSVImportForm(forms.Form):
+    csv_file = forms.FileField(label="CSV File")

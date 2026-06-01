@@ -1,0 +1,16 @@
+{% extends "core/base.html" %}
+{% block content %}
+<h1>Audit Log Detail</h1>
+<table>
+    <tr><th>Timestamp</th><td>{{ log.timestamp|date:"Y-m-d H:i:s" }}</td></tr>
+    <tr><th>Actor</th><td>{{ log.actor.lrn|default:"System" }}</td></tr>
+    <tr><th>Action</th><td>{{ log.action }}</td></tr>
+    <tr><th>Resource Type</th><td>{{ log.resource_type }}</td></tr>
+    <tr><th>Resource ID</th><td>{{ log.resource_id }}</td></tr>
+</table>
+{% if log.metadata %}
+<h3>Metadata</h3>
+<pre>{{ log.metadata|safe }}</pre>
+{% endif %}
+<a href="{% url 'audit:log_list' %}">Back to Audit Logs</a>
+{% endblock %}

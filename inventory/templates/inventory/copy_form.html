@@ -1,0 +1,13 @@
+{% extends "core/base.html" %}
+{% block content %}
+<h1>{{ title }}</h1>
+<form method="post">
+    {% csrf_token %}
+    <label>Book {{ form.book }}</label>
+    <label>Acquisition Date {{ form.acquisition_date }}</label>
+    <label>Shelf Location {{ form.shelf_location }}</label>
+    <label>Notes {{ form.notes }}</label>
+    <label>Status {{ form.status }}</label>
+    <button type="submit">Save</button>
+</form>
+{% endblock %}

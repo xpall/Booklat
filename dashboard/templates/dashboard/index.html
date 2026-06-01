@@ -1,0 +1,138 @@
+{% extends "core/base.html" %}
+{% block content %}
+<h1>Dashboard</h1>
+
+<h2>Statistics</h2>
+<div class="grid">
+    <article>
+        <h5>{{ total_titles }}</h5>
+        <small>Total Titles</small>
+    </article>
+    <article>
+        <h5>{{ total_copies }}</h5>
+        <small>Total Copies</small>
+    </article>
+    <article>
+        <h5>{{ available_copies }}</h5>
+        <small>Available</small>
+    </article>
+    <article>
+        <h5>{{ borrowed_copies }}</h5>
+        <small>Borrowed</small>
+    </article>
+    <article>
+        <h5>{{ reserved_copies }}</h5>
+        <small>Reserved</small>
+    </article>
+    <article>
+        <h5>{{ lost_copies }}</h5>
+        <small>Lost</small>
+    </article>
+    <article>
+        <h5>{{ damaged_copies }}</h5>
+        <small>Damaged</small>
+    </article>
+    <article>
+        <h5>{{ total_members }}</h5>
+        <small>Total Members</small>
+    </article>
+</div>
+
+<h2>Pending Requests</h2>
+<p>{{ pending_requests|length }} pending · {{ approved_today }} approved today · {{ rejected_today }} rejected today</p>
+<table>
+    <thead>
+        <tr><th>User</th><th>Book</th><th>Requested</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+        {% for req in pending_requests|slice:":10" %}
+        <tr>
+            <td>{{ req.user.get_full_name }}</td>
+            <td>{{ req.book.title }}</td>
+            <td>{{ req.requested_at|date:"Y-m-d H:i" }}</td>
+            <td><a href="{% url 'requests_app:process_request' req.pk %}">Process</a></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4">No pending requests.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>Overdue Loans</h2>
+<table>
+    <thead>
+        <tr><th>User</th><th>Book</th><th>Copy ID</th><th>Due Date</th><th>Days Overdue</th><th>Action</th></tr>
+    </thead>
+    <tbody>
+        {% for loan in overdue_loans %}
+        <tr>
+            <td><a href="{% url 'accounts:user_detail' loan.user.pk %}">{{ loan.user.get_full_name }}</a></td>
+            <td>{{ loan.book_copy.book.title }}</td>
+            <td>{{ loan.book_copy.copy_id }}</td>
+            <td>{{ loan.due_date|date:"Y-m-d" }}</td>
+            <td>{{ loan.days_overdue }}</td>
+            <td><a href="{% url 'loans:return_book' %}">Return</a></td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="6">No overdue loans.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>Recent Activity</h2>
+<h3>Recent Loans</h3>
+<table>
+    <thead>
+        <tr><th>User</th><th>Copy ID</th><th>Book</th><th>Checkout Date</th></tr>
+    </thead>
+    <tbody>
+        {% for loan in recent_loans %}
+        <tr>
+            <td>{{ loan.user.get_full_name }}</td>
+            <td>{{ loan.book_copy.copy_id }}</td>
+            <td>{{ loan.book_copy.book.title }}</td>
+            <td>{{ loan.checkout_date|date:"Y-m-d" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4">No recent loans.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h3>Recent Returns</h3>
+<table>
+    <thead>
+        <tr><th>User</th><th>Copy ID</th><th>Book</th><th>Return Date</th></tr>
+    </thead>
+    <tbody>
+        {% for loan in recent_returns %}
+        <tr>
+            <td>{{ loan.user.get_full_name }}</td>
+            <td>{{ loan.book_copy.copy_id }}</td>
+            <td>{{ loan.book_copy.book.title }}</td>
+            <td>{{ loan.return_date|date:"Y-m-d" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="4">No recent returns.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h3>New Users</h3>
+<table>
+    <thead>
+        <tr><th>LRN</th><th>Name</th><th>Created</th></tr>
+    </thead>
+    <tbody>
+        {% for user in new_users %}
+        <tr>
+            <td>{{ user.lrn }}</td>
+            <td>{{ user.get_full_name }}</td>
+            <td>{{ user.created_at|date:"Y-m-d" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="3">No new users.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

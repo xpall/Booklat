@@ -1,0 +1,18 @@
+{% extends "core/base.html" %}
+{% block content %}
+<h1>Checkout — Select Copy</h1>
+<p>User: <strong>{{ user.get_full_name }} ({{ user.lrn }})</strong></p>
+<form method="post">
+    {% csrf_token %}
+    <label>
+        Available Copy
+        <select name="copy" required>
+            <option value="">Select copy...</option>
+            {% for c in form.copy.field.queryset %}
+            <option value="{{ c.pk }}">{{ c.copy_id }} — {{ c.book.title }}</option>
+            {% endfor %}
+        </select>
+    </label>
+    <button type="submit">Next: Confirm</button>
+</form>
+{% endblock %}
