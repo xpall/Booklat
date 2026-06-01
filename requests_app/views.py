@@ -68,7 +68,7 @@ def process_request_view(request, request_id):
     req = get_object_or_404(CheckoutRequest.objects.select_related("user", "book"), pk=request_id)
     available_copies = req.book.copies.filter(is_archived=False, status=BookCopy.Status.AVAILABLE)
     if request.method == "POST":
-        form = ProcessRequestForm(request.POST)
+        form = ProcessRequestForm(request.POST, available_copies=available_copies)
         if form.is_valid():
             action = form.cleaned_data["action"]
             if action == "approve":
@@ -110,7 +110,7 @@ def process_request_view(request, request_id):
                 messages.success(request, "Request rejected.")
                 return redirect("requests_app:request_list")
     else:
-        form = ProcessRequestForm()
+        form = ProcessRequestForm(available_copies=available_copies)
     return render(request, "requests_app/process.html", {
         "form": form,
         "request_obj": req,
