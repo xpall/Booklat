@@ -44,7 +44,7 @@
         <tr>
             <td>{{ h.timestamp|date:"Y-m-d H:i" }}</td>
             <td>{{ h.event }}</td>
-            <td>{{ h.actor.get_full_name|default:h.actor.lrn|default:"—" }}</td>
+            <td>{% if h.actor %}{{ h.actor.get_full_name|default:h.actor.lrn }}{% else %}—{% endif %}</td>
             <td>{{ h.notes }}</td>
         </tr>
         {% empty %}
