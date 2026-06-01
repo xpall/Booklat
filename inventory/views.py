@@ -117,17 +117,23 @@ def copy_import_view(request):
     preview_data = None
     errors = []
     if request.method == "POST":
-        form = CopyImportForm(request.POST, request.FILES)
-        if form.is_valid():
-            records = parse_csv_upload(request.FILES["csv_file"])
-            if "preview" in request.POST:
+        if "preview" in request.POST:
+            form = CopyImportForm(request.POST, request.FILES)
+            if form.is_valid():
+                records = parse_csv_upload(request.FILES["csv_file"])
+                request.session["csv_import_records"] = records
                 preview_data = records
-            elif "confirm" in request.POST:
+        elif "confirm" in request.POST:
+            records = request.session.pop("csv_import_records", [])
+            if records:
                 imported, errors = _import_copies(records, request.user)
                 if imported:
                     messages.success(request, f"Imported {imported} copies.")
                     return redirect("inventory:copy_list")
                 preview_data = records
+            else:
+                messages.error(request, "No records to import. Please upload the CSV file again.")
+                return redirect("inventory:copy_import")
     else:
         form = CopyImportForm()
     return render(request, "inventory/import.html", {
