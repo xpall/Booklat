@@ -98,6 +98,9 @@ class User(models.Model):
         import hashlib
         return hashlib.sha256(f"{self.pk}{self.password}".encode()).hexdigest()
 
+    def get_session_auth_fallback_hash(self):
+        return self.get_session_auth_hash()
+
     @property
     def is_admin(self):
         return self.role and self.role.name == "Administrator"
