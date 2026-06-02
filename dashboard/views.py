@@ -1,16 +1,14 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.utils import timezone
 from inventory.models import BookCopy
 from books.models import Book
 from loans.models import Loan
 from requests_app.models import CheckoutRequest
+from core.decorators import admin_or_staff_required
 
 
+@admin_or_staff_required
 def index(request):
-    if not request.user.is_authenticated:
-        return redirect("accounts:login")
-    if request.user.is_member:
-        return redirect("books:book_list")
     today = timezone.localdate()
     total_titles = Book.objects.filter(is_archived=False).count()
     borrowed_copies = BookCopy.objects.filter(is_archived=False, status=BookCopy.Status.BORROWED).count()

@@ -1,8 +1,18 @@
 import csv
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from core.decorators import permission_required
 from accounts.models import User
+
+
+def home_view(request):
+    if not request.user.is_authenticated:
+        return redirect("accounts:login")
+    if request.user.role and request.user.role.name == "Member":
+        return redirect("books:book_list")
+    return redirect("dashboard:index")
+
+
 from books.models import Book
 from inventory.models import BookCopy
 from loans.models import Loan

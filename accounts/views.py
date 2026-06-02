@@ -222,6 +222,10 @@ def _preview_users(records):
 def _import_users(records, actor):
     errors = []
     imported = 0
+    try:
+        member_role = Role.objects.get(name="Member")
+    except Role.DoesNotExist:
+        member_role = None
     for i, r in enumerate(records, 1):
         lrn = r.get("lrn", "").strip()
         first_name = r.get("first_name", "").strip()
@@ -239,7 +243,7 @@ def _import_users(records, actor):
             errors.append(f"Row {i}: {lrn} - {e.messages[0]}")
             continue
         try:
-            user = User(lrn=lrn, first_name=first_name, last_name=last_name, must_change_password=True)
+            user = User(lrn=lrn, first_name=first_name, last_name=last_name, role=member_role, must_change_password=True)
             user.set_password(password)
             user.save()
             log_action(actor, "USER_CREATED", "User", user.lrn, metadata={"source": "csv_import"})

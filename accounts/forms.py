@@ -59,10 +59,15 @@ class UserForm(forms.ModelForm):
         widget=forms.PasswordInput,
         help_text="Minimum 16 characters. Must include uppercase, lowercase, number, and special character.",
     )
+    role = forms.ModelChoiceField(queryset=None, required=True, empty_label=None, label="Role")
 
     class Meta:
         model = User
         fields = ["lrn", "first_name", "last_name", "role"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["role"].queryset = User._meta.get_field("role").remote_field.model.objects.all().order_by("name")
 
     def clean_password(self):
         password = self.cleaned_data.get("password")
@@ -71,9 +76,15 @@ class UserForm(forms.ModelForm):
 
 
 class UserUpdateForm(forms.ModelForm):
+    role = forms.ModelChoiceField(queryset=None, required=True, empty_label=None, label="Role")
+
     class Meta:
         model = User
         fields = ["first_name", "last_name", "role"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["role"].queryset = User._meta.get_field("role").remote_field.model.objects.all().order_by("name")
 
 
 class CSVImportForm(forms.Form):

@@ -147,6 +147,6 @@ def user_loans_view(request, user_id):
     user = get_object_or_404(User, pk=user_id)
     if request.user.is_member and request.user.pk != user.pk:
         messages.error(request, "You can only view your own loans.")
-        return redirect("dashboard:index")
+        return redirect("books:book_list")
     loans = Loan.objects.filter(user=user).select_related("book_copy__book")
     return render(request, "loans/user_loans.html", {"profile_user": user, "loans": loans})

@@ -61,7 +61,7 @@
     <header class="container">
         <nav>
             <ul>
-                <li><a href="{% url 'dashboard:index' %}" aria-label="Dashboard"><strong>Booklat</strong></a></li>
+                <li><a href="{% url 'core:home' %}" aria-label="Home"><strong>Booklat</strong></a></li>
                 {% if user.is_admin or user.is_staff_user %}
                 <li><a href="{% url 'books:book_list' %}">Books</a></li>
                 <li><a href="{% url 'inventory:copy_list' %}">Copies</a></li>
