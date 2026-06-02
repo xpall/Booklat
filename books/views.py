@@ -1,5 +1,5 @@
 import csv
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.views.decorators.http import require_http_methods
@@ -144,3 +144,14 @@ def book_sample_csv(request):
     writer.writerow(["isbn", "title", "subtitle", "authors", "publisher", "publication_year", "description", "categories", "cover_image"])
     writer.writerow(["978-0-7475-3269-9", "Harry Potter and the Philosopher's Stone", "", "J.K. Rowling", "Bloomsbury", "1997", "A young wizard discovers his magical heritage.", "Fantasy", ""])
     return response
+
+
+@any_permission_required("books.view")
+def book_search_json(request):
+    q = request.GET.get("q", "").strip()
+    books = Book.objects.filter(is_archived=False)
+    if q:
+        books = books.filter(title__icontains=q) | books.filter(isbn__icontains=q)
+    books = books.distinct()[:20]
+    results = [{"id": b.pk, "isbn": b.isbn, "title": b.title, "authors": b.authors} for b in books]
+    return JsonResponse({"results": results})

@@ -3,7 +3,20 @@
 <h1 class="page-title mb-4">{{ title }}</h1>
 <form method="post" style="max-width:28rem;">
   {% csrf_token %}
-  <div class="form-group"><label for="{{ form.book.id_for_label }}" class="form-label">Book</label>{{ form.book }}</div>
+  <div class="form-group">
+    <label for="book-search" class="form-label">Book</label>
+    <div class="book-search" data-search-url="{% url 'books:book_search_json' %}">
+      <input type="text" id="book-search" class="form-input book-search__input" placeholder="Type ISBN or title to search..." autocomplete="off"
+        {% if form.instance.book %}value="{{ form.instance.book.title }}"{% endif %}>
+      <input type="hidden" name="{{ form.book.html_name }}" id="{{ form.book.id_for_label }}"
+        value="{% if form.book.value %}{{ form.book.value }}{% endif %}">
+      <div class="book-search__dropdown"></div>
+    </div>
+    {% if form.book.errors %}<div class="form-error">{{ form.book.errors }}</div>{% endif %}
+    {% if not form.instance.pk %}
+    <div class="form-help" style="margin-top:var(--space-1);">Can't find the book? <a href="{% url 'books:book_create' %}" target="_blank" rel="noopener">Create it first</a>.</div>
+    {% endif %}
+  </div>
   <div class="form-group"><label for="{{ form.acquisition_date.id_for_label }}" class="form-label">Acquisition Date</label>{{ form.acquisition_date }}</div>
   <div class="form-group"><label for="{{ form.shelf_location.id_for_label }}" class="form-label">Shelf Location</label>{{ form.shelf_location }}</div>
   <div class="form-group"><label for="{{ form.notes.id_for_label }}" class="form-label">Notes</label>{{ form.notes }}</div>
