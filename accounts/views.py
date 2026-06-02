@@ -7,6 +7,7 @@ from django.contrib.auth import login as auth_login, logout as auth_logout, upda
 from django.contrib.auth import password_validation
 from django.views.decorators.http import require_http_methods
 from django.utils import timezone
+from django_ratelimit.decorators import ratelimit
 from .models import User, Role
 from .forms import (
     LoginForm,
@@ -27,10 +28,15 @@ def _get_success_redirect(user):
 
 
 @require_http_methods(["GET", "POST"])
+@ratelimit(key="ip", rate="5/m", method="POST")
 def login_view(request):
+    was_limited = getattr(request, "limited", False)
     if request.user.is_authenticated and request.user.status == User.Status.ACTIVE:
         return _get_success_redirect(request.user)
     if request.method == "POST":
+        if was_limited:
+            messages.error(request, "Too many login attempts. Please wait a minute and try again.")
+            return render(request, "accounts/login.html", {"form": LoginForm()})
         form = LoginForm(request.POST)
         if form.is_valid():
             from .backends import LRNAuthenticationBackend
@@ -92,8 +98,13 @@ def user_detail_view(request, user_id):
 
 @require_http_methods(["GET", "POST"])
 @permission_required("users.create")
+@ratelimit(key="user_or_ip", rate="10/m", method="POST")
 def user_create_view(request):
+    was_limited = getattr(request, "limited", False)
     if request.method == "POST":
+        if was_limited:
+            messages.error(request, "Too many requests. Please wait a minute and try again.")
+            return redirect("accounts:user_list")
         form = UserForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
@@ -159,9 +170,14 @@ def user_activate_view(request, user_id):
 
 @require_http_methods(["GET", "POST"])
 @permission_required("users.password_reset")
+@ratelimit(key="user_or_ip", rate="5/m", method="POST")
 def password_reset_view(request, user_id):
+    was_limited = getattr(request, "limited", False)
     user = get_object_or_404(User, pk=user_id)
     if request.method == "POST":
+        if was_limited:
+            messages.error(request, "Too many requests. Please wait a minute and try again.")
+            return redirect("accounts:user_detail", user_id=user.pk)
         form = PasswordResetForm(request.POST)
         if form.is_valid():
             user.set_password(form.cleaned_data["new_password"])
@@ -177,10 +193,15 @@ def password_reset_view(request, user_id):
 
 @require_http_methods(["GET", "POST"])
 @permission_required("system.import_data")
+@ratelimit(key="user_or_ip", rate="10/m", method="POST")
 def user_import_view(request):
+    was_limited = getattr(request, "limited", False)
     preview_data = None
     errors = []
     if request.method == "POST":
+        if was_limited:
+            messages.error(request, "Too many requests. Please wait a minute and try again.")
+            return redirect("accounts:user_list")
         if "confirm" in request.POST:
             records = request.session.pop("import_records", None)
             if records:

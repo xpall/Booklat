@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.views.decorators.http import require_http_methods
 from django.utils import timezone
 from datetime import timedelta
+from django_ratelimit.decorators import ratelimit
 from .models import Loan
 from accounts.models import User
 from inventory.models import BookCopy, CopyHistory
@@ -28,8 +29,13 @@ def loan_list_view(request):
 
 @require_http_methods(["GET", "POST"])
 @permission_required("loans.create")
+@ratelimit(key="user_or_ip", rate="10/m", method="POST")
 def checkout_view(request):
+    was_limited = getattr(request, "limited", False)
     if request.method == "POST":
+        if was_limited:
+            messages.error(request, "Too many requests. Please wait a minute and try again.")
+            return redirect("loans:loan_list")
         if "user_id" in request.POST:
             form = CheckoutUserForm(request.POST)
             if form.is_valid():
@@ -109,8 +115,13 @@ def checkout_confirm(request):
 
 @require_http_methods(["GET", "POST"])
 @permission_required("loans.return")
+@ratelimit(key="user_or_ip", rate="10/m", method="POST")
 def return_book_view(request):
+    was_limited = getattr(request, "limited", False)
     if request.method == "POST":
+        if was_limited:
+            messages.error(request, "Too many requests. Please wait a minute and try again.")
+            return redirect("loans:loan_list")
         form = ReturnForm(request.POST)
         if form.is_valid():
             copy = form.cleaned_data["copy"]

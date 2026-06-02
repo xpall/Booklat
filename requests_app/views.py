@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.views.decorators.http import require_http_methods
 from django.utils import timezone
 from datetime import timedelta
+from django_ratelimit.decorators import ratelimit
 from .models import CheckoutRequest
 from inventory.models import BookCopy, CopyHistory
 from loans.models import Loan
@@ -28,7 +29,12 @@ def request_list_view(request):
 
 
 @require_http_methods(["POST"])
+@ratelimit(key="user_or_ip", rate="10/m", method="POST")
 def request_checkout_view(request, book_id):
+    was_limited = getattr(request, "limited", False)
+    if was_limited:
+        messages.error(request, "Too many requests. Please wait a minute and try again.")
+        return redirect("books:book_list")
     from books.models import Book
     book = get_object_or_404(Book, pk=book_id, is_archived=False)
     existing = CheckoutRequest.objects.filter(
