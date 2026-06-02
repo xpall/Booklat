@@ -1,34 +1,56 @@
 {% extends "core/base.html" %}
 {% block content %}
-<h1>{{ profile_user.get_full_name }}</h1>
-<p><strong>LRN:</strong> {{ profile_user.lrn }}</p>
-<p><strong>Role:</strong> {{ profile_user.role.name|default:"—" }}</p>
-<p><strong>Status:</strong> {{ profile_user.get_status_display }}</p>
-<p><strong>Created:</strong> {{ profile_user.created_at|date:"Y-m-d H:i" }}</p>
-<p><strong>Last Login:</strong> {{ profile_user.last_login|date:"Y-m-d H:i"|default:"Never" }}</p>
+<h1 class="page-title">{{ profile_user.get_full_name }}</h1>
+
+<div class="card mb-4">
+  <div class="book-meta">
+    <div class="book-meta__item">
+      <span class="book-meta__label">LRN</span>
+      <span class="book-meta__value">{{ profile_user.lrn }}</span>
+    </div>
+    <div class="book-meta__item">
+      <span class="book-meta__label">Role</span>
+      <span class="book-meta__value">{{ profile_user.role.name|default:"—" }}</span>
+    </div>
+    <div class="book-meta__item">
+      <span class="book-meta__label">Status</span>
+      <span class="book-meta__value">{{ profile_user.get_status_display }}</span>
+    </div>
+    <div class="book-meta__item">
+      <span class="book-meta__label">Created</span>
+      <span class="book-meta__value">{{ profile_user.created_at|date:"Y-m-d H:i" }}</span>
+    </div>
+    <div class="book-meta__item">
+      <span class="book-meta__label">Last Login</span>
+      <span class="book-meta__value">{{ profile_user.last_login|date:"Y-m-d H:i"|default:"Never" }}</span>
+    </div>
+  </div>
+</div>
 
 {% if user.is_admin or user.is_staff_user %}
-<p>
-    <a href="{% url 'accounts:user_edit' profile_user.pk %}" role="button">Edit</a>
-    <a href="{% url 'accounts:password_reset' profile_user.pk %}" role="button" class="secondary">Reset Password</a>
-    {% if profile_user.status == 'active' %}
-    <form method="post" action="{% url 'accounts:user_suspend' profile_user.pk %}" style="display:inline">
-        {% csrf_token %}
-        <button type="submit" class="secondary">Suspend</button>
-    </form>
-    {% elif profile_user.status == 'suspended' %}
-    <form method="post" action="{% url 'accounts:user_activate' profile_user.pk %}" style="display:inline">
-        {% csrf_token %}
-        <button type="submit" class="secondary">Activate</button>
-    </form>
-    {% endif %}
-    <form method="post" action="{% url 'accounts:user_archive' profile_user.pk %}" style="display:inline">
-        {% csrf_token %}
-        <button type="submit" class="contrast" onclick="return confirm('Archive this user?')">Archive</button>
-    </form>
-</p>
+<div class="flex gap-2 mb-4" style="flex-wrap:wrap;">
+  <a href="{% url 'accounts:user_edit' profile_user.pk %}" class="btn btn--secondary btn--small">Edit</a>
+  <a href="{% url 'accounts:password_reset' profile_user.pk %}" class="btn btn--outline btn--small">Reset Password</a>
+  {% if profile_user.status == 'active' %}
+  <form method="post" action="{% url 'accounts:user_suspend' profile_user.pk %}" style="display:inline">
+    {% csrf_token %}
+    <button type="submit" class="btn btn--warning-outline btn--small">Suspend</button>
+  </form>
+  {% elif profile_user.status == 'suspended' %}
+  <form method="post" action="{% url 'accounts:user_activate' profile_user.pk %}" style="display:inline">
+    {% csrf_token %}
+    <button type="submit" class="btn btn--outline btn--small">Activate</button>
+  </form>
+  {% endif %}
+  <form method="post" action="{% url 'accounts:user_archive' profile_user.pk %}" style="display:inline">
+    {% csrf_token %}
+    <button type="submit" class="btn btn--danger-outline btn--small" onclick="return confirm('Archive this user?')">Archive</button>
+  </form>
+</div>
 {% endif %}
 
-<h2>Loan History</h2>
-<p><a href="{% url 'loans:user_loans' profile_user.pk %}">View all loans</a></p>
+<div class="section-header">
+  <h2 class="section-title">Loan History</h2>
+  <a href="{% url 'loans:user_loans' profile_user.pk %}" class="section-header__action">View All →</a>
+</div>
 {% endblock %}

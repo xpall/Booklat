@@ -1,0 +1,79 @@
+<header class="topbar">
+  <div class="topbar__left">
+    <button class="topbar__hamburger js-sidebar-toggle" aria-label="Toggle menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="3" y1="6" x2="21" y2="6"/>
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+    <a href="{% url 'core:home' %}" class="topbar__brand">
+      <div class="topbar__logo">B</div>
+      <span class="topbar__title">Booklat <span class="topbar__title-label">Library</span></span>
+    </a>
+  </div>
+
+  <div class="topbar__right">
+    <div class="theme-toggle">
+      <span class="theme-toggle__option theme-toggle__option--active" data-theme="light" title="Light mode">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3a1 1 0 011 1v1a1 1 0 11-2 0V4a1 1 0 011-1zm0 15a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zm9-7a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5 12a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zm14.9-5.9a1 1 0 010 1.42l-.71.7a1 1 0 11-1.41-1.41l.7-.71a1 1 0 011.42 0zm-13.08 13.1a1 1 0 010 1.41l-.7.71a1 1 0 11-1.42-1.42l.71-.7a1 1 0 011.41 0zM19.9 17.1a1 1 0 010 1.41l-.7.71a1 1 0 11-1.41-1.42l.7-.7a1 1 0 011.41 0zM5.1 6.9a1 1 0 010-1.42l.7-.7a1 1 0 111.42 1.41l-.71.71a1 1 0 01-1.41 0zM12 8a4 4 0 100 8 4 4 0 000-8z"/></svg>
+      </span>
+      <span class="theme-toggle__option" data-theme="dark" title="Dark mode">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M21.75 15.07A9 9 0 018.93 2.25 7 7 0 1017.07 19.75 8.99 8.99 0 0021.75 15.07z"/></svg>
+      </span>
+    </div>
+
+    {% if user.is_authenticated %}
+    <div style="position:relative;">
+      <button class="topbar__avatar-btn js-profile-toggle">
+        <div class="topbar__avatar">{{ user.first_name|slice:":1" }}{{ user.last_name|slice:":1" }}</div>
+        <span class="topbar__avatar-text">{{ user.get_full_name }}</span>
+      </button>
+      <div class="profile-menu">
+        <a href="{% url 'accounts:password_change' %}" class="profile-menu__item">Change Password</a>
+        <a href="{% url 'accounts:logout' %}" class="profile-menu__item profile-menu__item--danger">Logout</a>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</header>
+
+<style>
+.profile-menu {
+  position: absolute;
+  top: calc(100% + var(--space-1));
+  right: 0;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  z-index: 200;
+  min-width: 12rem;
+  overflow: hidden;
+  display: none;
+}
+.profile-menu--open { display: block; }
+.profile-menu__item {
+  display: block;
+  padding: var(--space-3) var(--space-4);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-small);
+  text-decoration: none;
+  transition: background var(--transition-fast);
+}
+.profile-menu__item:hover { background: var(--color-border-light); }
+.profile-menu__item--danger { color: var(--color-danger); }
+.profile-menu__item--danger:hover { background: var(--color-danger-bg); }
+</style>
+<script>
+document.addEventListener('click', function(e) {
+  var menu = document.querySelector('.profile-menu');
+  var btn = document.querySelector('.js-profile-toggle');
+  if (!menu || !btn) return;
+  if (btn.contains(e.target)) {
+    menu.classList.toggle('profile-menu--open');
+  } else if (!menu.contains(e.target)) {
+    menu.classList.remove('profile-menu--open');
+  }
+});
+</script>

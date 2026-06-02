@@ -1,37 +1,59 @@
 {% extends "core/base.html" %}
 {% block content %}
-<h1>Books</h1>
-<form method="get" style="margin-bottom: 1rem;">
-    <input type="search" name="q" value="{{ query }}" placeholder="Search by title, author, or ISBN...">
-    <button type="submit">Search</button>
-</form>
+<h1 class="page-title mb-4">{% if user.is_member %}Browse Books{% else %}Books{% endif %}</h1>
+
+<div class="search-bar">
+  <svg class="search-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+  <form method="get">
+    <input type="search" name="q" class="form-input" value="{{ query }}" placeholder="Search books, authors, ISBN...">
+  </form>
+</div>
+
 {% if user.is_admin or user.is_staff_user %}
-<p>
-    <a href="{% url 'books:book_create' %}" role="button">Create Book</a>
-    <a href="{% url 'books:book_import' %}" role="button" class="secondary">Import CSV</a>
-    <a href="{% url 'books:book_import_sample' %}" role="button" class="secondary">Download Sample CSV</a>
-</p>
+<div class="mb-4 flex gap-2" style="flex-wrap:wrap;">
+  <a href="{% url 'books:book_create' %}" class="btn btn--primary btn--small">Create Book</a>
+  <a href="{% url 'books:book_import' %}" class="btn btn--secondary btn--small">Import CSV</a>
+  <a href="{% url 'books:book_import_sample' %}" class="btn btn--outline btn--small">Download Sample CSV</a>
+</div>
 {% endif %}
-<table>
-    <thead>
-        <tr>
-            <th>ISBN</th>
-            <th>Title</th>
-            <th>Authors</th>
-            <th>Categories</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for book in books %}
-        <tr>
-            <td>{{ book.isbn }}</td>
-            <td><a href="{% url 'books:book_detail' book.pk %}">{{ book.title }}</a></td>
-            <td>{{ book.authors }}</td>
-            <td>{{ book.categories }}</td>
-        </tr>
-        {% empty %}
-        <tr><td colspan="4">No books found.</td></tr>
-        {% endfor %}
-    </tbody>
-</table>
+
+<div class="filter-chips">
+  <a href="?q={{ query }}" class="filter-chip {% if not request.GET.status %}filter-chip--active{% endif %}">All</a>
+  <span class="filter-chip">Available</span>
+  <span class="filter-chip">New Arrivals</span>
+</div>
+
+{% if books %}
+<div class="book-grid">
+  {% for book in books %}
+  <a href="{% url 'books:book_detail' book.pk %}" class="book-card" style="display:block;">
+    <div class="book-card__cover">
+      {% if book.cover_image %}
+      <img src="{{ book.cover_image }}" alt="{{ book.title }}" loading="lazy">
+      {% else %}
+      <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="var(--color-text-tertiary)" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+      {% endif %}
+    </div>
+    <div class="book-card__body">
+      <div class="book-card__title">{{ book.title }}</div>
+      <div class="book-card__author">{{ book.authors }}</div>
+      <div class="book-card__footer">
+        <span class="badge badge--neutral">{{ book.categories|default:"Uncategorized" }}</span>
+      </div>
+    </div>
+  </a>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+  <div class="empty-state__icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+  </div>
+  <div class="empty-state__title">No books found</div>
+  <div class="empty-state__text">Try adjusting your search or browse all available titles.</div>
+  {% if query %}
+  <a href="{% url 'books:book_list' %}" class="btn btn--primary">Clear Search</a>
+  {% endif %}
+</div>
+{% endif %}
 {% endblock %}

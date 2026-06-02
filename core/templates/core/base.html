@@ -1,111 +1,36 @@
-<!DOCTYPE html>
+{% load static %}<!DOCTYPE html>
 <html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Booklat — {{ title|default:"Library Management" }}</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
-    <style>
-        :root {
-            --pico-primary: #6C5CE7;
-            --pico-primary-hover: #5A4BD6;
-            --pico-primary-focus: rgba(108, 92, 231, 0.25);
-            --pico-primary-inverse: #FFFFFF;
-            --pico-background-color: #F7F7FB;
-            --pico-card-background-color: #FFFFFF;
-            --pico-color: #1F1F2E;
-            --pico-muted-color: #6B6B7A;
-            --pico-form-element-background-color: #FFFFFF;
-            --pico-form-element-border-color: #D1D1E0;
-            --pico-form-element-active-border-color: #6C5CE7;
-            --pico-form-element-color: #1F1F2E;
-            --pico-form-element-placeholder-color: #6B6B7A;
-        }
-        article {
-            background: var(--pico-card-background-color);
-            border: 1px solid #E8E8F0;
-            border-radius: 12px;
-        }
-        [role="button"], button, input[type="submit"] {
-            border-radius: 8px;
-        }
-        table {
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        nav {
-            background: var(--pico-card-background-color);
-            border-radius: 0 0 12px 12px;
-            padding: 0.75rem 1.5rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-        }
-        .stat-card {
-            text-align: center;
-            padding: 1.5rem 1rem;
-        }
-        .stat-card h5 {
-            font-size: 2rem;
-            margin-bottom: 0.25rem;
-            color: var(--pico-primary);
-        }
-        .alert-error { background: #FDE8E8; border-color: #E74C3C; color: #1F1F2E; }
-        .alert-success { background: #E8F8EF; border-color: #2ECC71; color: #1F1F2E; }
-        .alert-warning { background: #FEF3E0; border-color: #F39C12; color: #1F1F2E; }
-        .badge-success { background: #2ECC71; color: #fff; padding: 0.15rem 0.5rem; border-radius: 999px; font-size: 0.75rem; }
-        .badge-warning { background: #F39C12; color: #fff; padding: 0.15rem 0.5rem; border-radius: 999px; font-size: 0.75rem; }
-        .badge-danger { background: #E74C3C; color: #fff; padding: 0.15rem 0.5rem; border-radius: 999px; font-size: 0.75rem; }
-    </style>
+    <link rel="stylesheet" href="{% static 'core/css/design-system.css' %}">
+    {% block extra_head %}{% endblock %}
 </head>
 <body>
-    <header class="container">
-        <nav>
-            <ul>
-                <li><a href="{% url 'core:home' %}" aria-label="Home"><strong>Booklat</strong></a></li>
-                {% if user.is_admin or user.is_staff_user %}
-                <li><a href="{% url 'books:book_list' %}">Books</a></li>
-                <li><a href="{% url 'inventory:copy_list' %}">Copies</a></li>
-                <li><a href="{% url 'loans:loan_list' %}">Loans</a></li>
-                <li><a href="{% url 'requests_app:request_list' %}">Requests</a></li>
+    {% block body %}
+    <div class="app-shell">
+        {% if user.is_authenticated %}{% include "core/partials/sidebar.html" %}{% endif %}
+        <div class="app-shell__main">
+            {% if user.is_authenticated %}{% include "core/partials/topbar.html" %}{% endif %}
+            <div class="app-shell__content">
+                {% if messages %}
+                <div class="js-django-messages" style="display:none;">
+                    {% for message in messages %}
+                    <span data-message="{{ message }}" data-type="{{ message.tags }}"></span>
+                    {% endfor %}
+                </div>
                 {% endif %}
-                {% if user.is_member %}
-                <li><a href="{% url 'books:book_list' %}">Search Books</a></li>
-                <li><a href="{% url 'requests_app:request_list' %}">My Requests</a></li>
-                {% endif %}
-            </ul>
-            <ul>
-                {% if user.is_admin or user.is_staff_user %}
-                <li><a href="{% url 'accounts:user_list' %}">Users</a></li>
-                {% endif %}
-                {% if user.is_admin %}
-                <li><a href="{% url 'audit:log_list' %}">Audit</a></li>
-                <li><a href="{% url 'core:export' %}">Export</a></li>
-                {% endif %}
-                <li><details class="dropdown">
-                    <summary>{{ user.get_full_name }}</summary>
-                    <ul>
-                        <li><a href="{% url 'accounts:password_change' %}">Change Password</a></li>
-                        <li><a href="{% url 'accounts:logout' %}">Logout</a></li>
-                    </ul>
-                </details></li>
-            </ul>
-        </nav>
-    </header>
 
-    <main class="container">
-        {% if messages %}
-        {% for message in messages %}
-        <article class="{% if message.tags == 'error' %}alert-error{% elif message.tags == 'success' %}alert-success{% elif message.tags == 'warning' %}alert-warning{% endif %}">
-            {{ message }}
-        </article>
-        {% endfor %}
-        {% endif %}
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
 
-        {% block content %}{% endblock %}
-    </main>
+    {% if user.is_authenticated %}{% include "core/partials/bottom_nav.html" %}{% endif %}
+    {% endblock %}
 
-    <footer class="container" style="text-align: center; padding: 2rem 0;">
-        <small>Booklat — Library Management System</small>
-    </footer>
+    <script src="{% static 'core/js/booklat-ui.js' %}"></script>
+    {% block extra_scripts %}{% endblock %}
 </body>
 </html>

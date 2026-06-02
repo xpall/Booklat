@@ -1,13 +1,13 @@
 {% extends "core/base.html" %}
 {% block content %}
-<h1>{{ title }}</h1>
-<form method="post">
-    {% csrf_token %}
-    <label>Book {{ form.book }}</label>
-    <label>Acquisition Date {{ form.acquisition_date }}</label>
-    <label>Shelf Location {{ form.shelf_location }}</label>
-    <label>Notes {{ form.notes }}</label>
-    <label>Status {{ form.status }}</label>
-    <button type="submit">Save</button>
+<h1 class="page-title mb-4">{{ title }}</h1>
+<form method="post" style="max-width:28rem;">
+  {% csrf_token %}
+  <div class="form-group"><label for="{{ form.book.id_for_label }}" class="form-label">Book</label>{{ form.book }}</div>
+  <div class="form-group"><label for="{{ form.acquisition_date.id_for_label }}" class="form-label">Acquisition Date</label>{{ form.acquisition_date }}</div>
+  <div class="form-group"><label for="{{ form.shelf_location.id_for_label }}" class="form-label">Shelf Location</label>{{ form.shelf_location }}</div>
+  <div class="form-group"><label for="{{ form.notes.id_for_label }}" class="form-label">Notes</label>{{ form.notes }}</div>
+  <div class="form-group"><label for="{{ form.status.id_for_label }}" class="form-label">Status</label>{{ form.status }}</div>
+  <button type="submit" class="btn btn--primary">Save</button>
 </form>
 {% endblock %}

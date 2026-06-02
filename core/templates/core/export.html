@@ -1,11 +1,27 @@
 {% extends "core/base.html" %}
 {% block content %}
-<h1>{{ title }}</h1>
-<ul>
-    <li><a href="{% url 'core:export_users_csv' %}">Export Users</a></li>
-    <li><a href="{% url 'core:export_books_csv' %}">Export Books</a></li>
-    <li><a href="{% url 'core:export_copies_csv' %}">Export Copies</a></li>
-    <li><a href="{% url 'core:export_loans_csv' %}">Export Loans</a></li>
-    <li><a href="{% url 'audit:export' %}">Export Audit Logs</a></li>
-</ul>
+<h1 class="page-title mb-4">{{ title|default:"Export Data" }}</h1>
+
+<div class="grid grid--2">
+  <a href="{% url 'core:export_users_csv' %}" class="card card--flat" style="text-decoration:none;color:inherit;">
+    <div class="card__title">Users</div>
+    <div class="card__subtitle">Export all users as CSV</div>
+  </a>
+  <a href="{% url 'core:export_books_csv' %}" class="card card--flat" style="text-decoration:none;color:inherit;">
+    <div class="card__title">Books</div>
+    <div class="card__subtitle">Export all book titles</div>
+  </a>
+  <a href="{% url 'core:export_copies_csv' %}" class="card card--flat" style="text-decoration:none;color:inherit;">
+    <div class="card__title">Copies</div>
+    <div class="card__subtitle">Export all book copies</div>
+  </a>
+  <a href="{% url 'core:export_loans_csv' %}" class="card card--flat" style="text-decoration:none;color:inherit;">
+    <div class="card__title">Loans</div>
+    <div class="card__subtitle">Export all loan records</div>
+  </a>
+  <a href="{% url 'audit:export' %}" class="card card--flat" style="text-decoration:none;color:inherit;">
+    <div class="card__title">Audit Logs</div>
+    <div class="card__subtitle">Export audit trail</div>
+  </a>
+</div>
 {% endblock %}

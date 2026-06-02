@@ -1,0 +1,189 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block extra_head %}
+<style>
+.hero-illustration {
+  width: 120px;
+  height: 120px;
+}
+.hero-illustration svg { width: 100%; height: 100%; }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1 class="page-title">Welcome back, {{ user.first_name|default:user.get_full_name }} 👋</h1>
+<p class="text-secondary mb-6">What would you like to do today?</p>
+
+<div class="search-bar">
+  <svg class="search-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+  <form method="get" action="{% url 'books:book_list' %}">
+    <input type="search" name="q" class="form-input" placeholder="Search books, authors, ISBN...">
+  </form>
+</div>
+
+<div class="section-header mb-4">
+  <h2 class="section-title" style="margin-bottom:0;">Quick Actions</h2>
+</div>
+<div class="quick-actions">
+  <a href="{% url 'books:book_list' %}" class="quick-action">
+    <div class="quick-action__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+    </div>
+    <span class="quick-action__label">Browse Books</span>
+  </a>
+  <a href="{% url 'loans:user_loans' user.pk %}" class="quick-action">
+    <div class="quick-action__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+    </div>
+    <span class="quick-action__label">My Loans</span>
+  </a>
+  <a href="{% url 'loans:user_loans' user.pk %}" class="quick-action">
+    <div class="quick-action__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+    </div>
+    <span class="quick-action__label">Due Soon</span>
+  </a>
+  <a href="{% url 'requests_app:request_list' %}" class="quick-action">
+    <div class="quick-action__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="9" y1="12" x2="15" y2="12"/></svg>
+    </div>
+    <span class="quick-action__label">My Requests</span>
+  </a>
+</div>
+
+<div class="section-header mb-4">
+  <h2 class="section-title" style="margin-bottom:0;">My Current Loans</h2>
+  <a href="{% url 'loans:user_loans' user.pk %}" class="section-header__action">View All →</a>
+</div>
+
+{% if active_loans %}
+<div class="flex flex-col gap-3 mb-6">
+  {% for loan in active_loans %}
+  <div class="loan-card">
+    <div class="loan-card__cover">
+      {% if loan.book_copy.book.cover_image %}
+      <img src="{{ loan.book_copy.book.cover_image }}" alt="{{ loan.book_copy.book.title }}">
+      {% else %}
+      <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="var(--color-text-tertiary)" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+      {% endif %}
+    </div>
+    <div class="loan-card__info">
+      <div class="loan-card__title">{{ loan.book_copy.book.title }}</div>
+      <div class="loan-card__author">{{ loan.book_copy.book.authors }}</div>
+      {% if loan.is_overdue %}
+      <div class="loan-card__meta">{{ loan.days_overdue }} days overdue</div>
+      {% else %}
+      <div class="loan-card__meta--ok">Due in {{ loan.days_until_due }} days</div>
+      {% endif %}
+    </div>
+    <div class="loan-card__badge{% if not loan.is_overdue %} loan-card__badge--ok{% endif %}">
+      {{ loan.is_overdue|yesno:"Overdue,Due" }} {{ loan.due_date|date:"d M" }}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty-state mb-6">
+  <div class="empty-state__icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+  </div>
+  <div class="empty-state__title">No active loans</div>
+  <div class="empty-state__text">You don't have any books checked out right now. Browse the catalog to find something to read.</div>
+  <a href="{% url 'books:book_list' %}" class="btn btn--primary">Browse Books</a>
+</div>
+{% endif %}
+
+<div class="section-header mb-4">
+  <h2 class="section-title" style="margin-bottom:0;">New Arrivals</h2>
+</div>
+
+{% if recent_books %}
+<div class="carousel mb-6">
+  {% for book in recent_books %}
+  <div class="carousel__item">
+    <a href="{% url 'books:book_detail' book.pk %}" class="book-card" style="display:block;">
+      <div class="book-card__cover">
+        {% if book.cover_image %}
+        <img src="{{ book.cover_image }}" alt="{{ book.title }}" loading="lazy">
+        {% else %}
+        <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="var(--color-text-tertiary)" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+        {% endif %}
+      </div>
+      <div class="book-card__body">
+        <div class="book-card__title">{{ book.title }}</div>
+        <div class="book-card__author">{{ book.authors }}</div>
+      </div>
+    </a>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% if pending_requests %}
+<div class="section-header mb-4">
+  <h2 class="section-title" style="margin-bottom:0;">Pending Requests</h2>
+  <a href="{% url 'requests_app:request_list' %}" class="section-header__action">View All →</a>
+</div>
+<div class="flex flex-col gap-3 mb-6">
+  {% for req in pending_requests %}
+  <div class="card card--flat" style="padding:var(--space-4);">
+    <div class="flex items-center justify-between">
+      <div>
+        <div class="card__title" style="font-size:var(--font-size-small);">{{ req.book.title }}</div>
+        <div class="card__subtitle" style="font-size:var(--font-size-caption);">Requested {{ req.requested_at|date:"d M Y" }}</div>
+      </div>
+      <span class="badge badge--warning">Pending</span>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% if reserved_books %}
+<div class="section-header mb-4">
+  <h2 class="section-title" style="margin-bottom:0;">Reserved Books</h2>
+</div>
+<div class="flex flex-col gap-3 mb-6">
+  {% for req in reserved_books %}
+  <div class="card card--flat" style="padding:var(--space-4);">
+    <div class="flex items-center justify-between">
+      <div>
+        <div class="card__title" style="font-size:var(--font-size-small);">{{ req.book.title }}</div>
+        <div class="card__subtitle" style="font-size:var(--font-size-caption);">Ready for pickup</div>
+      </div>
+      <span class="badge badge--success">Ready</span>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<div class="section-header mb-4">
+  <h2 class="section-title" style="margin-bottom:0;">Reading History</h2>
+  <a href="{% url 'loans:user_loans' user.pk %}" class="section-header__action">View All →</a>
+</div>
+
+{% if reading_history %}
+<div class="flex flex-col gap-3 mb-6">
+  {% for loan in reading_history %}
+  <div class="card card--flat" style="padding:var(--space-4);">
+    <div class="flex items-center justify-between">
+      <div>
+        <div class="card__title" style="font-size:var(--font-size-small);">{{ loan.book_copy.book.title }}</div>
+        <div class="card__subtitle" style="font-size:var(--font-size-caption);">Returned {{ loan.return_date|date:"d M Y" }}</div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+  <div class="empty-state__icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+  </div>
+  <div class="empty-state__title">No reading history yet</div>
+  <div class="empty-state__text">Books you borrow will appear here once returned.</div>
+</div>
+{% endif %}
+{% endblock %}

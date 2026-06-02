@@ -1,101 +1,126 @@
 {% extends "core/base.html" %}
 {% block content %}
-<h1>Dashboard</h1>
+<h1 class="page-title mb-4">Dashboard</h1>
 
-<h2>Statistics</h2>
-<div class="grid">
-    <article class="stat-card">
-        <h5>{{ total_titles }}</h5>
-        <small>Total Titles</small>
-    </article>
-    <article class="stat-card">
-        <h5>{{ borrowed_copies }}</h5>
-        <small>Borrowed</small>
-    </article>
-    <article class="stat-card">
-        <h5>{{ overdue_count }}</h5>
-        <small>Overdue</small>
-    </article>
+<div class="stats-row">
+  <div class="stat-card">
+    <div class="stat-card__value">{{ total_titles }}</div>
+    <div class="stat-card__label">Total Titles</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-card__value">{{ borrowed_copies }}</div>
+    <div class="stat-card__label">Borrowed</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-card__value">{{ overdue_count }}</div>
+    <div class="stat-card__label">Overdue</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-card__value">{{ pending_requests|length }}</div>
+    <div class="stat-card__label">Pending Requests</div>
+  </div>
 </div>
 
-<h2>Pending Requests</h2>
-<p>{{ pending_requests|length }} pending · {{ approved_today }} approved today · {{ rejected_today }} rejected today</p>
-<table>
-    <thead>
+<div class="card mb-4">
+  <div class="card-header">
+    <h3 class="card-header__title">Pending Requests</h3>
+    <span class="text-caption">{{ pending_requests|length }} pending &middot; {{ approved_today }} approved today &middot; {{ rejected_today }} rejected today</span>
+  </div>
+  <div class="table-responsive">
+    <table class="data-table">
+      <thead>
         <tr><th>User</th><th>Book</th><th>Requested</th><th>Action</th></tr>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody>
         {% for req in pending_requests|slice:":10" %}
         <tr>
-            <td>{{ req.user.get_full_name }}</td>
-            <td>{{ req.book.title }}</td>
-            <td>{{ req.requested_at|date:"Y-m-d H:i" }}</td>
-            <td><a href="{% url 'requests_app:process_request' req.pk %}">Process</a></td>
+          <td>{{ req.user.get_full_name }}</td>
+          <td>{{ req.book.title }}</td>
+          <td>{{ req.requested_at|date:"Y-m-d H:i" }}</td>
+          <td><a href="{% url 'requests_app:process_request' req.pk %}" class="btn btn--primary btn--small">Process</a></td>
         </tr>
         {% empty %}
         <tr><td colspan="4">No pending requests.</td></tr>
         {% endfor %}
-    </tbody>
-</table>
+      </tbody>
+    </table>
+  </div>
+</div>
 
-<h2>Overdue Loans</h2>
-<table>
-    <thead>
+<div class="card mb-4">
+  <div class="card-header">
+    <h3 class="card-header__title">Overdue Loans</h3>
+  </div>
+  <div class="table-responsive">
+    <table class="data-table">
+      <thead>
         <tr><th>User</th><th>Book</th><th>Copy ID</th><th>Due Date</th><th>Days Overdue</th><th>Action</th></tr>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody>
         {% for loan in overdue_loans %}
         <tr>
-            <td><a href="{% url 'accounts:user_detail' loan.user.pk %}">{{ loan.user.get_full_name }}</a></td>
-            <td>{{ loan.book_copy.book.title }}</td>
-            <td>{{ loan.book_copy.copy_id }}</td>
-            <td>{{ loan.due_date|date:"Y-m-d" }}</td>
-            <td>{{ loan.days_overdue }}</td>
-            <td><a href="{% url 'loans:return_book' %}">Return</a></td>
+          <td><a href="{% url 'accounts:user_detail' loan.user.pk %}">{{ loan.user.get_full_name }}</a></td>
+          <td>{{ loan.book_copy.book.title }}</td>
+          <td>{{ loan.book_copy.copy_id }}</td>
+          <td>{{ loan.due_date|date:"Y-m-d" }}</td>
+          <td><span class="badge badge--danger">{{ loan.days_overdue }}</span></td>
+          <td><a href="{% url 'loans:return_book' %}" class="btn btn--danger-outline btn--small">Return</a></td>
         </tr>
         {% empty %}
         <tr><td colspan="6">No overdue loans.</td></tr>
         {% endfor %}
-    </tbody>
-</table>
+      </tbody>
+    </table>
+  </div>
+</div>
 
-<h2>Recent Activity</h2>
-<h3>Recent Loans</h3>
-<table>
-    <thead>
+<div class="card mb-4">
+  <div class="card-header">
+    <h3 class="card-header__title">Recent Loans</h3>
+  </div>
+  <div class="table-responsive">
+    <table class="data-table">
+      <thead>
         <tr><th>User</th><th>Copy ID</th><th>Book</th><th>Checkout Date</th></tr>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody>
         {% for loan in recent_loans %}
         <tr>
-            <td>{{ loan.user.get_full_name }}</td>
-            <td>{{ loan.book_copy.copy_id }}</td>
-            <td>{{ loan.book_copy.book.title }}</td>
-            <td>{{ loan.checkout_date|date:"Y-m-d" }}</td>
+          <td>{{ loan.user.get_full_name }}</td>
+          <td>{{ loan.book_copy.copy_id }}</td>
+          <td>{{ loan.book_copy.book.title }}</td>
+          <td>{{ loan.checkout_date|date:"Y-m-d" }}</td>
         </tr>
         {% empty %}
         <tr><td colspan="4">No recent loans.</td></tr>
         {% endfor %}
-    </tbody>
-</table>
+      </tbody>
+    </table>
+  </div>
+</div>
 
-<h3>Recent Returns</h3>
-<table>
-    <thead>
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-header__title">Recent Returns</h3>
+  </div>
+  <div class="table-responsive">
+    <table class="data-table">
+      <thead>
         <tr><th>User</th><th>Copy ID</th><th>Book</th><th>Return Date</th></tr>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody>
         {% for loan in recent_returns %}
         <tr>
-            <td>{{ loan.user.get_full_name }}</td>
-            <td>{{ loan.book_copy.copy_id }}</td>
-            <td>{{ loan.book_copy.book.title }}</td>
-            <td>{{ loan.return_date|date:"Y-m-d" }}</td>
+          <td>{{ loan.user.get_full_name }}</td>
+          <td>{{ loan.book_copy.copy_id }}</td>
+          <td>{{ loan.book_copy.book.title }}</td>
+          <td>{{ loan.return_date|date:"Y-m-d" }}</td>
         </tr>
         {% empty %}
         <tr><td colspan="4">No recent returns.</td></tr>
         {% endfor %}
-    </tbody>
-</table>
-
+      </tbody>
+    </table>
+  </div>
+</div>
 {% endblock %}

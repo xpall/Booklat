@@ -23,7 +23,7 @@ from core.utils import log_action, parse_csv_upload
 
 def _get_success_redirect(user):
     if user.is_member:
-        return redirect("books:book_list")
+        return redirect("dashboard:student_dashboard")
     return redirect("dashboard:index")
 
 

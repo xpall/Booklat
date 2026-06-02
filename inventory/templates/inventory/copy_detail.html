@@ -1,55 +1,92 @@
 {% extends "core/base.html" %}
 {% block content %}
-<h1>{{ copy.copy_id }}</h1>
-<p><strong>Book:</strong> <a href="{% url 'books:book_detail' copy.book.pk %}">{{ copy.book.title }}</a></p>
-<p><strong>Status:</strong> {{ copy.get_status_display }}</p>
-<p><strong>Shelf Location:</strong> {{ copy.shelf_location|default:"—" }}</p>
-<p><strong>Acquisition Date:</strong> {{ copy.acquisition_date|date:"Y-m-d"|default:"—" }}</p>
-<p><strong>Notes:</strong> {{ copy.notes|default:"—" }}</p>
+<h1 class="page-title">{{ copy.copy_id }}</h1>
 
-<p>
-    <a href="{% url 'inventory:copy_edit' copy.pk %}" role="button">Edit</a>
+<div class="card mb-4">
+  <div class="book-meta">
+    <div class="book-meta__item">
+      <span class="book-meta__label">Book</span>
+      <span class="book-meta__value"><a href="{% url 'books:book_detail' copy.book.pk %}">{{ copy.book.title }}</a></span>
+    </div>
+    <div class="book-meta__item">
+      <span class="book-meta__label">Status</span>
+      <span class="book-meta__value">{{ copy.get_status_display }}</span>
+    </div>
+    <div class="book-meta__item">
+      <span class="book-meta__label">Shelf Location</span>
+      <span class="book-meta__value">{{ copy.shelf_location|default:"—" }}</span>
+    </div>
+    <div class="book-meta__item">
+      <span class="book-meta__label">Acquisition Date</span>
+      <span class="book-meta__value">{{ copy.acquisition_date|date:"Y-m-d"|default:"—" }}</span>
+    </div>
+    <div class="book-meta__item">
+      <span class="book-meta__label">Notes</span>
+      <span class="book-meta__value">{{ copy.notes|default:"—" }}</span>
+    </div>
+  </div>
+  <div class="flex gap-2 mt-4" style="flex-wrap:wrap;">
+    <a href="{% url 'inventory:copy_edit' copy.pk %}" class="btn btn--secondary btn--small">Edit</a>
     <form method="post" action="{% url 'inventory:copy_archive' copy.pk %}" style="display:inline">
-        {% csrf_token %}
-        <button type="submit" class="contrast" onclick="return confirm('Archive this copy?')">Archive</button>
+      {% csrf_token %}
+      <button type="submit" class="btn btn--danger-outline btn--small" onclick="return confirm('Archive this copy?')">Archive</button>
     </form>
-</p>
+  </div>
+</div>
 
-<h2>Change Status</h2>
-<form method="post" action="{% url 'inventory:copy_status_change' copy.pk %}">
+<div class="card mb-4">
+  <div class="card-header">
+    <h3 class="card-header__title">Change Status</h3>
+  </div>
+  <form method="post" action="{% url 'inventory:copy_status_change' copy.pk %}">
     {% csrf_token %}
-    <select name="status">
-        <option value="available" {% if copy.status == 'available' %}selected{% endif %}>Available</option>
-        <option value="reserved" {% if copy.status == 'reserved' %}selected{% endif %}>Reserved</option>
-        <option value="lost" {% if copy.status == 'lost' %}selected{% endif %}>Lost</option>
-        <option value="damaged" {% if copy.status == 'damaged' %}selected{% endif %}>Damaged</option>
-        <option value="under_repair" {% if copy.status == 'under_repair' %}selected{% endif %}>Under Repair</option>
-    </select>
-    <label>Notes <input type="text" name="notes"></label>
-    <button type="submit">Update Status</button>
-</form>
+    <div class="flex gap-3 items-end mb-3" style="flex-wrap:wrap;">
+      <div class="form-group" style="margin-bottom:0;">
+        <label for="status" class="form-label">Status</label>
+        <select name="status" id="status" class="form-input form-select">
+          <option value="available" {% if copy.status == 'available' %}selected{% endif %}>Available</option>
+          <option value="reserved" {% if copy.status == 'reserved' %}selected{% endif %}>Reserved</option>
+          <option value="lost" {% if copy.status == 'lost' %}selected{% endif %}>Lost</option>
+          <option value="damaged" {% if copy.status == 'damaged' %}selected{% endif %}>Damaged</option>
+          <option value="under_repair" {% if copy.status == 'under_repair' %}selected{% endif %}>Under Repair</option>
+        </select>
+      </div>
+      <div class="form-group" style="margin-bottom:0;">
+        <label for="notes" class="form-label">Notes</label>
+        <input type="text" name="notes" id="notes" class="form-input">
+      </div>
+      <button type="submit" class="btn btn--primary btn--small">Update Status</button>
+    </div>
+  </form>
+</div>
 
-<h2>History</h2>
-<table>
-    <thead>
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-header__title">History</h3>
+  </div>
+  <div class="table-responsive">
+    <table class="data-table">
+      <thead>
         <tr>
-            <th>Date</th>
-            <th>Event</th>
-            <th>Actor</th>
-            <th>Notes</th>
+          <th>Date</th>
+          <th>Event</th>
+          <th>Actor</th>
+          <th>Notes</th>
         </tr>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody>
         {% for h in history %}
         <tr>
-            <td>{{ h.timestamp|date:"Y-m-d H:i" }}</td>
-            <td>{{ h.event }}</td>
-            <td>{% if h.actor %}{{ h.actor.get_full_name|default:h.actor.lrn }}{% else %}—{% endif %}</td>
-            <td>{{ h.notes }}</td>
+          <td>{{ h.timestamp|date:"Y-m-d H:i" }}</td>
+          <td>{{ h.event }}</td>
+          <td>{% if h.actor %}{{ h.actor.get_full_name|default:h.actor.lrn }}{% else %}—{% endif %}</td>
+          <td>{{ h.notes }}</td>
         </tr>
         {% empty %}
         <tr><td colspan="4">No history.</td></tr>
         {% endfor %}
-    </tbody>
-</table>
+      </tbody>
+    </table>
+  </div>
+</div>
 {% endblock %}

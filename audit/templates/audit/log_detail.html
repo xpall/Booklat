@@ -1,16 +1,40 @@
 {% extends "core/base.html" %}
 {% block content %}
-<h1>Audit Log Detail</h1>
-<table>
-    <tr><th>Timestamp</th><td>{{ log.timestamp|date:"Y-m-d H:i:s" }}</td></tr>
-    <tr><th>Actor</th><td>{{ log.actor.lrn|default:"System" }}</td></tr>
-    <tr><th>Action</th><td>{{ log.action }}</td></tr>
-    <tr><th>Resource Type</th><td>{{ log.resource_type }}</td></tr>
-    <tr><th>Resource ID</th><td>{{ log.resource_id }}</td></tr>
-</table>
+<h1 class="page-title mb-4">Audit Log Detail</h1>
+
+<div class="card mb-4">
+  <div class="book-meta">
+    <div class="book-meta__item">
+      <span class="book-meta__label">Timestamp</span>
+      <span class="book-meta__value">{{ log.timestamp|date:"Y-m-d H:i:s" }}</span>
+    </div>
+    <div class="book-meta__item">
+      <span class="book-meta__label">Actor</span>
+      <span class="book-meta__value">{{ log.actor.lrn|default:"System" }}</span>
+    </div>
+    <div class="book-meta__item">
+      <span class="book-meta__label">Action</span>
+      <span class="book-meta__value">{{ log.action }}</span>
+    </div>
+    <div class="book-meta__item">
+      <span class="book-meta__label">Resource Type</span>
+      <span class="book-meta__value">{{ log.resource_type }}</span>
+    </div>
+    <div class="book-meta__item">
+      <span class="book-meta__label">Resource ID</span>
+      <span class="book-meta__value">{{ log.resource_id }}</span>
+    </div>
+  </div>
+</div>
+
 {% if log.metadata %}
-<h3>Metadata</h3>
-<pre>{{ log.metadata|safe }}</pre>
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-header__title">Metadata</h3>
+  </div>
+  <pre style="font-size:var(--font-size-small);color:var(--color-text-secondary);overflow-x:auto;">{{ log.metadata|safe }}</pre>
+</div>
 {% endif %}
-<a href="{% url 'audit:log_list' %}">Back to Audit Logs</a>
+
+<a href="{% url 'audit:log_list' %}" class="btn btn--secondary mt-4">Back to Audit Logs</a>
 {% endblock %}

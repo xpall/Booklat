@@ -1,41 +1,48 @@
 {% extends "core/base.html" %}
 {% block content %}
-<h1>Copies</h1>
-<form method="get" style="margin-bottom: 1rem;">
-    <input type="search" name="q" value="{{ query }}" placeholder="Search by copy ID or book title...">
-    <select name="status">
-        <option value="">All Statuses</option>
-        {% for value, label in status_choices %}
-        <option value="{{ value }}" {% if status_filter == value %}selected{% endif %}>{{ label }}</option>
-        {% endfor %}
-    </select>
-    <button type="submit">Filter</button>
+<h1 class="page-title mb-4">Copies</h1>
+
+<form method="get" class="mb-4 flex gap-3 items-center" style="flex-wrap:wrap;">
+  <div class="search-bar" style="flex:1;min-width:200px;margin-bottom:0;">
+    <svg class="search-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="search" name="q" class="form-input" value="{{ query }}" placeholder="Search by copy ID or book title...">
+  </div>
+  <select name="status" class="form-input form-select" style="max-width:12rem;margin-bottom:0;" onchange="this.form.submit()">
+    <option value="">All Statuses</option>
+    {% for value, label in status_choices %}
+    <option value="{{ value }}" {% if status_filter == value %}selected{% endif %}>{{ label }}</option>
+    {% endfor %}
+  </select>
 </form>
-<p>
-    <a href="{% url 'inventory:copy_create' %}" role="button">Create Copy</a>
-    <a href="{% url 'inventory:copy_import' %}" role="button" class="secondary">Import CSV</a>
-    <a href="{% url 'inventory:copy_import_sample' %}" role="button" class="secondary">Download Sample CSV</a>
-</p>
-<table>
+
+<div class="mb-4 flex gap-2" style="flex-wrap:wrap;">
+  <a href="{% url 'inventory:copy_create' %}" class="btn btn--primary btn--small">Create Copy</a>
+  <a href="{% url 'inventory:copy_import' %}" class="btn btn--secondary btn--small">Import CSV</a>
+  <a href="{% url 'inventory:copy_import_sample' %}" class="btn btn--outline btn--small">Download Sample CSV</a>
+</div>
+
+<div class="table-responsive">
+  <table class="data-table">
     <thead>
-        <tr>
-            <th>Copy ID</th>
-            <th>Book</th>
-            <th>Status</th>
-            <th>Shelf Location</th>
-        </tr>
+      <tr>
+        <th>Copy ID</th>
+        <th>Book</th>
+        <th>Status</th>
+        <th>Shelf Location</th>
+      </tr>
     </thead>
     <tbody>
-        {% for copy in copies %}
-        <tr>
-            <td><a href="{% url 'inventory:copy_detail' copy.pk %}">{{ copy.copy_id }}</a></td>
-            <td>{{ copy.book.title }}</td>
-            <td>{{ copy.get_status_display }}</td>
-            <td>{{ copy.shelf_location|default:"—" }}</td>
-        </tr>
-        {% empty %}
-        <tr><td colspan="4">No copies found.</td></tr>
-        {% endfor %}
+      {% for copy in copies %}
+      <tr>
+        <td><a href="{% url 'inventory:copy_detail' copy.pk %}">{{ copy.copy_id }}</a></td>
+        <td>{{ copy.book.title }}</td>
+        <td>{{ copy.get_status_display }}</td>
+        <td>{{ copy.shelf_location|default:"—" }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="4">No copies found.</td></tr>
+      {% endfor %}
     </tbody>
-</table>
+  </table>
+</div>
 {% endblock %}

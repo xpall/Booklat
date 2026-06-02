@@ -9,7 +9,7 @@ def home_view(request):
     if not request.user.is_authenticated:
         return redirect("accounts:login")
     if request.user.role and request.user.role.name == "Member":
-        return redirect("books:book_list")
+        return redirect("dashboard:student_dashboard")
     return redirect("dashboard:index")
 
 

@@ -31,3 +31,10 @@ class Loan(models.Model):
             return 0
         from django.utils import timezone
         return (timezone.localdate() - self.due_date).days
+
+    @property
+    def days_until_due(self):
+        from django.utils import timezone
+        if self.return_date:
+            return 0
+        return (self.due_date - timezone.localdate()).days

@@ -1,34 +1,48 @@
 {% extends "core/base.html" %}
 {% block content %}
-<h1>{{ title }}</h1>
+<h1 class="page-title mb-4">{{ title }}</h1>
 {% if not preview_data %}
-<form method="post" enctype="multipart/form-data">
+<div class="card" style="max-width:28rem;">
+  <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <label>CSV File <input type="file" name="csv_file" accept=".csv" required></label>
-    <button type="submit" name="preview">Preview</button>
-</form>
-<p><a href="{% url 'inventory:copy_import_sample' %}">Download sample CSV</a></p>
+    <div class="form-group">
+      <label for="csv_file" class="form-label">CSV File</label>
+      <input type="file" name="csv_file" id="csv_file" accept=".csv" required class="form-input">
+    </div>
+    <button type="submit" name="preview" class="btn btn--primary">Preview</button>
+  </form>
+</div>
+<p class="mt-4"><a href="{% url 'inventory:copy_import_sample' %}" class="btn btn--outline btn--small">Download Sample CSV</a></p>
 {% else %}
-<h2>Preview</h2>
-<table>
+<h2 class="section-title">Preview</h2>
+<div class="table-responsive mb-4">
+  <table class="data-table">
     <thead>
-        <tr>{% for col in columns %}<th>{{ col }}</th>{% endfor %}</tr>
+      <tr>{% for col in columns %}<th>{{ col }}</th>{% endfor %}</tr>
     </thead>
     <tbody>
-        {% for row in preview_data %}
-        <tr>
-            <td>{{ row.isbn }}</td>
-            <td>{{ row.shelf_location }}</td>
-            <td>{{ row.acquisition_date }}</td>
-            <td>{{ row.notes }}</td>
-        </tr>
-        {% endfor %}
+      {% for row in preview_data %}
+      <tr>
+        <td>{{ row.isbn }}</td>
+        <td>{{ row.shelf_location }}</td>
+        <td>{{ row.acquisition_date }}</td>
+        <td>{{ row.notes }}</td>
+      </tr>
+      {% endfor %}
     </tbody>
-</table>
-{% if errors %}<h3>Errors</h3><ul>{% for err in errors %}<li style="color: var(--pico-del-color);">{{ err }}</li>{% endfor %}</ul>{% endif %}
+  </table>
+</div>
+{% if errors %}
+<div class="card mb-4">
+  <h3 class="card-header__title">Errors</h3>
+  <ul class="mt-3">
+    {% for err in errors %}<li class="form-error" style="list-style-position:inside;">{{ err }}</li>{% endfor %}
+  </ul>
+</div>
+{% endif %}
 <form method="post">
-    {% csrf_token %}
-    <button type="submit" name="confirm">Confirm Import</button>
+  {% csrf_token %}
+  <button type="submit" name="confirm" class="btn btn--primary">Confirm Import</button>
 </form>
 {% endif %}
 {% endblock %}

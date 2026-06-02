@@ -34,3 +34,38 @@ def index(request):
         "recent_loans": recent_loans,
         "recent_returns": recent_returns,
     })
+
+
+def student_dashboard(request):
+    if not request.user.is_member:
+        return index(request)
+
+    active_loans = Loan.objects.filter(
+        user=request.user,
+        return_date__isnull=True,
+    ).select_related("book_copy__book").order_by("due_date")
+
+    pending_requests = CheckoutRequest.objects.filter(
+        user=request.user,
+        status=CheckoutRequest.Status.PENDING,
+    ).select_related("book").order_by("-requested_at")
+
+    approved_requests = CheckoutRequest.objects.filter(
+        user=request.user,
+        status=CheckoutRequest.Status.APPROVED,
+    ).select_related("book").order_by("-processed_at")
+
+    reading_history = Loan.objects.filter(
+        user=request.user,
+        return_date__isnull=False,
+    ).select_related("book_copy__book").order_by("-return_date")[:5]
+
+    recent_books = Book.objects.filter(is_archived=False).order_by("-created_at")[:8]
+
+    return render(request, "dashboard/student_dashboard.html", {
+        "active_loans": active_loans,
+        "pending_requests": pending_requests,
+        "reserved_books": approved_requests,
+        "reading_history": reading_history,
+        "recent_books": recent_books,
+    })

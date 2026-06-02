@@ -1,28 +1,47 @@
 {% extends "core/base.html" %}
 {% block content %}
-<h1>Loan History — {{ profile_user.get_full_name }}</h1>
-<table>
-    <thead>
-        <tr>
-            <th>Copy ID</th>
-            <th>Book</th>
-            <th>Checkout</th>
-            <th>Due</th>
-            <th>Returned</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for loan in loans %}
-        <tr>
-            <td><a href="{% url 'inventory:copy_detail' loan.book_copy.pk %}">{{ loan.book_copy.copy_id }}</a></td>
-            <td>{{ loan.book_copy.book.title }}</td>
-            <td>{{ loan.checkout_date|date:"Y-m-d" }}</td>
-            <td>{{ loan.due_date|date:"Y-m-d" }}</td>
-            <td>{{ loan.return_date|date:"Y-m-d"|default:"—" }}</td>
-        </tr>
-        {% empty %}
-        <tr><td colspan="5">No loan history.</td></tr>
-        {% endfor %}
-    </tbody>
-</table>
+<h1 class="page-title mb-4">{% if user.is_member %}My Loans{% else %}Loan History — {{ profile_user.get_full_name }}{% endif %}</h1>
+
+{% if loans %}
+<div class="flex flex-col gap-3">
+  {% for loan in loans %}
+  <div class="loan-card">
+    <div class="loan-card__cover">
+      {% if loan.book_copy.book.cover_image %}
+      <img src="{{ loan.book_copy.book.cover_image }}" alt="{{ loan.book_copy.book.title }}">
+      {% else %}
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="var(--color-text-tertiary)" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+      {% endif %}
+    </div>
+    <div class="loan-card__info">
+      <div class="loan-card__title">{{ loan.book_copy.book.title }}</div>
+      <div class="loan-card__author">{{ loan.book_copy.book.authors }}</div>
+      <div class="text-caption mt-2">
+        Checkout: {{ loan.checkout_date|date:"d M Y" }} ·
+        Due: {{ loan.due_date|date:"d M Y" }}
+        {% if loan.return_date %} · Returned: {{ loan.return_date|date:"d M Y" }}{% endif %}
+      </div>
+    </div>
+    {% if loan.return_date %}
+    <span class="badge badge--success">Returned</span>
+    {% elif loan.is_overdue %}
+    <span class="badge badge--danger">{{ loan.days_overdue }}d overdue</span>
+    {% else %}
+    <span class="badge badge--info">Active</span>
+    {% endif %}
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+  <div class="empty-state__icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+  </div>
+  <div class="empty-state__title">No loans yet</div>
+  <div class="empty-state__text">Your loan history will appear here once you borrow books.</div>
+  {% if user.is_member %}
+  <a href="{% url 'books:book_list' %}" class="btn btn--primary">Browse Books</a>
+  {% endif %}
+</div>
+{% endif %}
 {% endblock %}

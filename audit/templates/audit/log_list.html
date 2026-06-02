@@ -1,44 +1,47 @@
 {% extends "core/base.html" %}
 {% block content %}
-<h1>Audit Logs</h1>
-<form method="get" style="margin-bottom: 1rem;">
-    <select name="action">
-        <option value="">All Actions</option>
-        {% for a in actions %}
-        <option value="{{ a }}" {% if action_filter == a %}selected{% endif %}>{{ a }}</option>
-        {% endfor %}
-    </select>
-    <select name="resource_type">
-        <option value="">All Resource Types</option>
-        {% for rt in resource_types %}
-        <option value="{{ rt }}" {% if resource_filter == rt %}selected{% endif %}>{{ rt }}</option>
-        {% endfor %}
-    </select>
-    <button type="submit">Filter</button>
-    <a href="{% url 'audit:export' %}" role="button" class="secondary">Export CSV</a>
+<h1 class="page-title mb-4">Audit Logs</h1>
+
+<form method="get" class="mb-4 flex gap-3 items-center" style="flex-wrap:wrap;">
+  <select name="action" class="form-input form-select" style="max-width:16rem;margin-bottom:0;" onchange="this.form.submit()">
+    <option value="">All Actions</option>
+    {% for a in actions %}
+    <option value="{{ a }}" {% if action_filter == a %}selected{% endif %}>{{ a }}</option>
+    {% endfor %}
+  </select>
+  <select name="resource_type" class="form-input form-select" style="max-width:14rem;margin-bottom:0;" onchange="this.form.submit()">
+    <option value="">All Resource Types</option>
+    {% for rt in resource_types %}
+    <option value="{{ rt }}" {% if resource_filter == rt %}selected{% endif %}>{{ rt }}</option>
+    {% endfor %}
+  </select>
+  <a href="{% url 'audit:export' %}" class="btn btn--secondary btn--small">Export CSV</a>
 </form>
-<table>
+
+<div class="table-responsive">
+  <table class="data-table">
     <thead>
-        <tr>
-            <th>Timestamp</th>
-            <th>Actor</th>
-            <th>Action</th>
-            <th>Resource</th>
-            <th>Details</th>
-        </tr>
+      <tr>
+        <th>Timestamp</th>
+        <th>Actor</th>
+        <th>Action</th>
+        <th>Resource</th>
+        <th>Details</th>
+      </tr>
     </thead>
     <tbody>
-        {% for log in logs %}
-        <tr>
-            <td>{{ log.timestamp|date:"Y-m-d H:i:s" }}</td>
-            <td>{{ log.actor.lrn|default:"System" }}</td>
-            <td>{{ log.action }}</td>
-            <td>{{ log.resource_type }} #{{ log.resource_id }}</td>
-            <td><a href="{% url 'audit:log_detail' log.pk %}">View</a></td>
-        </tr>
-        {% empty %}
-        <tr><td colspan="5">No audit logs found.</td></tr>
-        {% endfor %}
+      {% for log in logs %}
+      <tr>
+        <td style="white-space:nowrap;">{{ log.timestamp|date:"Y-m-d H:i:s" }}</td>
+        <td>{{ log.actor.lrn|default:"System" }}</td>
+        <td>{{ log.action }}</td>
+        <td>{{ log.resource_type }} #{{ log.resource_id }}</td>
+        <td><a href="{% url 'audit:log_detail' log.pk %}" class="btn btn--outline btn--small">View</a></td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="5">No audit logs found.</td></tr>
+      {% endfor %}
     </tbody>
-</table>
+  </table>
+</div>
 {% endblock %}

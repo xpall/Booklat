@@ -1,15 +1,28 @@
 {% extends "core/base.html" %}
 {% block content %}
-<h1>Confirm Checkout</h1>
-<p>User: <strong>{{ user.get_full_name }} ({{ user.lrn }})</strong></p>
-<p>Copy: <strong>{{ copy.copy_id }}</strong> — {{ copy.book.title }}</p>
-<p>Due date defaults to 7 days from today.</p>
-<form method="post">
-    {% csrf_token %}
-    <label>Due Date
-        <input type="date" name="due_date" value="{{ default_due_date|date:'Y-m-d' }}">
-    </label>
-    <button type="submit">Confirm Checkout</button>
-    <a href="{% url 'loans:checkout' %}" class="secondary">Cancel</a>
+<h1 class="page-title mb-4">Confirm Checkout</h1>
+<div class="card mb-4">
+  <div class="book-meta">
+    <div class="book-meta__item">
+      <span class="book-meta__label">User</span>
+      <span class="book-meta__value">{{ user.get_full_name }} ({{ user.lrn }})</span>
+    </div>
+    <div class="book-meta__item">
+      <span class="book-meta__label">Copy</span>
+      <span class="book-meta__value">{{ copy.copy_id }} — {{ copy.book.title }}</span>
+    </div>
+  </div>
+</div>
+<form method="post" style="max-width:28rem;">
+  {% csrf_token %}
+  <div class="form-group">
+    <label for="due_date" class="form-label">Due Date</label>
+    <input type="date" name="due_date" id="due_date" class="form-input" value="{{ default_due_date|date:'Y-m-d' }}">
+  </div>
+  <p class="form-help mb-4">Defaults to 7 days from today.</p>
+  <div class="flex gap-2">
+    <button type="submit" class="btn btn--primary">Confirm Checkout</button>
+    <a href="{% url 'loans:checkout' %}" class="btn btn--secondary">Cancel</a>
+  </div>
 </form>
 {% endblock %}

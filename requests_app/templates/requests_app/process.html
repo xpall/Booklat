@@ -1,52 +1,78 @@
 {% extends "core/base.html" %}
 {% block content %}
-<h1>Process Request</h1>
-<p><strong>User:</strong> {{ request_obj.user.get_full_name }} ({{ request_obj.user.lrn }})</p>
-<p><strong>Book:</strong> {{ request_obj.book.title }}</p>
-<p><strong>Requested:</strong> {{ request_obj.requested_at|date:"Y-m-d H:i" }}</p>
+<h1 class="page-title mb-4">Process Request</h1>
+
+<div class="card mb-4">
+  <div class="book-meta">
+    <div class="book-meta__item">
+      <span class="book-meta__label">User</span>
+      <span class="book-meta__value">{{ request_obj.user.get_full_name }} ({{ request_obj.user.lrn }})</span>
+    </div>
+    <div class="book-meta__item">
+      <span class="book-meta__label">Book</span>
+      <span class="book-meta__value">{{ request_obj.book.title }}</span>
+    </div>
+    <div class="book-meta__item">
+      <span class="book-meta__label">Requested</span>
+      <span class="book-meta__value">{{ request_obj.requested_at|date:"Y-m-d H:i" }}</span>
+    </div>
+  </div>
+</div>
 
 {% if request_obj.status == 'pending' %}
-<form method="post">
-    {% csrf_token %}
-    <fieldset>
-        <legend>Action</legend>
-        <label><input type="radio" name="action" value="approve" checked> Approve</label>
-        <label><input type="radio" name="action" value="reject"> Reject</label>
-    </fieldset>
-
-    <div id="copy-select">
-        <label>Select Copy
-            <select name="copy">
-                <option value="">Choose a copy...</option>
-                {% for c in available_copies %}
-                <option value="{{ c.pk }}">{{ c.copy_id }} — {{ c.shelf_location|default:"No location" }}</option>
-                {% empty %}
-                <option value="">No available copies</option>
-                {% endfor %}
-            </select>
+<form method="post" style="max-width:28rem;">
+  {% csrf_token %}
+  <div class="card mb-4">
+    <div class="form-group">
+      <label class="form-label">Action</label>
+      <div class="flex gap-3">
+        <label style="display:flex;align-items:center;gap:var(--space-2);font-size:var(--font-size-small);cursor:pointer;">
+          <input type="radio" name="action" value="approve" checked> Approve
         </label>
+        <label style="display:flex;align-items:center;gap:var(--space-2);font-size:var(--font-size-small);cursor:pointer;">
+          <input type="radio" name="action" value="reject"> Reject
+        </label>
+      </div>
     </div>
 
-    <label>Due Date
-        <input type="date" name="due_date" value="{{ form.due_date.value|default:'' }}">
-    </label>
+    <div class="form-group" id="copy-select">
+      <label for="copy" class="form-label">Select Copy</label>
+      <select name="copy" id="copy" class="form-input form-select">
+        <option value="">Choose a copy...</option>
+        {% for c in available_copies %}
+        <option value="{{ c.pk }}">{{ c.copy_id }} — {{ c.shelf_location|default:"No location" }}</option>
+        {% empty %}
+        <option value="">No available copies</option>
+        {% endfor %}
+      </select>
+    </div>
 
-    <label>Notes
-        <textarea name="notes" rows="3"></textarea>
-    </label>
+    <div class="form-group">
+      <label for="due_date" class="form-label">Due Date</label>
+      <input type="date" name="due_date" id="due_date" class="form-input" value="{{ form.due_date.value|default:'' }}">
+    </div>
 
-    {% if form.errors %}
-    {% for field, error_list in form.errors.items %}
-    {% for error in error_list %}
-    <p style="color: var(--pico-del-color);">{{ error }}</p>
-    {% endfor %}
-    {% endfor %}
-    {% endif %}
+    <div class="form-group">
+      <label for="notes" class="form-label">Notes</label>
+      <textarea name="notes" id="notes" rows="3" class="form-input"></textarea>
+    </div>
+  </div>
 
-    <button type="submit">Submit</button>
-    <a href="{% url 'requests_app:request_list' %}" class="secondary">Cancel</a>
+  {% if form.errors %}
+  {% for field, error_list in form.errors.items %}
+  {% for error in error_list %}
+  <p class="form-error mb-4">{{ error }}</p>
+  {% endfor %}
+  {% endfor %}
+  {% endif %}
+
+  <div class="flex gap-2">
+    <button type="submit" class="btn btn--primary">Submit</button>
+    <a href="{% url 'requests_app:request_list' %}" class="btn btn--secondary">Cancel</a>
+  </div>
 </form>
 {% else %}
-<p>This request has already been processed ({{ request_obj.get_status_display }}).</p>
+<p class="text-secondary">This request has already been processed ({{ request_obj.get_status_display }}).</p>
+<a href="{% url 'requests_app:request_list' %}" class="btn btn--secondary">Back to Requests</a>
 {% endif %}
 {% endblock %}

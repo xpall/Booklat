@@ -1,53 +1,96 @@
 {% extends "core/base.html" %}
 {% block content %}
-<h1>{{ book.title }}</h1>
-{% if book.subtitle %}<h4>{{ book.subtitle }}</h4>{% endif %}
-<p><strong>ISBN:</strong> {{ book.isbn }}</p>
-<p><strong>Authors:</strong> {{ book.authors }}</p>
-<p><strong>Publisher:</strong> {{ book.publisher|default:"—" }}</p>
-<p><strong>Year:</strong> {{ book.publication_year|default:"—" }}</p>
-<p><strong>Categories:</strong> {{ book.categories|default:"—" }}</p>
-{% if book.cover_image %}<img src="{{ book.cover_image }}" alt="Cover" style="max-width:200px;">{% endif %}
-{% if book.description %}<p>{{ book.description }}</p>{% endif %}
+<div class="book-hero">
+  <div class="book-hero__cover">
+    {% if book.cover_image %}
+    <img src="{{ book.cover_image }}" alt="{{ book.title }}">
+    {% else %}
+    <div class="book-hero__cover-placeholder">
+      <svg viewBox="0 0 24 24" fill="none" stroke="var(--color-text-tertiary)" stroke-width="1.5"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+    </div>
+    {% endif %}
+  </div>
+  <div class="book-hero__info">
+    <h1 class="book-hero__title">{{ book.title }}</h1>
+    {% if book.subtitle %}
+    <p class="book-hero__subtitle">{{ book.subtitle }}</p>
+    {% endif %}
 
-{% if user.is_admin or user.is_staff_user %}
-<p>
-    <a href="{% url 'books:book_edit' book.pk %}" role="button">Edit</a>
-    <form method="post" action="{% url 'books:book_archive' book.pk %}" style="display:inline">
+    <div class="book-meta">
+      <div class="book-meta__item">
+        <span class="book-meta__label">Author</span>
+        <span class="book-meta__value">{{ book.authors }}</span>
+      </div>
+      <div class="book-meta__item">
+        <span class="book-meta__label">ISBN</span>
+        <span class="book-meta__value">{{ book.isbn }}</span>
+      </div>
+      <div class="book-meta__item">
+        <span class="book-meta__label">Publisher</span>
+        <span class="book-meta__value">{{ book.publisher|default:"—" }}</span>
+      </div>
+      <div class="book-meta__item">
+        <span class="book-meta__label">Year</span>
+        <span class="book-meta__value">{{ book.publication_year|default:"—" }}</span>
+      </div>
+      <div class="book-meta__item">
+        <span class="book-meta__label">Category</span>
+        <span class="book-meta__value">{{ book.categories|default:"Uncategorized" }}</span>
+      </div>
+    </div>
+
+    <div class="book-actions">
+      {% if user.is_member %}
+      <form method="post" action="{% url 'requests_app:request_checkout' book.pk %}">
         {% csrf_token %}
-        <button type="submit" class="contrast" onclick="return confirm('Archive this book?')">Archive</button>
-    </form>
-</p>
-{% endif %}
+        <button type="submit" class="btn btn--primary btn--large">Request Checkout</button>
+      </form>
+      {% endif %}
+      {% if user.is_admin or user.is_staff_user %}
+      <a href="{% url 'books:book_edit' book.pk %}" class="btn btn--secondary">Edit Book</a>
+      <form method="post" action="{% url 'books:book_archive' book.pk %}" style="display:inline">
+        {% csrf_token %}
+        <button type="submit" class="btn btn--danger-outline" onclick="return confirm('Archive this book?')">Archive</button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+</div>
 
-{% if user.is_member %}
-<form method="post" action="{% url 'requests_app:request_checkout' book.pk %}">
-    {% csrf_token %}
-    <button type="submit">Request Checkout</button>
-</form>
+{% if book.description %}
+<div class="card mb-4">
+  <div class="card__title">Description</div>
+  <p class="book-description" style="margin-bottom:0;margin-top:var(--space-2);">{{ book.description }}</p>
+</div>
 {% endif %}
 
 {% if user.is_admin or user.is_staff_user %}
-<h2>Copies</h2>
-<table>
-    <thead>
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-header__title">Copies ({{ copies|length }})</h3>
+  </div>
+  <div class="table-responsive">
+    <table class="data-table">
+      <thead>
         <tr>
-            <th>Copy ID</th>
-            <th>Status</th>
-            <th>Shelf Location</th>
+          <th>Copy ID</th>
+          <th>Status</th>
+          <th>Shelf Location</th>
         </tr>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody>
         {% for copy in copies %}
         <tr>
-            <td><a href="{% url 'inventory:copy_detail' copy.pk %}">{{ copy.copy_id }}</a></td>
-            <td>{{ copy.get_status_display }}</td>
-            <td>{{ copy.shelf_location|default:"—" }}</td>
+          <td><a href="{% url 'inventory:copy_detail' copy.pk %}">{{ copy.copy_id }}</a></td>
+          <td>{{ copy.get_status_display }}</td>
+          <td>{{ copy.shelf_location|default:"—" }}</td>
         </tr>
         {% empty %}
-        <tr><td colspan="3">No copies.</td></tr>
+        <tr><td colspan="3">No copies registered.</td></tr>
         {% endfor %}
-    </tbody>
-</table>
+      </tbody>
+    </table>
+  </div>
+</div>
 {% endif %}
 {% endblock %}
