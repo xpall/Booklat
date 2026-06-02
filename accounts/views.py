@@ -181,18 +181,22 @@ def user_import_view(request):
     preview_data = None
     errors = []
     if request.method == "POST":
-        form = CSVImportForm(request.POST, request.FILES)
-        if form.is_valid():
-            records = parse_csv_upload(request.FILES["csv_file"])
-            if "preview" in request.POST:
-                preview_data = _preview_users(records)
-            elif "confirm" in request.POST:
+        if "confirm" in request.POST:
+            records = request.session.pop("import_records", None)
+            if records:
                 success, errors = _import_users(records, request.user)
                 if success:
                     messages.success(request, f"Imported {success} users.")
                     return redirect("accounts:user_list")
-                preview_data = records
                 preview_data = _preview_users(records)
+            form = CSVImportForm()
+        else:
+            form = CSVImportForm(request.POST, request.FILES)
+            if form.is_valid():
+                records = parse_csv_upload(request.FILES["csv_file"])
+                if "preview" in request.POST:
+                    preview_data = _preview_users(records)
+                    request.session["import_records"] = records
     else:
         form = CSVImportForm()
     return render(request, "accounts/import.html", {
