@@ -21,6 +21,7 @@ STAFF_PERMISSIONS = [
 
 MEMBER_PERMISSIONS = [
     "books.view",
+    "loans.view",
     "requests.view",
 ]
 
