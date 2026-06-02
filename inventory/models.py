@@ -13,7 +13,7 @@ class BookCopy(models.Model):
         UNDER_REPAIR = "under_repair", "Under Repair"
         ARCHIVED = "archived", "Archived"
 
-    copy_id = models.CharField(max_length=20, unique=True)
+    copy_id = models.CharField(max_length=30, unique=True)
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name="copies")
     acquisition_date = models.DateField(null=True, blank=True)
     shelf_location = models.CharField(max_length=200, blank=True)

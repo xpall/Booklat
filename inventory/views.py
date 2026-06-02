@@ -10,13 +10,13 @@ from core.decorators import permission_required, any_permission_required
 from core.utils import log_action, parse_csv_upload
 
 
-def _generate_copy_id():
-    last = BookCopy.objects.order_by("-id").first()
-    if last and last.copy_id.startswith("CP-"):
-        num = int(last.copy_id[3:]) + 1
+def _generate_copy_id(isbn):
+    last = BookCopy.objects.filter(copy_id__startswith=f"{isbn}#").order_by("-id").first()
+    if last:
+        num = int(last.copy_id.rsplit("#", 1)[-1]) + 1
     else:
         num = 1
-    return f"CP-{num:04d}"
+    return f"{isbn}#{num:02d}"
 
 
 @any_permission_required("copies.view")
@@ -50,7 +50,7 @@ def copy_create_view(request):
         form = CopyForm(request.POST)
         if form.is_valid():
             copy = form.save(commit=False)
-            copy.copy_id = _generate_copy_id()
+            copy.copy_id = _generate_copy_id(copy.book.isbn)
             copy.save()
             CopyHistory.objects.create(book_copy=copy, event="Created", actor=request.user)
             log_action(request.user, "COPY_CREATED", "BookCopy", copy.copy_id)
@@ -157,7 +157,7 @@ def _import_copies(records, actor):
             continue
         try:
             copy = BookCopy(
-                copy_id=_generate_copy_id(),
+                copy_id=_generate_copy_id(isbn),
                 book=book,
                 shelf_location=r.get("shelf_location", "").strip(),
                 acquisition_date=r.get("acquisition_date") or None,
