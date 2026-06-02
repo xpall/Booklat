@@ -5,6 +5,9 @@ from django.contrib import messages
 from django.views.decorators.http import require_http_methods
 from .models import Book
 from .forms import BookForm, BookImportForm
+from inventory.forms import CopyForm
+from inventory.models import BookCopy, CopyHistory
+from inventory.views import _generate_copy_id
 from core.decorators import permission_required, any_permission_required
 from core.utils import log_action, parse_csv_upload
 
@@ -66,6 +69,30 @@ def book_archive_view(request, book_id):
     log_action(request.user, "BOOK_ARCHIVED", "Book", book.isbn)
     messages.success(request, f"Book '{book.title}' archived.")
     return redirect("books:book_list")
+
+
+@require_http_methods(["GET", "POST"])
+@permission_required("copies.create")
+def book_add_copy_view(request, book_id):
+    book = get_object_or_404(Book, pk=book_id)
+    if request.method == "POST":
+        form = CopyForm(request.POST)
+        if form.is_valid():
+            copy = form.save(commit=False)
+            copy.copy_id = _generate_copy_id(book.isbn)
+            copy.book = book
+            copy.save()
+            CopyHistory.objects.create(book_copy=copy, event="Created", actor=request.user)
+            log_action(request.user, "COPY_CREATED", "BookCopy", copy.copy_id)
+            messages.success(request, f"Copy {copy.copy_id} created for '{book.title}'.")
+            return redirect("books:book_detail", book_id=book.pk)
+    else:
+        form = CopyForm(initial={"book": book})
+    return render(request, "books/book_copy_form.html", {
+        "form": form,
+        "book": book,
+        "title": f"Add Copy for {book.title}",
+    })
 
 
 @require_http_methods(["GET", "POST"])

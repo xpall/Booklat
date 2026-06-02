@@ -48,6 +48,7 @@
       {% endif %}
       {% if user.is_admin or user.is_staff_user %}
       <a href="{% url 'books:book_edit' book.pk %}" class="btn btn--secondary">Edit Book</a>
+      <a href="{% url 'books:book_add_copy' book.pk %}" class="btn btn--primary">Add Copy</a>
       <form method="post" action="{% url 'books:book_archive' book.pk %}" style="display:inline">
         {% csrf_token %}
         <button type="submit" class="btn btn--danger-outline" onclick="return confirm('Archive this book?')">Archive</button>

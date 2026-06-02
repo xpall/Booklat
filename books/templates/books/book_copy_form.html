@@ -1,0 +1,15 @@
+{% extends "core/base.html" %}
+{% block content %}
+<h1 class="page-title mb-4">{{ title }}</h1>
+<p class="mb-4">Book: <strong>{{ book.title }}</strong> ({{ book.isbn }})</p>
+<form method="post" style="max-width:28rem;">
+  {% csrf_token %}
+  {{ form.book.as_hidden }}
+  <div class="form-group"><label for="{{ form.acquisition_date.id_for_label }}" class="form-label">Acquisition Date</label>{{ form.acquisition_date }}</div>
+  <div class="form-group"><label for="{{ form.shelf_location.id_for_label }}" class="form-label">Shelf Location</label>{{ form.shelf_location }}</div>
+  <div class="form-group"><label for="{{ form.notes.id_for_label }}" class="form-label">Notes</label>{{ form.notes }}</div>
+  <div class="form-group"><label for="{{ form.status.id_for_label }}" class="form-label">Status</label>{{ form.status }}</div>
+  <button type="submit" class="btn btn--primary">Add Copy</button>
+  <a href="{% url 'books:book_detail' book.pk %}" class="btn btn--secondary">Cancel</a>
+</form>
+{% endblock %}
