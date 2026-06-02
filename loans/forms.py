@@ -8,6 +8,7 @@ class CheckoutUserForm(forms.Form):
         queryset=User.objects.filter(status=User.Status.ACTIVE),
         label="User",
         help_text="Search by LRN or name",
+        widget=forms.HiddenInput(),
     )
 
 

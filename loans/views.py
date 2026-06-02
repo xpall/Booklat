@@ -36,7 +36,7 @@ def checkout_view(request):
         if was_limited:
             messages.error(request, "Too many requests. Please wait a minute and try again.")
             return redirect("loans:loan_list")
-        if "user_id" in request.POST:
+        if "user" in request.POST:
             form = CheckoutUserForm(request.POST)
             if form.is_valid():
                 user = form.cleaned_data["user"]

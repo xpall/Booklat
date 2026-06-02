@@ -1,6 +1,6 @@
 import csv
 
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth import login as auth_login, logout as auth_logout, update_session_auth_hash
@@ -282,3 +282,14 @@ def user_sample_csv(request):
     writer.writerow(["first_name", "last_name", "lrn", "password"])
     writer.writerow(["Juan", "Dela Cruz", "LRN123456", "SecurePass1!"])
     return response
+
+
+@any_permission_required("accounts.view", "loans.create")
+def user_search_json(request):
+    q = request.GET.get("q", "").strip()
+    users = User.objects.filter(status=User.Status.ACTIVE)
+    if q:
+        users = users.filter(lrn__icontains=q) | users.filter(first_name__icontains=q) | users.filter(last_name__icontains=q)
+    users = users.distinct()[:20]
+    results = [{"id": u.pk, "lrn": u.lrn, "name": u.get_full_name()} for u in users]
+    return JsonResponse({"results": results})

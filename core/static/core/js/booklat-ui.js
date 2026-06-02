@@ -301,6 +301,111 @@
     });
   }
 
+  /* ------------------------------------------------------
+      User Search Widget
+      ------------------------------------------------------ */
+
+  function initUserSearch() {
+    document.querySelectorAll('.user-search').forEach(function (container) {
+      var input = container.querySelector('.user-search__input');
+      var hidden = container.querySelector('input[type="hidden"]');
+      var dropdown = container.querySelector('.user-search__dropdown');
+      var searchUrl = container.dataset.searchUrl;
+      var debounceTimer = null;
+      var activeIndex = -1;
+      var results = [];
+
+      function clearDropdown() {
+        dropdown.innerHTML = '';
+        dropdown.classList.remove('user-search__dropdown--open');
+        results = [];
+        activeIndex = -1;
+      }
+
+      function renderResults() {
+        dropdown.innerHTML = '';
+        if (results.length === 0) {
+          dropdown.innerHTML = '<div class="user-search__empty">No users found</div>';
+        } else {
+          results.forEach(function (user, idx) {
+            var el = document.createElement('div');
+            el.className = 'user-search__option' + (idx === activeIndex ? ' user-search__option--active' : '');
+            el.innerHTML =
+              '<span class="user-search__option-title">' + escapeHtml(user.name) + '</span>' +
+              '<span class="user-search__option-meta">LRN: ' + escapeHtml(user.lrn) + '</span>';
+            el.addEventListener('mousedown', function (e) {
+              e.preventDefault();
+              selectUser(user);
+            });
+            dropdown.appendChild(el);
+          });
+        }
+        dropdown.classList.add('user-search__dropdown--open');
+      }
+
+      function selectUser(user) {
+        hidden.value = user.id;
+        input.value = user.name + ' (' + user.lrn + ')';
+        clearDropdown();
+      }
+
+      input.addEventListener('input', function () {
+        clearTimeout(debounceTimer);
+        var val = input.value.trim();
+        if (!val) {
+          clearDropdown();
+          return;
+        }
+        dropdown.innerHTML = '<div class="user-search__spinner">Searching...</div>';
+        dropdown.classList.add('user-search__dropdown--open');
+        debounceTimer = setTimeout(function () {
+          fetch(searchUrl + '?q=' + encodeURIComponent(val))
+            .then(function (resp) { return resp.json(); })
+            .then(function (data) {
+              if (data.results) {
+                results = data.results;
+                renderResults();
+              }
+            })
+            .catch(function () {
+              dropdown.innerHTML = '<div class="user-search__empty">Search failed</div>';
+            });
+        }, 250);
+      });
+
+      input.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          activeIndex = Math.min(activeIndex + 1, results.length - 1);
+          renderResults();
+          var activeEl = dropdown.querySelector('.user-search__option--active');
+          if (activeEl) activeEl.scrollIntoView({ block: 'nearest' });
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          activeIndex = Math.max(activeIndex - 1, 0);
+          renderResults();
+          var activeEl2 = dropdown.querySelector('.user-search__option--active');
+          if (activeEl2) activeEl2.scrollIntoView({ block: 'nearest' });
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          if (activeIndex >= 0 && results[activeIndex]) {
+            selectUser(results[activeIndex]);
+          }
+        } else if (e.key === 'Escape') {
+          clearDropdown();
+        }
+      });
+
+      input.addEventListener('blur', function () {
+        setTimeout(function () {
+          if (!container.contains(document.activeElement)) {
+            clearDropdown();
+          }
+        }, 150);
+      });
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     initThemeToggle();
     initSidebar();
@@ -308,6 +413,7 @@
     initSkeletonSwap();
     initActiveNav();
     initBookSearch();
+    initUserSearch();
   });
 
   /* Expose showToast globally for inline use */

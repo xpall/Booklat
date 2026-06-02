@@ -17,4 +17,5 @@ urlpatterns = [
     path("<int:user_id>/password-reset/", views.password_reset_view, name="password_reset"),
     path("import/", views.user_import_view, name="user_import"),
     path("import/sample/", views.user_sample_csv, name="user_import_sample"),
+    path("search/", views.user_search_json, name="user_search_json"),
 ]
