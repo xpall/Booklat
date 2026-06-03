@@ -222,11 +222,13 @@ button, input, select, textarea {
   background: rgba(0, 0, 0, 0.4);
   z-index: var(--z-sidebar-backdrop);
   opacity: 0;
+  pointer-events: none;
   transition: opacity var(--transition-base);
 }
 
 .app-shell__sidebar-backdrop--visible {
   opacity: 1;
+  pointer-events: auto;
 }
 
 .app-shell__main {
