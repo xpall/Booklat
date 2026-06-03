@@ -14,6 +14,9 @@
   <a href="{% url 'books:book_create' %}" class="btn btn--primary btn--small">Create Book</a>
   <a href="{% url 'books:book_import' %}" class="btn btn--secondary btn--small">Import CSV</a>
   <a href="{% url 'books:book_import_sample' %}" class="btn btn--outline btn--small">Download Sample CSV</a>
+  <a href="?q={{ query }}&show_archived={% if show_archived %}0{% else %}1{% endif %}" class="btn btn--outline btn--small">
+    {% if show_archived %}Hide Archived{% else %}Show Archived{% endif %}
+  </a>
 </div>
 {% endif %}
 

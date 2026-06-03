@@ -86,8 +86,11 @@ def password_change_view(request):
 
 @permission_required("users.view")
 def user_list_view(request):
-    users = User.objects.exclude(status=User.Status.ARCHIVED).select_related("role")
-    return render(request, "accounts/user_list.html", {"users": users})
+    users = User.objects.select_related("role")
+    show_archived = request.GET.get("show_archived") == "1"
+    if not show_archived:
+        users = users.exclude(status=User.Status.ARCHIVED)
+    return render(request, "accounts/user_list.html", {"users": users, "show_archived": show_archived})
 
 
 @permission_required("users.view")
@@ -165,6 +168,17 @@ def user_activate_view(request, lrn):
     user.save()
     log_action(request.user, "USER_ACTIVATED", "User", user.lrn)
     messages.success(request, f"User {user.lrn} activated.")
+    return redirect("accounts:user_detail", lrn=user.lrn)
+
+
+@require_http_methods(["POST"])
+@permission_required("users.archive")
+def user_unarchive_view(request, lrn):
+    user = get_object_or_404(User, lrn=lrn)
+    user.status = User.Status.ACTIVE
+    user.save()
+    log_action(request.user, "USER_UNARCHIVED", "User", user.lrn)
+    messages.success(request, f"User {user.lrn} unarchived.")
     return redirect("accounts:user_detail", lrn=user.lrn)
 
 

@@ -41,11 +41,18 @@
     {% csrf_token %}
     <button type="submit" class="btn btn--outline btn--small">Activate</button>
   </form>
+  {% elif profile_user.status == 'archived' %}
+  <form method="post" action="{% url 'accounts:user_unarchive' profile_user.lrn %}" style="display:inline">
+    {% csrf_token %}
+    <button type="submit" class="btn btn--outline btn--small">Unarchive</button>
+  </form>
   {% endif %}
+  {% if profile_user.status != 'archived' %}
   <form method="post" action="{% url 'accounts:user_archive' profile_user.lrn %}" style="display:inline">
     {% csrf_token %}
     <button type="submit" class="btn btn--danger-outline btn--small" onclick="return confirm('Archive this user?')">Archive</button>
   </form>
+  {% endif %}
 </div>
 {% endif %}
 

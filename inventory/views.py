@@ -23,7 +23,10 @@ def _generate_copy_id(isbn):
 def copy_list_view(request):
     query = request.GET.get("q", "")
     status_filter = request.GET.get("status", "")
-    copies = BookCopy.objects.filter(is_archived=False).select_related("book")
+    show_archived = request.GET.get("show_archived") == "1"
+    copies = BookCopy.objects.select_related("book")
+    if not show_archived:
+        copies = copies.filter(is_archived=False)
     if query:
         copies = copies.filter(book__title__icontains=query) | copies.filter(copy_id__icontains=query)
     if status_filter:
@@ -32,6 +35,7 @@ def copy_list_view(request):
         "copies": copies,
         "query": query,
         "status_filter": status_filter,
+        "show_archived": show_archived,
         "status_choices": BookCopy.Status.choices,
     })
 
@@ -109,6 +113,19 @@ def copy_archive_view(request, copy_id):
     log_action(request.user, "COPY_ARCHIVED", "BookCopy", copy.copy_id)
     messages.success(request, f"Copy {copy.copy_id} archived.")
     return redirect("inventory:copy_list")
+
+
+@require_http_methods(["POST"])
+@permission_required("copies.update")
+def copy_unarchive_view(request, copy_id):
+    copy = get_object_or_404(BookCopy, copy_id=copy_id)
+    copy.is_archived = False
+    copy.status = BookCopy.Status.AVAILABLE
+    copy.save()
+    CopyHistory.objects.create(book_copy=copy, event="Unarchived", actor=request.user)
+    log_action(request.user, "COPY_UNARCHIVED", "BookCopy", copy.copy_id)
+    messages.success(request, f"Copy {copy.copy_id} unarchived.")
+    return redirect("inventory:copy_detail", copy_id=copy.copy_id)
 
 
 @require_http_methods(["GET", "POST"])

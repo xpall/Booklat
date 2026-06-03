@@ -18,4 +18,5 @@ urlpatterns = [
     path("<str:lrn>/suspend/", views.user_suspend_view, name="user_suspend"),
     path("<str:lrn>/activate/", views.user_activate_view, name="user_activate"),
     path("<str:lrn>/password-reset/", views.password_reset_view, name="password_reset"),
+    path("<str:lrn>/unarchive/", views.user_unarchive_view, name="user_unarchive"),
 ]

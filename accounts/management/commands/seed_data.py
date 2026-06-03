@@ -13,6 +13,7 @@ ADMIN_PERMISSIONS = [
 ]
 
 STAFF_PERMISSIONS = [
+    "users.view", "users.update", "users.archive", "users.password_reset",
     "books.view", "books.create", "books.update", "books.archive",
     "copies.view", "copies.create", "copies.update",
     "loans.create", "loans.return",

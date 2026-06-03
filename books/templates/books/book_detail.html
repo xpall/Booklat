@@ -49,10 +49,17 @@
       {% if user.is_admin or user.is_staff_user %}
       <a href="{% url 'books:book_edit' book.isbn %}" class="btn btn--secondary">Edit Book</a>
       <a href="{% url 'books:book_add_copy' book.isbn %}" class="btn btn--primary">Add Copy</a>
+      {% if book.is_archived %}
+      <form method="post" action="{% url 'books:book_unarchive' book.isbn %}" style="display:inline">
+        {% csrf_token %}
+        <button type="submit" class="btn btn--outline">Unarchive</button>
+      </form>
+      {% else %}
       <form method="post" action="{% url 'books:book_archive' book.isbn %}" style="display:inline">
         {% csrf_token %}
         <button type="submit" class="btn btn--danger-outline" onclick="return confirm('Archive this book?')">Archive</button>
       </form>
+      {% endif %}
       {% endif %}
     </div>
   </div>

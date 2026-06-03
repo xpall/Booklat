@@ -15,17 +15,20 @@ from core.utils import log_action, parse_csv_upload
 @any_permission_required("books.view")
 def book_list_view(request):
     query = request.GET.get("q", "")
-    books = Book.objects.filter(is_archived=False)
+    show_archived = request.GET.get("show_archived") == "1"
+    books = Book.objects.all()
+    if not show_archived:
+        books = books.filter(is_archived=False)
     if query:
         books = books.filter(title__icontains=query) | books.filter(authors__icontains=query) | books.filter(isbn__icontains=query)
     books = books.distinct()
-    return render(request, "books/book_list.html", {"books": books, "query": query})
+    return render(request, "books/book_list.html", {"books": books, "query": query, "show_archived": show_archived})
 
 
 @any_permission_required("books.view")
 def book_detail_view(request, isbn):
     book = get_object_or_404(Book, isbn=isbn)
-    copies = book.copies.filter(is_archived=False)
+    copies = book.copies.all() if book.is_archived else book.copies.filter(is_archived=False)
     return render(request, "books/book_detail.html", {"book": book, "copies": copies})
 
 
@@ -69,6 +72,17 @@ def book_archive_view(request, isbn):
     log_action(request.user, "BOOK_ARCHIVED", "Book", book.isbn)
     messages.success(request, f"Book '{book.title}' archived.")
     return redirect("books:book_list")
+
+
+@require_http_methods(["POST"])
+@permission_required("books.archive")
+def book_unarchive_view(request, isbn):
+    book = get_object_or_404(Book, isbn=isbn)
+    book.is_archived = False
+    book.save()
+    log_action(request.user, "BOOK_UNARCHIVED", "Book", book.isbn)
+    messages.success(request, f"Book '{book.title}' unarchived.")
+    return redirect("books:book_detail", isbn=book.isbn)
 
 
 @require_http_methods(["GET", "POST"])

@@ -12,4 +12,5 @@ urlpatterns = [
     path("<str:copy_id>/edit/", views.copy_update_view, name="copy_edit"),
     path("<str:copy_id>/status/", views.copy_status_change_view, name="copy_status_change"),
     path("<str:copy_id>/archive/", views.copy_archive_view, name="copy_archive"),
+    path("<str:copy_id>/unarchive/", views.copy_unarchive_view, name="copy_unarchive"),
 ]
