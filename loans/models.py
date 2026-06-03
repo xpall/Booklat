@@ -4,6 +4,7 @@ from inventory.models import BookCopy
 
 
 class Loan(models.Model):
+    loan_id = models.CharField(max_length=200, unique=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="loans")
     book_copy = models.ForeignKey(BookCopy, on_delete=models.CASCADE, related_name="loans")
     checkout_date = models.DateField()
@@ -15,8 +16,13 @@ class Loan(models.Model):
     class Meta:
         ordering = ["-checkout_date"]
 
+    def save(self, *args, **kwargs):
+        if not self.loan_id:
+            self.loan_id = f"{self.checkout_date:%Y%m%d}-{self.user.lrn}-{self.book_copy.copy_id}"
+        super().save(*args, **kwargs)
+
     def __str__(self):
-        return f"{self.user.lrn} — {self.book_copy.copy_id}"
+        return self.loan_id
 
     @property
     def is_overdue(self):

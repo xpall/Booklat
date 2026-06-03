@@ -18,8 +18,8 @@
     <tbody>
       {% for loan in loans %}
       <tr>
-        <td><a href="{% url 'accounts:user_detail' loan.user.pk %}">{{ loan.user.get_full_name }}</a></td>
-        <td><a href="{% url 'inventory:copy_detail' loan.book_copy.pk %}">{{ loan.book_copy.copy_id }}</a></td>
+        <td><a href="{% url 'accounts:user_detail' loan.user.lrn %}">{{ loan.user.get_full_name }}</a></td>
+        <td><a href="{% url 'inventory:copy_detail' loan.book_copy.copy_id %}">{{ loan.book_copy.copy_id }}</a></td>
         <td>{{ loan.book_copy.book.title }}</td>
         <td>{{ loan.due_date|date:"Y-m-d" }}</td>
         <td><span class="badge badge--danger">{{ loan.days_overdue }}</span></td>

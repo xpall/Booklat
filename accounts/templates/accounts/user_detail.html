@@ -29,20 +29,20 @@
 
 {% if user.is_admin or user.is_staff_user %}
 <div class="flex gap-2 mb-4" style="flex-wrap:wrap;">
-  <a href="{% url 'accounts:user_edit' profile_user.pk %}" class="btn btn--secondary btn--small">Edit</a>
-  <a href="{% url 'accounts:password_reset' profile_user.pk %}" class="btn btn--outline btn--small">Reset Password</a>
+  <a href="{% url 'accounts:user_edit' profile_user.lrn %}" class="btn btn--secondary btn--small">Edit</a>
+  <a href="{% url 'accounts:password_reset' profile_user.lrn %}" class="btn btn--outline btn--small">Reset Password</a>
   {% if profile_user.status == 'active' %}
-  <form method="post" action="{% url 'accounts:user_suspend' profile_user.pk %}" style="display:inline">
+  <form method="post" action="{% url 'accounts:user_suspend' profile_user.lrn %}" style="display:inline">
     {% csrf_token %}
     <button type="submit" class="btn btn--warning-outline btn--small">Suspend</button>
   </form>
   {% elif profile_user.status == 'suspended' %}
-  <form method="post" action="{% url 'accounts:user_activate' profile_user.pk %}" style="display:inline">
+  <form method="post" action="{% url 'accounts:user_activate' profile_user.lrn %}" style="display:inline">
     {% csrf_token %}
     <button type="submit" class="btn btn--outline btn--small">Activate</button>
   </form>
   {% endif %}
-  <form method="post" action="{% url 'accounts:user_archive' profile_user.pk %}" style="display:inline">
+  <form method="post" action="{% url 'accounts:user_archive' profile_user.lrn %}" style="display:inline">
     {% csrf_token %}
     <button type="submit" class="btn btn--danger-outline btn--small" onclick="return confirm('Archive this user?')">Archive</button>
   </form>
@@ -51,6 +51,6 @@
 
 <div class="section-header">
   <h2 class="section-title">Loan History</h2>
-  <a href="{% url 'loans:user_loans' profile_user.pk %}" class="section-header__action">View All →</a>
+  <a href="{% url 'loans:user_loans' profile_user.lrn %}" class="section-header__action">View All →</a>
 </div>
 {% endblock %}

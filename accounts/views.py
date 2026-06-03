@@ -91,8 +91,8 @@ def user_list_view(request):
 
 
 @permission_required("users.view")
-def user_detail_view(request, user_id):
-    user = get_object_or_404(User, pk=user_id)
+def user_detail_view(request, lrn):
+    user = get_object_or_404(User, lrn=lrn)
     return render(request, "accounts/user_detail.html", {"profile_user": user})
 
 
@@ -113,7 +113,7 @@ def user_create_view(request):
             user.save()
             log_action(request.user, "USER_CREATED", "User", user.lrn)
             messages.success(request, f"User {user.lrn} created.")
-            return redirect("accounts:user_detail", user_id=user.pk)
+            return redirect("accounts:user_detail", lrn=user.lrn)
     else:
         form = UserForm()
     return render(request, "accounts/user_form.html", {"form": form, "title": "Create User"})
@@ -121,15 +121,15 @@ def user_create_view(request):
 
 @require_http_methods(["GET", "POST"])
 @permission_required("users.update")
-def user_update_view(request, user_id):
-    user = get_object_or_404(User, pk=user_id)
+def user_update_view(request, lrn):
+    user = get_object_or_404(User, lrn=lrn)
     if request.method == "POST":
         form = UserUpdateForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
             log_action(request.user, "USER_UPDATED", "User", user.lrn)
             messages.success(request, f"User {user.lrn} updated.")
-            return redirect("accounts:user_detail", user_id=user.pk)
+            return redirect("accounts:user_detail", lrn=user.lrn)
     else:
         form = UserUpdateForm(instance=user)
     return render(request, "accounts/user_form.html", {"form": form, "title": f"Edit {user.get_full_name()}"})
@@ -137,8 +137,8 @@ def user_update_view(request, user_id):
 
 @require_http_methods(["POST"])
 @permission_required("users.archive")
-def user_archive_view(request, user_id):
-    user = get_object_or_404(User, pk=user_id)
+def user_archive_view(request, lrn):
+    user = get_object_or_404(User, lrn=lrn)
     user.status = User.Status.ARCHIVED
     user.save()
     log_action(request.user, "USER_ARCHIVED", "User", user.lrn)
@@ -148,36 +148,36 @@ def user_archive_view(request, user_id):
 
 @require_http_methods(["POST"])
 @permission_required("users.update")
-def user_suspend_view(request, user_id):
-    user = get_object_or_404(User, pk=user_id)
+def user_suspend_view(request, lrn):
+    user = get_object_or_404(User, lrn=lrn)
     user.status = User.Status.SUSPENDED
     user.save()
     log_action(request.user, "USER_SUSPENDED", "User", user.lrn)
     messages.success(request, f"User {user.lrn} suspended.")
-    return redirect("accounts:user_detail", user_id=user.pk)
+    return redirect("accounts:user_detail", lrn=user.lrn)
 
 
 @require_http_methods(["POST"])
 @permission_required("users.update")
-def user_activate_view(request, user_id):
-    user = get_object_or_404(User, pk=user_id)
+def user_activate_view(request, lrn):
+    user = get_object_or_404(User, lrn=lrn)
     user.status = User.Status.ACTIVE
     user.save()
     log_action(request.user, "USER_ACTIVATED", "User", user.lrn)
     messages.success(request, f"User {user.lrn} activated.")
-    return redirect("accounts:user_detail", user_id=user.pk)
+    return redirect("accounts:user_detail", lrn=user.lrn)
 
 
 @require_http_methods(["GET", "POST"])
 @permission_required("users.password_reset")
 @ratelimit(key="user_or_ip", rate="5/m", method="POST")
-def password_reset_view(request, user_id):
+def password_reset_view(request, lrn):
     was_limited = getattr(request, "limited", False)
-    user = get_object_or_404(User, pk=user_id)
+    user = get_object_or_404(User, lrn=lrn)
     if request.method == "POST":
         if was_limited:
             messages.error(request, "Too many requests. Please wait a minute and try again.")
-            return redirect("accounts:user_detail", user_id=user.pk)
+            return redirect("accounts:user_detail", lrn=user.lrn)
         form = PasswordResetForm(request.POST)
         if form.is_valid():
             user.set_password(form.cleaned_data["new_password"])
@@ -185,7 +185,7 @@ def password_reset_view(request, user_id):
             user.save()
             log_action(request.user, "PASSWORD_RESET", "User", user.lrn)
             messages.success(request, f"Password reset for {user.lrn}.")
-            return redirect("accounts:user_detail", user_id=user.pk)
+            return redirect("accounts:user_detail", lrn=user.lrn)
     else:
         form = PasswordResetForm()
     return render(request, "accounts/password_reset.html", {"form": form, "profile_user": user})

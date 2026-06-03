@@ -41,15 +41,15 @@
 
     <div class="book-actions">
       {% if user.is_member %}
-      <form method="post" action="{% url 'requests_app:request_checkout' book.pk %}">
+      <form method="post" action="{% url 'requests_app:request_checkout' book.isbn %}">
         {% csrf_token %}
         <button type="submit" class="btn btn--primary btn--large">Request Checkout</button>
       </form>
       {% endif %}
       {% if user.is_admin or user.is_staff_user %}
-      <a href="{% url 'books:book_edit' book.pk %}" class="btn btn--secondary">Edit Book</a>
-      <a href="{% url 'books:book_add_copy' book.pk %}" class="btn btn--primary">Add Copy</a>
-      <form method="post" action="{% url 'books:book_archive' book.pk %}" style="display:inline">
+      <a href="{% url 'books:book_edit' book.isbn %}" class="btn btn--secondary">Edit Book</a>
+      <a href="{% url 'books:book_add_copy' book.isbn %}" class="btn btn--primary">Add Copy</a>
+      <form method="post" action="{% url 'books:book_archive' book.isbn %}" style="display:inline">
         {% csrf_token %}
         <button type="submit" class="btn btn--danger-outline" onclick="return confirm('Archive this book?')">Archive</button>
       </form>
@@ -82,7 +82,7 @@
       <tbody>
         {% for copy in copies %}
         <tr>
-          <td><a href="{% url 'inventory:copy_detail' copy.pk %}">{{ copy.copy_id }}</a></td>
+          <td><a href="{% url 'inventory:copy_detail' copy.copy_id %}">{{ copy.copy_id }}</a></td>
           <td>{{ copy.get_status_display }}</td>
           <td>{{ copy.shelf_location|default:"—" }}</td>
         </tr>

@@ -23,8 +23,8 @@ def book_list_view(request):
 
 
 @any_permission_required("books.view")
-def book_detail_view(request, book_id):
-    book = get_object_or_404(Book, pk=book_id)
+def book_detail_view(request, isbn):
+    book = get_object_or_404(Book, isbn=isbn)
     copies = book.copies.filter(is_archived=False)
     return render(request, "books/book_detail.html", {"book": book, "copies": copies})
 
@@ -38,7 +38,7 @@ def book_create_view(request):
             book = form.save()
             log_action(request.user, "BOOK_CREATED", "Book", book.isbn)
             messages.success(request, f"Book '{book.title}' created.")
-            return redirect("books:book_detail", book_id=book.pk)
+            return redirect("books:book_detail", isbn=book.isbn)
     else:
         form = BookForm()
     return render(request, "books/book_form.html", {"form": form, "title": "Create Book"})
@@ -46,15 +46,15 @@ def book_create_view(request):
 
 @require_http_methods(["GET", "POST"])
 @permission_required("books.update")
-def book_update_view(request, book_id):
-    book = get_object_or_404(Book, pk=book_id)
+def book_update_view(request, isbn):
+    book = get_object_or_404(Book, isbn=isbn)
     if request.method == "POST":
         form = BookForm(request.POST, instance=book)
         if form.is_valid():
             form.save()
             log_action(request.user, "BOOK_UPDATED", "Book", book.isbn)
             messages.success(request, f"Book '{book.title}' updated.")
-            return redirect("books:book_detail", book_id=book.pk)
+            return redirect("books:book_detail", isbn=book.isbn)
     else:
         form = BookForm(instance=book)
     return render(request, "books/book_form.html", {"form": form, "title": f"Edit {book.title}"})
@@ -62,8 +62,8 @@ def book_update_view(request, book_id):
 
 @require_http_methods(["POST"])
 @permission_required("books.archive")
-def book_archive_view(request, book_id):
-    book = get_object_or_404(Book, pk=book_id)
+def book_archive_view(request, isbn):
+    book = get_object_or_404(Book, isbn=isbn)
     book.is_archived = True
     book.save()
     log_action(request.user, "BOOK_ARCHIVED", "Book", book.isbn)
@@ -73,8 +73,8 @@ def book_archive_view(request, book_id):
 
 @require_http_methods(["GET", "POST"])
 @permission_required("copies.create")
-def book_add_copy_view(request, book_id):
-    book = get_object_or_404(Book, pk=book_id)
+def book_add_copy_view(request, isbn):
+    book = get_object_or_404(Book, isbn=isbn)
     if request.method == "POST":
         form = CopyForm(request.POST)
         if form.is_valid():
@@ -85,7 +85,7 @@ def book_add_copy_view(request, book_id):
             CopyHistory.objects.create(book_copy=copy, event="Created", actor=request.user)
             log_action(request.user, "COPY_CREATED", "BookCopy", copy.copy_id)
             messages.success(request, f"Copy {copy.copy_id} created for '{book.title}'.")
-            return redirect("books:book_detail", book_id=book.pk)
+            return redirect("books:book_detail", isbn=book.isbn)
     else:
         form = CopyForm(initial={"book": book})
     return render(request, "books/book_copy_form.html", {

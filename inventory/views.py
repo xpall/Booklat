@@ -38,7 +38,7 @@ def copy_list_view(request):
 
 @any_permission_required("copies.view")
 def copy_detail_view(request, copy_id):
-    copy = get_object_or_404(BookCopy.objects.select_related("book"), pk=copy_id)
+    copy = get_object_or_404(BookCopy.objects.select_related("book"), copy_id=copy_id)
     history = copy.history.select_related("actor").all()
     return render(request, "inventory/copy_detail.html", {"copy": copy, "history": history})
 
@@ -55,7 +55,7 @@ def copy_create_view(request):
             CopyHistory.objects.create(book_copy=copy, event="Created", actor=request.user)
             log_action(request.user, "COPY_CREATED", "BookCopy", copy.copy_id)
             messages.success(request, f"Copy {copy.copy_id} created.")
-            return redirect("inventory:copy_detail", copy_id=copy.pk)
+            return redirect("inventory:copy_detail", copy_id=copy.copy_id)
     else:
         form = CopyForm()
     return render(request, "inventory/copy_form.html", {"form": form, "title": "Create Copy"})
@@ -64,14 +64,14 @@ def copy_create_view(request):
 @require_http_methods(["GET", "POST"])
 @permission_required("copies.update")
 def copy_update_view(request, copy_id):
-    copy = get_object_or_404(BookCopy, pk=copy_id)
+    copy = get_object_or_404(BookCopy, copy_id=copy_id)
     if request.method == "POST":
         form = CopyForm(request.POST, instance=copy)
         if form.is_valid():
             form.save()
             log_action(request.user, "COPY_UPDATED", "BookCopy", copy.copy_id)
             messages.success(request, f"Copy {copy.copy_id} updated.")
-            return redirect("inventory:copy_detail", copy_id=copy.pk)
+            return redirect("inventory:copy_detail", copy_id=copy.copy_id)
     else:
         form = CopyForm(instance=copy)
     return render(request, "inventory/copy_form.html", {"form": form, "title": f"Edit {copy.copy_id}"})
@@ -80,7 +80,7 @@ def copy_update_view(request, copy_id):
 @require_http_methods(["POST"])
 @permission_required("copies.update")
 def copy_status_change_view(request, copy_id):
-    copy = get_object_or_404(BookCopy, pk=copy_id)
+    copy = get_object_or_404(BookCopy, copy_id=copy_id)
     new_status = request.POST.get("status")
     notes = request.POST.get("notes", "")
     if new_status and new_status in dict(BookCopy.Status.choices):
@@ -95,13 +95,13 @@ def copy_status_change_view(request, copy_id):
             "notes": notes,
         })
         messages.success(request, f"Copy {copy.copy_id} status updated.")
-    return redirect("inventory:copy_detail", copy_id=copy.pk)
+    return redirect("inventory:copy_detail", copy_id=copy.copy_id)
 
 
 @require_http_methods(["POST"])
 @permission_required("copies.update")
 def copy_archive_view(request, copy_id):
-    copy = get_object_or_404(BookCopy, pk=copy_id)
+    copy = get_object_or_404(BookCopy, copy_id=copy_id)
     copy.is_archived = True
     copy.status = BookCopy.Status.ARCHIVED
     copy.save()

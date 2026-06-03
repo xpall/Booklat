@@ -98,7 +98,7 @@ def checkout_confirm(request):
         copy.status = BookCopy.Status.BORROWED
         copy.save()
         CopyHistory.objects.create(book_copy=copy, event="Borrowed", notes=f"Checked out by {user.lrn}", actor=request.user)
-        log_action(request.user, "LOAN_CREATED", "Loan", str(loan.pk), metadata={
+        log_action(request.user, "LOAN_CREATED", "Loan", loan.loan_id, metadata={
             "user_lrn": user.lrn,
             "copy_id": copy.copy_id,
             "due_date": str(loan.due_date),
@@ -134,7 +134,7 @@ def return_book_view(request):
             copy.status = BookCopy.Status.AVAILABLE
             copy.save()
             CopyHistory.objects.create(book_copy=copy, event="Returned", actor=request.user)
-            log_action(request.user, "LOAN_RETURNED", "Loan", str(loan.pk), metadata={
+            log_action(request.user, "LOAN_RETURNED", "Loan", loan.loan_id, metadata={
                 "user_lrn": loan.user.lrn,
                 "copy_id": copy.copy_id,
             })
@@ -154,9 +154,9 @@ def overdue_list_view(request):
 
 
 @any_permission_required("loans.view")
-def user_loans_view(request, user_id):
-    user = get_object_or_404(User, pk=user_id)
-    if request.user.is_member and request.user.pk != user.pk:
+def user_loans_view(request, lrn):
+    user = get_object_or_404(User, lrn=lrn)
+    if request.user.is_member and request.user.lrn != lrn:
         messages.error(request, "You can only view your own loans.")
         return redirect("books:book_list")
     loans = Loan.objects.filter(user=user).select_related("book_copy__book")

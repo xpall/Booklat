@@ -34,7 +34,7 @@
     <tbody>
       {% for copy in copies %}
       <tr>
-        <td><a href="{% url 'inventory:copy_detail' copy.pk %}">{{ copy.copy_id }}</a></td>
+        <td><a href="{% url 'inventory:copy_detail' copy.copy_id %}">{{ copy.copy_id }}</a></td>
         <td>{{ copy.book.title }}</td>
         <td>{{ copy.get_status_display }}</td>
         <td>{{ copy.shelf_location|default:"—" }}</td>

@@ -26,7 +26,7 @@
 {% if books %}
 <div class="book-grid">
   {% for book in books %}
-  <a href="{% url 'books:book_detail' book.pk %}" class="book-card" style="display:block;">
+  <a href="{% url 'books:book_detail' book.isbn %}" class="book-card" style="display:block;">
     <div class="book-card__cover">
       {% if book.cover_image %}
       <img src="{{ book.cover_image }}" alt="{{ book.title }}" loading="lazy">

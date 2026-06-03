@@ -6,7 +6,7 @@
   <div class="book-meta">
     <div class="book-meta__item">
       <span class="book-meta__label">Book</span>
-      <span class="book-meta__value"><a href="{% url 'books:book_detail' copy.book.pk %}">{{ copy.book.title }}</a></span>
+      <span class="book-meta__value"><a href="{% url 'books:book_detail' copy.book.isbn %}">{{ copy.book.title }}</a></span>
     </div>
     <div class="book-meta__item">
       <span class="book-meta__label">Status</span>
@@ -26,8 +26,8 @@
     </div>
   </div>
   <div class="flex gap-2 mt-4" style="flex-wrap:wrap;">
-    <a href="{% url 'inventory:copy_edit' copy.pk %}" class="btn btn--secondary btn--small">Edit</a>
-    <form method="post" action="{% url 'inventory:copy_archive' copy.pk %}" style="display:inline">
+    <a href="{% url 'inventory:copy_edit' copy.copy_id %}" class="btn btn--secondary btn--small">Edit</a>
+    <form method="post" action="{% url 'inventory:copy_archive' copy.copy_id %}" style="display:inline">
       {% csrf_token %}
       <button type="submit" class="btn btn--danger-outline btn--small" onclick="return confirm('Archive this copy?')">Archive</button>
     </form>
@@ -38,7 +38,7 @@
   <div class="card-header">
     <h3 class="card-header__title">Change Status</h3>
   </div>
-  <form method="post" action="{% url 'inventory:copy_status_change' copy.pk %}">
+  <form method="post" action="{% url 'inventory:copy_status_change' copy.copy_id %}">
     {% csrf_token %}
     <div class="flex gap-3 items-end mb-3" style="flex-wrap:wrap;">
       <div class="form-group" style="margin-bottom:0;">

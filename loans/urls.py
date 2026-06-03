@@ -10,5 +10,5 @@ urlpatterns = [
     path("checkout/confirm/", views.checkout_confirm, name="checkout_confirm"),
     path("return/", views.return_book_view, name="return_book"),
     path("overdue/", views.overdue_list_view, name="overdue_list"),
-    path("user/<int:user_id>/", views.user_loans_view, name="user_loans"),
+    path("user/<str:lrn>/", views.user_loans_view, name="user_loans"),
 ]

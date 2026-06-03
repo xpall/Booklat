@@ -30,13 +30,13 @@ def request_list_view(request):
 
 @require_http_methods(["POST"])
 @ratelimit(key="user_or_ip", rate="10/m", method="POST")
-def request_checkout_view(request, book_id):
+def request_checkout_view(request, isbn):
     was_limited = getattr(request, "limited", False)
     if was_limited:
         messages.error(request, "Too many requests. Please wait a minute and try again.")
         return redirect("books:book_list")
     from books.models import Book
-    book = get_object_or_404(Book, pk=book_id, is_archived=False)
+    book = get_object_or_404(Book, isbn=isbn, is_archived=False)
     existing = CheckoutRequest.objects.filter(
         user=request.user,
         book=book,
@@ -44,7 +44,7 @@ def request_checkout_view(request, book_id):
     ).first()
     if existing:
         messages.warning(request, "You already have a pending request for this book.")
-        return redirect("books:book_detail", book_id=book.pk)
+        return redirect("books:book_detail", isbn=book.isbn)
     req = CheckoutRequest(user=request.user, book=book)
     req.save()
     log_action(request.user, "CHECKOUT_REQUEST_CREATED", "CheckoutRequest", str(req.pk), metadata={
@@ -52,7 +52,7 @@ def request_checkout_view(request, book_id):
         "book_isbn": book.isbn,
     })
     messages.success(request, f"Checkout requested for '{book.title}'.")
-    return redirect("books:book_detail", book_id=book.pk)
+    return redirect("books:book_detail", isbn=book.isbn)
 
 
 @require_http_methods(["POST"])

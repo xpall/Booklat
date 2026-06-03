@@ -20,9 +20,9 @@
     <div class="flex items-center justify-between min-w-0 gap-4">
       <div class="min-w-0 flex-1">
         {% if not user.is_member %}
-        <div class="card__subtitle mb-1" style="font-size:var(--font-size-caption);"><a href="{% url 'accounts:user_detail' req.user.pk %}">{{ req.user.get_full_name }}</a></div>
+        <div class="card__subtitle mb-1" style="font-size:var(--font-size-caption);"><a href="{% url 'accounts:user_detail' req.user.lrn %}">{{ req.user.get_full_name }}</a></div>
         {% endif %}
-        <a href="{% url 'books:book_detail' req.book.pk %}" class="card__title" style="font-size:var(--font-size-small);display:block;">{{ req.book.title }}</a>
+        <a href="{% url 'books:book_detail' req.book.isbn %}" class="card__title" style="font-size:var(--font-size-small);display:block;">{{ req.book.title }}</a>
         <div class="card__subtitle" style="font-size:var(--font-size-caption);">{{ req.requested_at|date:"d M Y H:i" }}</div>
       </div>
       <div class="flex items-center gap-2" style="flex-shrink:0;">

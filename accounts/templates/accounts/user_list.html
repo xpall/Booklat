@@ -21,7 +21,7 @@
     <tbody>
       {% for u in users %}
       <tr>
-        <td><a href="{% url 'accounts:user_detail' u.pk %}">{{ u.lrn }}</a></td>
+        <td><a href="{% url 'accounts:user_detail' u.lrn %}">{{ u.lrn }}</a></td>
         <td>{{ u.get_full_name }}</td>
         <td>{{ u.role.name|default:"—" }}</td>
         <td>{{ u.get_status_display }}</td>
