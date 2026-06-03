@@ -17,7 +17,9 @@ def book_list_view(request):
     query = request.GET.get("q", "")
     show_archived = request.GET.get("show_archived") == "1"
     books = Book.objects.all()
-    if not show_archived:
+    if show_archived:
+        books = books.filter(is_archived=True)
+    else:
         books = books.filter(is_archived=False)
     if query:
         books = books.filter(title__icontains=query) | books.filter(authors__icontains=query) | books.filter(isbn__icontains=query)

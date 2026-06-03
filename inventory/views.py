@@ -25,7 +25,9 @@ def copy_list_view(request):
     status_filter = request.GET.get("status", "")
     show_archived = request.GET.get("show_archived") == "1"
     copies = BookCopy.objects.select_related("book")
-    if not show_archived:
+    if show_archived:
+        copies = copies.filter(is_archived=True)
+    else:
         copies = copies.filter(is_archived=False)
     if query:
         copies = copies.filter(book__title__icontains=query) | copies.filter(copy_id__icontains=query)

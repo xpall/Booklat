@@ -88,7 +88,9 @@ def password_change_view(request):
 def user_list_view(request):
     users = User.objects.select_related("role")
     show_archived = request.GET.get("show_archived") == "1"
-    if not show_archived:
+    if show_archived:
+        users = users.filter(status=User.Status.ARCHIVED)
+    else:
         users = users.exclude(status=User.Status.ARCHIVED)
     return render(request, "accounts/user_list.html", {"users": users, "show_archived": show_archived})
 
