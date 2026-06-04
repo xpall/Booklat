@@ -16,12 +16,15 @@ from core.utils import log_action, parse_csv_upload
 def book_list_view(request):
     query = request.GET.get("q", "")
     category_id = request.GET.get("category", "")
+    filter_val = request.GET.get("filter", "")
     show_archived = request.GET.get("show_archived") == "1"
     books = Book.objects.all()
     if show_archived:
         books = books.filter(is_archived=True)
     else:
         books = books.filter(is_archived=False)
+    if filter_val == "new":
+        books = books.order_by("-created_at")
     if query:
         books = books.filter(title__icontains=query) | books.filter(authors__icontains=query) | books.filter(isbn__icontains=query)
     if category_id:
@@ -31,6 +34,7 @@ def book_list_view(request):
     return render(request, "books/book_list.html", {
         "books": books, "query": query, "show_archived": show_archived,
         "categories": all_categories, "selected_category": category_id,
+        "filter": filter_val,
     })
 
 
