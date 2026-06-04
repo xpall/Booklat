@@ -4,6 +4,7 @@ from django.db.models import Count
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from core.decorators import permission_required
+from core.models import AboutConfig
 from accounts.models import User
 
 
@@ -16,7 +17,11 @@ def home_view(request):
 
 
 def about_view(request):
-    return render(request, "core/about.html", {"title": "About"})
+    config = AboutConfig.get_config()
+    return render(request, "core/about.html", {
+        "title": "About",
+        "config": config,
+    })
 
 
 from books.models import Book, Category
