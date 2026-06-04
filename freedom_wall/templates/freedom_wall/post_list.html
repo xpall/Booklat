@@ -44,8 +44,17 @@
           </td>
           <td>{{ post.content|truncatewords:12 }}</td>
           <td>{{ post.created_at|date:"Y-m-d H:i" }}</td>
-          <td>
-            <a href="{% url 'freedom_wall:post_process' post.pk %}" class="btn btn--primary btn--small">Process</a>
+          <td class="actions-cell">
+            <form method="post" action="{% url 'freedom_wall:post_process' post.pk %}" style="display:inline;">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="approve">
+              <button type="submit" class="btn-icon btn-icon--approve" title="Approve">&#10003;</button>
+            </form>
+            <form method="post" action="{% url 'freedom_wall:post_process' post.pk %}" style="display:inline;">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="reject">
+              <button type="submit" class="btn-icon btn-icon--reject" title="Reject">&#10007;</button>
+            </form>
           </td>
         </tr>
         {% endfor %}

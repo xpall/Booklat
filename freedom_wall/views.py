@@ -85,12 +85,11 @@ def post_process_view(request, post_id):
     )
     if post.status != FreedomPost.Status.PENDING:
         messages.error(request, "Only pending posts can be processed.")
-        return redirect("freedom_wall:post_pending")
+        return redirect("freedom_wall:post_list")
 
     if request.method == "POST":
-        form = ProcessPostForm(request.POST)
-        if form.is_valid():
-            action = form.cleaned_data["action"]
+        action = request.POST.get("action", "")
+        if action in ("approve", "reject"):
             post.processed_by = request.user
             post.processed_at = timezone.now()
             if action == "approve":
@@ -103,14 +102,14 @@ def post_process_view(request, post_id):
                 messages.success(request, "Post approved and published to the wall.")
             elif action == "reject":
                 post.status = FreedomPost.Status.REJECTED
-                post.rejection_reason = form.cleaned_data.get("rejection_reason", "")
+                post.rejection_reason = request.POST.get("rejection_reason", "")
                 post.save()
                 log_action(request.user, "FREEDOM_POST_REJECTED", "FreedomPost", str(post.pk), metadata={
                     "author_lrn": post.user.lrn,
                     "reason": post.rejection_reason,
                 })
                 messages.success(request, "Post rejected.")
-            return redirect("freedom_wall:post_pending")
+            return redirect("freedom_wall:post_list")
     else:
         form = ProcessPostForm()
 

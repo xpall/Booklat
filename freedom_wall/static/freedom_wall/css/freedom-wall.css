@@ -18,6 +18,50 @@
   background: #dc2626;
 }
 
+.actions-cell {
+  white-space: nowrap;
+}
+
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+  padding: 0;
+  line-height: 1;
+  vertical-align: middle;
+  margin-right: 0.25rem;
+}
+
+.btn-icon:hover {
+  transform: scale(1.15);
+}
+
+.btn-icon--approve {
+  background: #16a34a;
+  color: #fff;
+}
+
+.btn-icon--approve:hover {
+  background: #15803d;
+}
+
+.btn-icon--reject {
+  background: #ef4444;
+  color: #fff;
+}
+
+.btn-icon--reject:hover {
+  background: #dc2626;
+}
+
 .sticky-wall {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
