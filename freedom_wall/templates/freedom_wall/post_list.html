@@ -12,6 +12,12 @@
 </div>
 {% endif %}
 
+<div class="sort-bar mb-4">
+  <span class="sort-bar__label">Sort by:</span>
+  <a href="?sort=newest" class="sort-bar__link{% if current_sort == 'newest' %} sort-bar__link--active{% endif %}">Newest</a>
+  <a href="?sort=upvotes" class="sort-bar__link{% if current_sort == 'upvotes' %} sort-bar__link--active{% endif %}">Most Upvotes</a>
+</div>
+
 {% if user.is_admin or user.is_staff_user %}
 {% if pending_posts %}
 <div class="pending-queue mb-6">
@@ -78,6 +84,15 @@
         {% endif %}
       </span>
       <span class="sticky-note__date">{{ post.created_at|date:"M j, Y" }}</span>
+    </div>
+    <div class="sticky-note__upvote">
+      <form method="post" action="{% url 'freedom_wall:post_upvote' post.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="upvote-btn{% if post.pk in user_upvoted_ids %} upvote-btn--active{% endif %}" title="Upvote">
+          <span class="upvote-btn__arrow">&#9650;</span>
+          <span class="upvote-btn__count">{{ post.upvote_count }}</span>
+        </button>
+      </form>
     </div>
     {% if user.is_admin %}
     <div class="sticky-note__sender">

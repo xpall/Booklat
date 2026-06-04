@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
 from django.contrib import messages
 from django.views.decorators.http import require_http_methods
 from django.utils import timezone
+from django.db import models
 from django_ratelimit.decorators import ratelimit
-from .models import FreedomPost
+from .models import FreedomPost, FreedomPostUpvote
 from .forms import CreatePostForm, ProcessPostForm
 from core.decorators import permission_required, any_permission_required
 from core.utils import log_action
@@ -11,9 +13,25 @@ from core.utils import log_action
 
 @any_permission_required("freedom_wall.view")
 def post_list_view(request):
+    sort = request.GET.get("sort", "newest")
     posts = FreedomPost.objects.filter(
         status=FreedomPost.Status.APPROVED
-    ).select_related("user")
+    ).select_related("user").annotate(upvote_count=models.Count("upvotes"))
+
+    if sort == "upvotes":
+        posts = posts.order_by("-upvote_count", "-created_at")
+    else:
+        posts = posts.order_by("-created_at")
+
+    user_upvoted_ids = set()
+    if request.user.is_authenticated:
+        user_upvoted_ids = set(
+            FreedomPostUpvote.objects.filter(
+                user=request.user,
+                post__in=posts,
+            ).values_list("post_id", flat=True)
+        )
+
     pending_posts = []
     if request.user.is_admin or request.user.is_staff_user:
         pending_posts = FreedomPost.objects.filter(
@@ -22,6 +40,8 @@ def post_list_view(request):
     return render(request, "freedom_wall/post_list.html", {
         "posts": posts,
         "pending_posts": pending_posts,
+        "user_upvoted_ids": user_upvoted_ids,
+        "current_sort": sort,
     })
 
 
@@ -135,3 +155,18 @@ def post_delete_view(request, post_id):
     })
     messages.success(request, "Post removed from the wall.")
     return redirect("freedom_wall:post_list")
+
+
+@require_http_methods(["POST"])
+@any_permission_required("freedom_wall.view")
+def post_upvote_view(request, post_id):
+    post = get_object_or_404(
+        FreedomPost, pk=post_id, status=FreedomPost.Status.APPROVED
+    )
+    upvote, created = FreedomPostUpvote.objects.get_or_create(
+        post=post, user=request.user,
+    )
+    if not created:
+        upvote.delete()
+
+    return redirect(request.META.get("HTTP_REFERER", reverse("freedom_wall:post_list")))

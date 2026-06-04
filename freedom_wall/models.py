@@ -49,3 +49,24 @@ class FreedomPost(models.Model):
 
     def randomize_color(self):
         self.color = random.choice([c[0] for c in self.STICKY_COLORS])
+
+
+class FreedomPostUpvote(models.Model):
+    post = models.ForeignKey(
+        FreedomPost,
+        on_delete=models.CASCADE,
+        related_name="upvotes",
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="freedom_upvotes",
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("post", "user")
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"Upvote by {self.user.lrn} on FreedomPost #{self.post_id}"

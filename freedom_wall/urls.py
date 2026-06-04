@@ -9,4 +9,5 @@ urlpatterns = [
     path("pending/", views.post_pending_view, name="post_pending"),
     path("<int:post_id>/process/", views.post_process_view, name="post_process"),
     path("<int:post_id>/delete/", views.post_delete_view, name="post_delete"),
+    path("<int:post_id>/upvote/", views.post_upvote_view, name="post_upvote"),
 ]
