@@ -31,6 +31,7 @@
   }
 
   function initThemeToggle() {
+    if (document.documentElement.hasAttribute('data-theme-locked')) return;
     var current = getTheme();
     setTheme(current);
 
