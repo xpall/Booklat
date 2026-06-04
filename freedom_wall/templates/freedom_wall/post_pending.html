@@ -22,12 +22,10 @@
       <tr>
         <td>{{ post.user.get_full_name }} ({{ post.user.lrn }})</td>
         <td>
-          {% if post.is_anonymous %}
-            <span class="badge badge--neutral">Anonymous</span>
-          {% elif post.pen_name %}
+          {% if post.pen_name %}
             {{ post.pen_name }}
           {% else %}
-            <span class="text-secondary">&mdash;</span>
+            <span class="badge badge--neutral">Anonymous</span>
           {% endif %}
         </td>
         <td>{{ post.content|truncatewords:12 }}</td>

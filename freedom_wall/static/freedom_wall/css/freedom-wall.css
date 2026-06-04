@@ -1,3 +1,23 @@
+.pending-queue__badge {
+  display: inline-block;
+  background: #ef4444;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  min-width: 1.5em;
+  height: 1.5em;
+  line-height: 1.5em;
+  text-align: center;
+  border-radius: 999px;
+  padding: 0 0.4em;
+  vertical-align: middle;
+  margin-left: 0.35rem;
+}
+
+[data-theme="dark"] .pending-queue__badge {
+  background: #dc2626;
+}
+
 .sticky-wall {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -147,7 +167,7 @@
 }
 
 @media (max-width: 600px) {
-  .sticky-wall {
+.sticky-wall {
     grid-template-columns: 1fr;
     gap: var(--space-3);
   }

@@ -11,19 +11,17 @@
     <div class="sticky-note__body">{{ post_obj.content|linebreaksbr }}</div>
     <div class="sticky-note__footer">
       <span class="sticky-note__author">
-        {% if post_obj.is_anonymous %}
-          Anonymous
-        {% elif post_obj.pen_name %}
+        {% if post_obj.pen_name %}
           {{ post_obj.pen_name }}
         {% else %}
-          {{ post_obj.user.get_full_name }}
+          Anonymous
         {% endif %}
       </span>
       <span class="sticky-note__date">{{ post_obj.created_at|date:"M j, Y" }}</span>
     </div>
     <div class="sticky-note__sender">
       Author: {{ post_obj.user.get_full_name }} ({{ post_obj.user.lrn }})
-      {% if post_obj.is_anonymous %}— Anonymous{% elif post_obj.pen_name %}— {{ post_obj.pen_name }}{% endif %}
+      {% if post_obj.pen_name %}&mdash; {{ post_obj.pen_name }}{% endif %}
     </div>
   </div>
 </div>
@@ -63,7 +61,7 @@
 
   <div class="flex gap-2">
     <button type="submit" class="btn btn--primary">Submit</button>
-    <a href="{% url 'freedom_wall:post_pending' %}" class="btn btn--secondary">Cancel</a>
+    <a href="{% url 'freedom_wall:post_list' %}" class="btn btn--secondary">Cancel</a>
   </div>
 </form>
 
@@ -76,6 +74,6 @@
 </script>
 {% else %}
 <p class="text-secondary">This post has already been processed ({{ post_obj.get_status_display }}).</p>
-<a href="{% url 'freedom_wall:post_pending' %}" class="btn btn--secondary">Back to Pending</a>
+<a href="{% url 'freedom_wall:post_list' %}" class="btn btn--secondary">Back to Wall</a>
 {% endif %}
 {% endblock %}

@@ -14,8 +14,14 @@ def post_list_view(request):
     posts = FreedomPost.objects.filter(
         status=FreedomPost.Status.APPROVED
     ).select_related("user")
+    pending_posts = []
+    if request.user.is_admin or request.user.is_staff_user:
+        pending_posts = FreedomPost.objects.filter(
+            status=FreedomPost.Status.PENDING
+        ).select_related("user")
     return render(request, "freedom_wall/post_list.html", {
         "posts": posts,
+        "pending_posts": pending_posts,
     })
 
 
@@ -43,14 +49,12 @@ def post_create_view(request):
             post = FreedomPost(
                 user=request.user,
                 pen_name=form.cleaned_data["pen_name"].strip(),
-                is_anonymous=form.cleaned_data["is_anonymous"],
                 content=form.cleaned_data["content"],
             )
             post.randomize_color()
             post.save()
             log_action(request.user, "FREEDOM_POST_CREATED", "FreedomPost", str(post.pk), metadata={
                 "user_lrn": request.user.lrn,
-                "is_anonymous": post.is_anonymous,
                 "pen_name": post.pen_name,
             })
             messages.success(request, "Your note has been submitted for approval.")

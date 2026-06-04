@@ -13,20 +13,13 @@
     <div class="form-group">
       <label for="id_pen_name" class="form-label">Pen Name</label>
       <input type="text" name="pen_name" id="id_pen_name" class="form-input" maxlength="100" placeholder="Your pen name (optional)" value="{{ form.pen_name.value|default:'' }}">
-      <span class="text-caption text-secondary">Leave blank if posting anonymously.</span>
-    </div>
-
-    <div class="form-group">
-      <label style="display:flex;align-items:center;gap:var(--space-2);font-size:var(--font-size-small);cursor:pointer;">
-        <input type="checkbox" name="is_anonymous" id="id_is_anonymous" {% if form.is_anonymous.value %}checked{% endif %}>
-        Post anonymously
-      </label>
+      <span class="text-caption text-secondary">Leave blank to post anonymously.</span>
     </div>
 
     <div class="form-group">
       <label for="id_content" class="form-label">Your Message</label>
       <textarea name="content" id="id_content" class="form-input" rows="5" maxlength="500" required>{{ form.content.value|default:'' }}</textarea>
-      <span class="text-caption text-secondary">Max 500 characters &middot; One post per day</span>
+      <span class="text-caption text-secondary">Max 500 characters &middot; One post per day &middot; All posts are anonymous</span>
     </div>
   </div>
 

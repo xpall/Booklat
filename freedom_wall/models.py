@@ -25,7 +25,6 @@ class FreedomPost(models.Model):
         related_name="freedom_posts",
     )
     pen_name = models.CharField(max_length=100, blank=True)
-    is_anonymous = models.BooleanField(default=False)
     content = models.TextField()
     color = models.CharField(max_length=20, choices=STICKY_COLORS)
     status = models.CharField(

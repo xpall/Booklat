@@ -6,20 +6,54 @@
 {% block content %}
 <h1 class="page-title mb-4">Freedom Wall</h1>
 
-{% if user.is_admin or user.is_staff_user %}
-<div class="flex gap-2 mb-4">
-  <a href="{% url 'freedom_wall:post_pending' %}" class="btn btn--secondary">
-    Pending Approval
-    {% freedom_wall_pending_count as count %}
-    {% if count %}<span class="badge badge--warning" style="margin-left:0.5rem;">{{ count }}</span>{% endif %}
-  </a>
-</div>
-{% endif %}
-
 {% if user.is_member %}
 <div class="mb-4">
   <a href="{% url 'freedom_wall:post_create' %}" class="btn btn--primary">Write a Note</a>
 </div>
+{% endif %}
+
+{% if user.is_admin or user.is_staff_user %}
+{% if pending_posts %}
+<div class="pending-queue mb-6">
+  <h2 class="section-title">
+    Pending Approval
+    {% freedom_wall_pending_count as count %}
+    {% if count %}<span class="pending-queue__badge">{{ count }}</span>{% endif %}
+  </h2>
+  <div class="table-responsive">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Author</th>
+          <th>Display As</th>
+          <th>Content Preview</th>
+          <th>Submitted</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for post in pending_posts %}
+        <tr>
+          <td>{{ post.user.get_full_name }} ({{ post.user.lrn }})</td>
+          <td>
+            {% if post.pen_name %}
+              {{ post.pen_name }}
+            {% else %}
+              <span class="badge badge--neutral">Anonymous</span>
+            {% endif %}
+          </td>
+          <td>{{ post.content|truncatewords:12 }}</td>
+          <td>{{ post.created_at|date:"Y-m-d H:i" }}</td>
+          <td>
+            <a href="{% url 'freedom_wall:post_process' post.pk %}" class="btn btn--primary btn--small">Process</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
 {% endif %}
 
 <div class="sticky-wall">
@@ -28,12 +62,10 @@
     <div class="sticky-note__body">{{ post.content|linebreaksbr }}</div>
     <div class="sticky-note__footer">
       <span class="sticky-note__author">
-        {% if post.is_anonymous %}
-          Anonymous
-        {% elif post.pen_name %}
+        {% if post.pen_name %}
           {{ post.pen_name }}
         {% else %}
-          {{ post.user.get_full_name }}
+          Anonymous
         {% endif %}
       </span>
       <span class="sticky-note__date">{{ post.created_at|date:"M j, Y" }}</span>
@@ -41,7 +73,7 @@
     {% if user.is_admin %}
     <div class="sticky-note__sender">
       {{ post.user.get_full_name }} ({{ post.user.lrn }})
-      {% if post.is_anonymous or post.pen_name %}&mdash; posted as {% if post.is_anonymous %}Anonymous{% else %}{{ post.pen_name }}{% endif %}{% endif %}
+      {% if post.pen_name %}&mdash; {{ post.pen_name }}{% endif %}
     </div>
     {% endif %}
     {% if user.is_admin or user.is_staff_user %}
