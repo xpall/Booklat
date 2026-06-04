@@ -1555,6 +1555,12 @@ button, input, select, textarea {
   background: var(--color-border-light);
 }
 
+.data-table__row--selected td,
+.data-table tr.data-table__row--selected td {
+  background: var(--color-primary-bg);
+  border-bottom-color: var(--color-primary-bg-strong);
+}
+
 .data-table--clickable tr {
   cursor: pointer;
 }

@@ -32,25 +32,19 @@ def loan_list_view(request):
 @ratelimit(key="user_or_ip", rate="10/m", method="POST")
 def checkout_view(request):
     was_limited = getattr(request, "limited", False)
+    users = User.objects.filter(status=User.Status.ACTIVE).select_related("role").order_by("lrn")
     if request.method == "POST":
         if was_limited:
             messages.error(request, "Too many requests. Please wait a minute and try again.")
             return redirect("loans:loan_list")
-        if "user" in request.POST:
-            form = CheckoutUserForm(request.POST)
-            if form.is_valid():
-                user = form.cleaned_data["user"]
-                request.session["checkout_user_id"] = user.pk
-                return redirect("loans:checkout_select_copy")
-        elif "copy_id" in request.POST:
-            form = CheckoutCopyForm(request.POST)
-            if form.is_valid():
-                copy = form.cleaned_data["copy"]
-                request.session["checkout_copy_id"] = copy.pk
-                return redirect("loans:checkout_confirm")
+        form = CheckoutUserForm(request.POST)
+        if form.is_valid():
+            user = form.cleaned_data["user"]
+            request.session["checkout_user_id"] = user.pk
+            return redirect("loans:checkout_select_copy")
     else:
         form = CheckoutUserForm()
-    return render(request, "loans/checkout_user.html", {"form": form})
+    return render(request, "loans/checkout_user.html", {"form": form, "users": users})
 
 
 @require_http_methods(["GET", "POST"])
@@ -60,6 +54,7 @@ def checkout_select_copy(request):
     if not user_id:
         return redirect("loans:checkout")
     user = get_object_or_404(User, pk=user_id)
+    copies = BookCopy.objects.filter(is_archived=False, status=BookCopy.Status.AVAILABLE).select_related("book").order_by("copy_id")
     if request.method == "POST":
         form = CheckoutCopyForm(request.POST)
         if form.is_valid():
@@ -68,7 +63,7 @@ def checkout_select_copy(request):
             return redirect("loans:checkout_confirm")
     else:
         form = CheckoutCopyForm()
-    return render(request, "loans/checkout_copy.html", {"form": form, "checkout_user": user})
+    return render(request, "loans/checkout_copy.html", {"form": form, "checkout_user": user, "copies": copies})
 
 
 @require_http_methods(["GET", "POST"])

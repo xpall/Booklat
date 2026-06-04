@@ -1,17 +1,39 @@
 {% extends "core/base.html" %}
 {% block content %}
 <h1 class="page-title mb-4">Checkout — Select User</h1>
-<form method="post" style="max-width:28rem;">
+
+<form method="post" id="checkout-user-form">
   {% csrf_token %}
-  <div class="form-group">
-    <label for="user-search" class="form-label">User</label>
-    <div class="user-search" data-search-url="{% url 'accounts:user_search_json' %}">
-      <input type="text" id="user-search" class="form-input user-search__input" placeholder="Search by LRN or name..." autocomplete="off" required>
-      {{ form.user }}
-      <div class="user-search__dropdown"></div>
-    </div>
-    {% if form.user.errors %}<div class="form-error">{{ form.user.errors }}</div>{% endif %}
+  <div class="search-bar">
+    <svg class="search-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="search" id="checkout-user-search" class="form-input" placeholder="Search by LRN or name..." autocomplete="off">
   </div>
-  <button type="submit" class="btn btn--primary">Next: Select Copy</button>
+  {{ form.user }}
+  {% if form.user.errors %}<div class="form-error mb-4">{{ form.user.errors }}</div>{% endif %}
+
+  <div class="table-responsive mb-4">
+    <table class="data-table data-table--clickable" id="checkout-user-table">
+      <thead>
+        <tr>
+          <th>LRN</th>
+          <th>Name</th>
+          <th>Role</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in users %}
+        <tr data-id="{{ u.pk }}" data-search="{{ u.lrn|lower }} {{ u.get_full_name|lower }}">
+          <td>{{ u.lrn }}</td>
+          <td>{{ u.get_full_name }}</td>
+          <td>{{ u.role.name|default:"—" }}</td>
+        </tr>
+        {% empty %}
+        <tr class="checkout-empty-row"><td colspan="3">No active users found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <button type="submit" class="btn btn--primary" id="checkout-user-submit" disabled>Next: Select Copy</button>
 </form>
 {% endblock %}

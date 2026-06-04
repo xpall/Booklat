@@ -255,7 +255,8 @@
         dropdown.innerHTML = '<div class="book-search__spinner">Searching...</div>';
         dropdown.classList.add('book-search__dropdown--open');
         debounceTimer = setTimeout(function () {
-          fetch(searchUrl + '?q=' + encodeURIComponent(val))
+          var connector = searchUrl.indexOf('?') === -1 ? '?' : '&';
+          fetch(searchUrl + connector + 'q=' + encodeURIComponent(val))
             .then(function (resp) { return resp.json(); })
             .then(function (data) {
               if (data.results) {
@@ -360,7 +361,8 @@
         dropdown.innerHTML = '<div class="user-search__spinner">Searching...</div>';
         dropdown.classList.add('user-search__dropdown--open');
         debounceTimer = setTimeout(function () {
-          fetch(searchUrl + '?q=' + encodeURIComponent(val))
+          var connector = searchUrl.indexOf('?') === -1 ? '?' : '&';
+          fetch(searchUrl + connector + 'q=' + encodeURIComponent(val))
             .then(function (resp) { return resp.json(); })
             .then(function (data) {
               if (data.results) {
@@ -465,7 +467,8 @@
         dropdown.innerHTML = '<div class="copy-search__spinner">Searching...</div>';
         dropdown.classList.add('copy-search__dropdown--open');
         debounceTimer = setTimeout(function () {
-          fetch(searchUrl + '?q=' + encodeURIComponent(val))
+          var connector = searchUrl.indexOf('?') === -1 ? '?' : '&';
+          fetch(searchUrl + connector + 'q=' + encodeURIComponent(val))
             .then(function (resp) { return resp.json(); })
             .then(function (data) {
               if (data.results) {
@@ -512,6 +515,67 @@
     });
   }
 
+  /* ------------------------------------------------------
+      Checkout Table — client-side filter + row selection
+      ------------------------------------------------------ */
+
+  function initCheckoutTable(config) {
+    var searchInput = document.getElementById(config.searchInputId);
+    var table = document.getElementById(config.tableId);
+    var hiddenInput = document.querySelector('input[name="' + config.hiddenName + '"]');
+    var submitBtn = document.getElementById(config.submitBtnId);
+    if (!searchInput || !table || !hiddenInput || !submitBtn) return;
+
+    var tbody = table.querySelector('tbody');
+    var rows = table.querySelectorAll('tbody tr');
+    var selectedRow = null;
+
+    function clearSelection() {
+      if (selectedRow) {
+        selectedRow.classList.remove('data-table__row--selected');
+        selectedRow = null;
+      }
+      hiddenInput.value = '';
+      submitBtn.disabled = true;
+    }
+
+    function selectRow(row) {
+      clearSelection();
+      row.classList.add('data-table__row--selected');
+      selectedRow = row;
+      hiddenInput.value = row.dataset.id;
+      submitBtn.disabled = false;
+    }
+
+    searchInput.addEventListener('input', function () {
+      var val = searchInput.value.trim().toLowerCase();
+      var visibleCount = 0;
+      rows.forEach(function (row) {
+        if (row.classList.contains('checkout-empty-row')) return;
+        var searchData = (row.dataset.search || '').toLowerCase();
+        if (!val || searchData.indexOf(val) !== -1) {
+          row.style.display = '';
+          visibleCount++;
+        } else {
+          row.style.display = 'none';
+        }
+      });
+      var emptyRow = tbody.querySelector('.checkout-empty-row');
+      if (emptyRow) {
+        emptyRow.style.display = visibleCount === 0 ? '' : 'none';
+      }
+      if (selectedRow && selectedRow.style.display === 'none') {
+        clearSelection();
+      }
+    });
+
+    tbody.addEventListener('click', function (e) {
+      var row = e.target.closest('tr');
+      if (!row || row.classList.contains('checkout-empty-row')) return;
+      selectRow(row);
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     initThemeToggle();
     initSidebar();
@@ -521,6 +585,18 @@
     initBookSearch();
     initUserSearch();
     initCopySearch();
+    initCheckoutTable({
+      searchInputId: 'checkout-user-search',
+      tableId: 'checkout-user-table',
+      hiddenName: 'user',
+      submitBtnId: 'checkout-user-submit'
+    });
+    initCheckoutTable({
+      searchInputId: 'checkout-copy-search',
+      tableId: 'checkout-copy-table',
+      hiddenName: 'copy',
+      submitBtnId: 'checkout-copy-submit'
+    });
   });
 
   /* Expose showToast globally for inline use */
