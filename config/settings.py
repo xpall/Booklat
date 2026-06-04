@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     "requests_app",
     "audit",
     "dashboard",
+    "freedom_wall",
 ]
 
 MIDDLEWARE = [

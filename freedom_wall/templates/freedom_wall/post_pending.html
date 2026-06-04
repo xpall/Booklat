@@ -1,0 +1,45 @@
+{% extends "core/base.html" %}
+{% block content %}
+<h1 class="page-title mb-4">Pending Posts</h1>
+
+<div class="flex gap-2 mb-4">
+  <a href="{% url 'freedom_wall:post_list' %}" class="btn btn--secondary">Back to Wall</a>
+</div>
+
+<div class="table-responsive">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Author</th>
+        <th>Display As</th>
+        <th>Content Preview</th>
+        <th>Submitted</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for post in posts %}
+      <tr>
+        <td>{{ post.user.get_full_name }} ({{ post.user.lrn }})</td>
+        <td>
+          {% if post.is_anonymous %}
+            <span class="badge badge--neutral">Anonymous</span>
+          {% elif post.pen_name %}
+            {{ post.pen_name }}
+          {% else %}
+            <span class="text-secondary">&mdash;</span>
+          {% endif %}
+        </td>
+        <td>{{ post.content|truncatewords:12 }}</td>
+        <td>{{ post.created_at|date:"Y-m-d H:i" }}</td>
+        <td>
+          <a href="{% url 'freedom_wall:post_process' post.pk %}" class="btn btn--primary btn--small">Process</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="5">No posts pending approval.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

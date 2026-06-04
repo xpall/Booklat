@@ -9,4 +9,5 @@ urlpatterns = [
     path("requests/", include("requests_app.urls")),
     path("audit/", include("audit.urls")),
     path("dashboard/", include("dashboard.urls")),
+    path("freedom-wall/", include("freedom_wall.urls")),
 ]

@@ -1,0 +1,62 @@
+{% extends "core/base.html" %}
+{% load static freedom_wall_tags %}
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'freedom_wall/css/freedom-wall.css' %}">
+{% endblock %}
+{% block content %}
+<h1 class="page-title mb-4">Freedom Wall</h1>
+
+{% if user.is_admin or user.is_staff_user %}
+<div class="flex gap-2 mb-4">
+  <a href="{% url 'freedom_wall:post_pending' %}" class="btn btn--secondary">
+    Pending Approval
+    {% freedom_wall_pending_count as count %}
+    {% if count %}<span class="badge badge--warning" style="margin-left:0.5rem;">{{ count }}</span>{% endif %}
+  </a>
+</div>
+{% endif %}
+
+{% if user.is_member %}
+<div class="mb-4">
+  <a href="{% url 'freedom_wall:post_create' %}" class="btn btn--primary">Write a Note</a>
+</div>
+{% endif %}
+
+<div class="sticky-wall">
+  {% for post in posts %}
+  <div class="sticky-note sticky-note--{{ post.color }}">
+    <div class="sticky-note__body">{{ post.content|linebreaksbr }}</div>
+    <div class="sticky-note__footer">
+      <span class="sticky-note__author">
+        {% if post.is_anonymous %}
+          Anonymous
+        {% elif post.pen_name %}
+          {{ post.pen_name }}
+        {% else %}
+          {{ post.user.get_full_name }}
+        {% endif %}
+      </span>
+      <span class="sticky-note__date">{{ post.created_at|date:"M j, Y" }}</span>
+    </div>
+    {% if user.is_admin %}
+    <div class="sticky-note__sender">
+      {{ post.user.get_full_name }} ({{ post.user.lrn }})
+      {% if post.is_anonymous or post.pen_name %}&mdash; posted as {% if post.is_anonymous %}Anonymous{% else %}{{ post.pen_name }}{% endif %}{% endif %}
+    </div>
+    {% endif %}
+    {% if user.is_admin or user.is_staff_user %}
+    <form method="post" action="{% url 'freedom_wall:post_delete' post.pk %}" onsubmit="return confirm('Remove this post from the wall?');" style="margin-top:0.5rem;">
+      {% csrf_token %}
+      <button type="submit" class="btn btn--danger-outline btn--small btn--full">Remove</button>
+    </form>
+    {% endif %}
+  </div>
+  {% empty %}
+  <div class="empty-state" style="grid-column:1/-1;">
+    <div class="empty-state__icon">&#x1F4CB;</div>
+    <div class="empty-state__title">The wall is empty</div>
+    <div class="empty-state__text">No approved posts yet. Be the first to pin a note!</div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

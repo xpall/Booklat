@@ -11,6 +11,7 @@ ADMIN_PERMISSIONS = [
     "audit.view",
     "system.export_data", "system.import_data",
     "categories.manage",
+    "freedom_wall.view", "freedom_wall.create", "freedom_wall.approve",
 ]
 
 STAFF_PERMISSIONS = [
@@ -20,12 +21,14 @@ STAFF_PERMISSIONS = [
     "loans.create", "loans.return",
     "requests.process", "requests.view",
     "categories.manage",
+    "freedom_wall.view", "freedom_wall.approve",
 ]
 
 MEMBER_PERMISSIONS = [
     "books.view",
     "loans.view",
     "requests.view",
+    "freedom_wall.view", "freedom_wall.create",
 ]
 
 

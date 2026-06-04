@@ -1,0 +1,48 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'freedom_wall/css/freedom-wall.css' %}">
+{% endblock %}
+{% block content %}
+<h1 class="page-title mb-4">Write a Note</h1>
+
+<form method="post" style="max-width:32rem;">
+  {% csrf_token %}
+
+  <div class="card mb-4">
+    <div class="form-group">
+      <label for="id_pen_name" class="form-label">Pen Name</label>
+      <input type="text" name="pen_name" id="id_pen_name" class="form-input" maxlength="100" placeholder="Your pen name (optional)" value="{{ form.pen_name.value|default:'' }}">
+      <span class="text-caption text-secondary">Leave blank if posting anonymously.</span>
+    </div>
+
+    <div class="form-group">
+      <label style="display:flex;align-items:center;gap:var(--space-2);font-size:var(--font-size-small);cursor:pointer;">
+        <input type="checkbox" name="is_anonymous" id="id_is_anonymous" {% if form.is_anonymous.value %}checked{% endif %}>
+        Post anonymously
+      </label>
+    </div>
+
+    <div class="form-group">
+      <label for="id_content" class="form-label">Your Message</label>
+      <textarea name="content" id="id_content" class="form-input" rows="5" maxlength="500" required>{{ form.content.value|default:'' }}</textarea>
+      <span class="text-caption text-secondary">Max 500 characters &middot; One post per day</span>
+    </div>
+  </div>
+
+  {% if form.errors %}
+  <div class="mb-4">
+    {% for field, error_list in form.errors.items %}
+    {% for error in error_list %}
+    <p class="form-error">{{ error }}</p>
+    {% endfor %}
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="flex gap-2">
+    <button type="submit" class="btn btn--primary">Submit for Approval</button>
+    <a href="{% url 'freedom_wall:post_list' %}" class="btn btn--secondary">Cancel</a>
+  </div>
+</form>
+{% endblock %}
