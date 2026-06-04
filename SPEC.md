@@ -54,15 +54,15 @@ The system focuses on:
 * Django
 * PostgreSQL
 * Redis
-* Celery
 * Gunicorn
+* django-ratelimit
 
 ## Infrastructure
 
 * Docker
 * Docker Compose
-* Cloudflare Tunnel
 * WhiteNoise
+* Cloudflare Tunnel (production-only, `docker-compose.prod.yml`)
 
 ## Not Used
 
@@ -78,12 +78,28 @@ The system focuses on:
 # Architecture
 
 Internet
-→ Cloudflare
-→ Cloudflare Tunnel
+→ Cloudflare (optional)
+→ Cloudflare Tunnel (optional, production only)
 → Gunicorn
 → Django
 → PostgreSQL
 → Redis
+
+## Django Admin
+
+`django.contrib.admin` is **not** installed. All management is through custom views.
+
+## Session Behavior
+
+Sessions use the `cached_db` backend (DB + Redis cache). Expires on browser close (`SESSION_EXPIRE_AT_BROWSER_CLOSE = True`), max 24-hour cookie age.
+
+## Rate Limiting
+
+`django-ratelimit` is used on auth and form submission endpoints. Ratelimits are disabled when `DEBUG=1` and active in production.
+
+## Environment
+
+No dotenv package. Environment variables are read directly from `os.environ` in `settings.py` with fallback defaults. A `.env.example` is provided as a template.
 
 ---
 
@@ -954,11 +970,12 @@ CSV exports are not a replacement for database backups.
 
 # Django Applications
 
+config/
 accounts/
 books/
 inventory/
 loans/
-requests/
+requests_app/
 audit/
 dashboard/
 core/
@@ -973,12 +990,11 @@ Permission
 
 Book
 BookCopy
+CopyHistory
 
 Loan
 
 CheckoutRequest
-
-ImportJob
 
 AuditLog
 
@@ -1040,7 +1056,6 @@ Administration
 Deployment
 
 * Docker Compose
-* Cloudflare Tunnel
 * PostgreSQL
 * Redis
-* Celery
+* Cloudflare Tunnel (production-only)
