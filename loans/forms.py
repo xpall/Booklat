@@ -16,13 +16,24 @@ class CheckoutCopyForm(forms.Form):
     copy = forms.ModelChoiceField(
         queryset=BookCopy.objects.filter(is_archived=False, status=BookCopy.Status.AVAILABLE),
         label="Copy",
-        help_text="Select an available copy",
+        help_text="Search available copies by copy ID or book title",
+        widget=forms.HiddenInput(),
     )
 
 
-class ReturnForm(forms.Form):
+class ReturnUserForm(forms.Form):
+    user = forms.ModelChoiceField(
+        queryset=User.objects.filter(status=User.Status.ACTIVE),
+        label="User",
+        help_text="Search by LRN or name — select the student who is returning the book",
+        widget=forms.HiddenInput(),
+    )
+
+
+class ReturnCopyForm(forms.Form):
     copy = forms.ModelChoiceField(
         queryset=BookCopy.objects.filter(is_archived=False, status=BookCopy.Status.BORROWED),
         label="Copy",
-        help_text="Select a borrowed copy to return",
+        help_text="Search borrowed copies by copy ID or book title",
+        widget=forms.HiddenInput(),
     )

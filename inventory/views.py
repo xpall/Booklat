@@ -1,5 +1,5 @@
 import csv
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.views.decorators.http import require_http_methods
@@ -189,6 +189,22 @@ def _import_copies(records, actor):
         except Exception as e:
             errors.append(f"Row {i}: {isbn} - {str(e)}")
     return imported, errors
+
+
+@any_permission_required("loans.create", "loans.return")
+def copy_search_json(request):
+    q = request.GET.get("q", "").strip()
+    status = request.GET.get("status", BookCopy.Status.AVAILABLE)
+    copies = BookCopy.objects.filter(is_archived=False, status=status).select_related("book")
+    if q:
+        copies = copies.filter(
+            copy_id__icontains=q
+        ) | copies.filter(
+            book__title__icontains=q
+        )
+    copies = copies.distinct()[:20]
+    results = [{"id": c.pk, "copy_id": c.copy_id, "title": c.book.title} for c in copies]
+    return JsonResponse({"results": results})
 
 
 @permission_required("system.import_data")

@@ -1,0 +1,32 @@
+{% extends "core/base.html" %}
+{% block content %}
+<h1 class="page-title mb-4">Confirm Return</h1>
+<div class="card mb-4">
+  <div class="book-meta">
+    <div class="book-meta__item">
+      <span class="book-meta__label">User</span>
+      <span class="book-meta__value">{{ return_user.get_full_name }} ({{ return_user.lrn }})</span>
+    </div>
+    <div class="book-meta__item">
+      <span class="book-meta__label">Copy</span>
+      <span class="book-meta__value">{{ copy.copy_id }} — {{ copy.book.title }}</span>
+    </div>
+    <div class="book-meta__item">
+      <span class="book-meta__label">Checked Out</span>
+      <span class="book-meta__value">{{ loan.checkout_date|date:"Y-m-d" }}</span>
+    </div>
+    <div class="book-meta__item">
+      <span class="book-meta__label">Due Date</span>
+      <span class="book-meta__value">{% if loan.is_overdue %}<span style="color:var(--color-danger);">{{ loan.due_date|date:"Y-m-d" }} ({{ loan.days_overdue }}d overdue)</span>{% else %}{{ loan.due_date|date:"Y-m-d" }}{% endif %}</span>
+    </div>
+  </div>
+</div>
+<p class="mb-4" style="font-weight:var(--font-weight-medium);">Are you sure you want to mark this book as returned?</p>
+<form method="post" style="max-width:28rem;">
+  {% csrf_token %}
+  <div class="flex gap-2">
+    <button type="submit" class="btn btn--primary">Yes, Return Book</button>
+    <a href="{% url 'loans:return_book' %}" class="btn btn--secondary">Cancel</a>
+  </div>
+</form>
+{% endblock %}

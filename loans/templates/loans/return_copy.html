@@ -1,15 +1,15 @@
 {% extends "core/base.html" %}
 {% block content %}
-<h1 class="page-title mb-4">Checkout — Select Copy</h1>
+<h1 class="page-title mb-4">Return — Select Copy</h1>
 <div class="card card--flat mb-4" style="padding:var(--space-4);">
   <span class="text-caption">User:</span>
-  <span class="card__title" style="font-size:var(--font-size-small);">{{ checkout_user.get_full_name }} ({{ checkout_user.lrn }})</span>
+  <span class="card__title" style="font-size:var(--font-size-small);">{{ return_user.get_full_name }} ({{ return_user.lrn }})</span>
 </div>
 <form method="post" style="max-width:28rem;">
   {% csrf_token %}
   <div class="form-group">
-    <label for="copy-search" class="form-label">Available Copy</label>
-    <div class="copy-search" data-search-url="{% url 'inventory:copy_search_json' %}?status=available">
+    <label for="copy-search" class="form-label">Borrowed Copy</label>
+    <div class="copy-search" data-search-url="{% url 'loans:borrowed_copy_search_json' %}?user_id={{ return_user.pk }}">
       <input type="text" id="copy-search" class="form-input copy-search__input" placeholder="Search by copy ID or book title..." autocomplete="off" required>
       {{ form.copy }}
       <div class="copy-search__dropdown"></div>

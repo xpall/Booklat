@@ -2,12 +2,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.views.decorators.http import require_http_methods
 from django.utils import timezone
+from django.http import JsonResponse
 from datetime import timedelta
 from django_ratelimit.decorators import ratelimit
 from .models import Loan
 from accounts.models import User
 from inventory.models import BookCopy, CopyHistory
-from .forms import CheckoutUserForm, CheckoutCopyForm, ReturnForm
+from .forms import CheckoutUserForm, CheckoutCopyForm, ReturnUserForm, ReturnCopyForm
 from core.decorators import permission_required, any_permission_required, admin_or_staff_required
 from core.utils import log_action
 
@@ -68,7 +69,7 @@ def checkout_select_copy(request):
             return redirect("loans:checkout_confirm")
     else:
         form = CheckoutCopyForm()
-    return render(request, "loans/checkout_copy.html", {"form": form, "user": user})
+    return render(request, "loans/checkout_copy.html", {"form": form, "checkout_user": user})
 
 
 @require_http_methods(["GET", "POST"])
@@ -108,7 +109,7 @@ def checkout_confirm(request):
         messages.success(request, f"Book checked out to {user.get_full_name()}.")
         return redirect("loans:loan_list")
     return render(request, "loans/checkout_confirm.html", {
-        "user": user, "copy": copy,
+        "checkout_user": user, "copy": copy,
         "default_due_date": timezone.localdate() + timedelta(days=7),
     })
 
@@ -122,27 +123,97 @@ def return_book_view(request):
         if was_limited:
             messages.error(request, "Too many requests. Please wait a minute and try again.")
             return redirect("loans:loan_list")
-        form = ReturnForm(request.POST)
+        form = ReturnUserForm(request.POST)
+        if form.is_valid():
+            user = form.cleaned_data["user"]
+            request.session["return_user_id"] = user.pk
+            return redirect("loans:return_select_copy")
+    else:
+        form = ReturnUserForm()
+    return render(request, "loans/return_user.html", {"form": form})
+
+
+@require_http_methods(["GET", "POST"])
+@permission_required("loans.return")
+def return_select_copy(request):
+    user_id = request.session.get("return_user_id")
+    if not user_id:
+        return redirect("loans:return_book")
+    return_user = get_object_or_404(User, pk=user_id)
+    if request.method == "POST":
+        form = ReturnCopyForm(request.POST)
         if form.is_valid():
             copy = form.cleaned_data["copy"]
             loan = Loan.objects.filter(book_copy=copy, return_date__isnull=True).first()
             if not loan:
                 messages.error(request, "No active loan found for this copy.")
-                return redirect("loans:return_book")
-            loan.return_date = timezone.localdate()
-            loan.save()
-            copy.status = BookCopy.Status.AVAILABLE
-            copy.save()
-            CopyHistory.objects.create(book_copy=copy, event="Returned", actor=request.user)
-            log_action(request.user, "LOAN_RETURNED", "Loan", loan.loan_id, metadata={
-                "user_lrn": loan.user.lrn,
-                "copy_id": copy.copy_id,
-            })
-            messages.success(request, f"Book returned: {copy.copy_id}.")
-            return redirect("loans:loan_list")
+                return redirect("loans:return_select_copy")
+            if loan.user.pk != return_user.pk:
+                messages.error(request, "This copy is not borrowed by the selected user.")
+                return redirect("loans:return_select_copy")
+            request.session["return_copy_id"] = copy.pk
+            return redirect("loans:return_confirm")
     else:
-        form = ReturnForm()
-    return render(request, "loans/return_form.html", {"form": form})
+        form = ReturnCopyForm()
+    return render(request, "loans/return_copy.html", {
+        "form": form,
+        "return_user": return_user,
+    })
+
+
+@require_http_methods(["GET", "POST"])
+@permission_required("loans.return")
+def return_confirm(request):
+    user_id = request.session.get("return_user_id")
+    copy_id = request.session.get("return_copy_id")
+    if not user_id or not copy_id:
+        return redirect("loans:return_book")
+    return_user = get_object_or_404(User, pk=user_id)
+    copy = get_object_or_404(BookCopy, pk=copy_id)
+    loan = Loan.objects.filter(book_copy=copy, return_date__isnull=True).first()
+    if not loan:
+        messages.error(request, "No active loan found for this copy.")
+        return redirect("loans:loan_list")
+    if request.method == "POST":
+        loan.return_date = timezone.localdate()
+        loan.save()
+        copy.status = BookCopy.Status.AVAILABLE
+        copy.save()
+        CopyHistory.objects.create(book_copy=copy, event="Returned", actor=request.user)
+        log_action(request.user, "LOAN_RETURNED", "Loan", loan.loan_id, metadata={
+            "user_lrn": loan.user.lrn,
+            "copy_id": copy.copy_id,
+        })
+        request.session.pop("return_user_id", None)
+        request.session.pop("return_copy_id", None)
+        messages.success(request, f"Book returned: {copy.copy_id}.")
+        return redirect("loans:loan_list")
+    return render(request, "loans/return_confirm.html", {
+        "return_user": return_user,
+        "copy": copy,
+        "loan": loan,
+    })
+
+
+@any_permission_required("loans.return", "loans.create")
+def borrowed_copy_search_json(request):
+    q = request.GET.get("q", "").strip()
+    user_id = request.GET.get("user_id")
+    copies = BookCopy.objects.filter(is_archived=False, status=BookCopy.Status.BORROWED).select_related("book")
+    if user_id:
+        active_loan_copy_ids = Loan.objects.filter(
+            user_id=user_id, return_date__isnull=True
+        ).values_list("book_copy_id", flat=True)
+        copies = copies.filter(pk__in=active_loan_copy_ids)
+    if q:
+        copies = copies.filter(
+            copy_id__icontains=q
+        ) | copies.filter(
+            book__title__icontains=q
+        )
+    copies = copies.distinct()[:20]
+    results = [{"id": c.pk, "copy_id": c.copy_id, "title": c.book.title} for c in copies]
+    return JsonResponse({"results": results})
 
 
 @admin_or_staff_required
