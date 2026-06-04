@@ -1,4 +1,5 @@
 import csv
+from datetime import datetime
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import HttpResponse
@@ -37,7 +38,8 @@ def audit_detail_view(request, log_id):
 @permission_required("system.export_data")
 def audit_export_view(request):
     response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="audit_logs.csv"'
+    ts = datetime.now().strftime("%Y-%m-%d_%H%M")
+    response["Content-Disposition"] = f'attachment; filename="booklat_audit_logs_{ts}.csv"'
     writer = csv.writer(response)
     writer.writerow(["Timestamp", "Actor LRN", "Action", "Resource Type", "Resource ID"])
     for log in AuditLog.objects.select_related("actor").iterator():

@@ -1,4 +1,5 @@
 import csv
+from datetime import datetime
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from core.decorators import permission_required
@@ -27,7 +28,8 @@ def export_view(request):
 @permission_required("system.export_data")
 def export_users_csv(request):
     response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="users.csv"'
+    ts = datetime.now().strftime("%Y-%m-%d_%H%M")
+    response["Content-Disposition"] = f'attachment; filename="booklat_users_{ts}.csv"'
     writer = csv.writer(response)
     writer.writerow(["LRN", "First Name", "Last Name", "Status", "Created At"])
     for user in User.objects.iterator():
@@ -38,7 +40,8 @@ def export_users_csv(request):
 @permission_required("system.export_data")
 def export_books_csv(request):
     response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="books.csv"'
+    ts = datetime.now().strftime("%Y-%m-%d_%H%M")
+    response["Content-Disposition"] = f'attachment; filename="booklat_books_{ts}.csv"'
     writer = csv.writer(response)
     writer.writerow(["ISBN", "Title", "Publisher", "Publication Year", "Categories"])
     for book in Book.objects.filter(is_archived=False).iterator():
@@ -49,7 +52,8 @@ def export_books_csv(request):
 @permission_required("system.export_data")
 def export_copies_csv(request):
     response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="copies.csv"'
+    ts = datetime.now().strftime("%Y-%m-%d_%H%M")
+    response["Content-Disposition"] = f'attachment; filename="booklat_copies_{ts}.csv"'
     writer = csv.writer(response)
     writer.writerow(["Copy ID", "Book ISBN", "Book Title", "Status", "Shelf Location", "Acquisition Date"])
     for copy in BookCopy.objects.select_related("book").filter(is_archived=False).iterator():
@@ -67,7 +71,8 @@ def export_copies_csv(request):
 @permission_required("system.export_data")
 def export_loans_csv(request):
     response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="loans.csv"'
+    ts = datetime.now().strftime("%Y-%m-%d_%H%M")
+    response["Content-Disposition"] = f'attachment; filename="booklat_loans_{ts}.csv"'
     writer = csv.writer(response)
     writer.writerow(["User LRN", "Copy ID", "Book Title", "Checkout Date", "Due Date", "Return Date"])
     for loan in Loan.objects.select_related("user", "book_copy__book").iterator():
