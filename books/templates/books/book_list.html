@@ -24,7 +24,7 @@
   <a href="?q={{ query }}" class="filter-chip {% if not filter and not selected_category %}filter-chip--active{% endif %}">All</a>
   <a href="?q={{ query }}&filter=new" class="filter-chip {% if filter == 'new' %}filter-chip--active{% endif %}">New Arrivals</a>
   {% for cat in categories %}
-  <a href="?q={{ query }}&category={{ cat.id }}" class="filter-chip {% if selected_category == cat.id|stringformat:'s' %}filter-chip--active{% endif %}">{{ cat.name }}</a>
+  <a href="?q={{ query }}&category={{ cat.slug }}" class="filter-chip {% if selected_category == cat.slug %}filter-chip--active{% endif %}">{{ cat.name }}</a>
   {% endfor %}
 </div>
 

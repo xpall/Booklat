@@ -15,7 +15,7 @@ from core.utils import log_action, parse_csv_upload
 @any_permission_required("books.view")
 def book_list_view(request):
     query = request.GET.get("q", "")
-    category_id = request.GET.get("category", "")
+    category_slug = request.GET.get("category", "")
     filter_val = request.GET.get("filter", "")
     show_archived = request.GET.get("show_archived") == "1"
     books = Book.objects.all()
@@ -27,13 +27,13 @@ def book_list_view(request):
         books = books.order_by("-created_at")
     if query:
         books = books.filter(title__icontains=query) | books.filter(authors__icontains=query) | books.filter(isbn__icontains=query)
-    if category_id:
-        books = books.filter(categories__id=category_id)
+    if category_slug:
+        books = books.filter(categories__slug=category_slug)
     books = books.prefetch_related("categories").distinct()
     all_categories = Category.objects.filter(is_archived=False)
     return render(request, "books/book_list.html", {
         "books": books, "query": query, "show_archived": show_archived,
-        "categories": all_categories, "selected_category": category_id,
+        "categories": all_categories, "selected_category": category_slug,
         "filter": filter_val,
     })
 
@@ -236,7 +236,7 @@ def category_create_view(request):
         form = CategoryForm(request.POST)
         if form.is_valid():
             category = form.save()
-            log_action(request.user, "CATEGORY_CREATED", "Category", category.id)
+            log_action(request.user, "CATEGORY_CREATED", "Category", category.slug)
             messages.success(request, f"Category '{category.name}' created.")
             return redirect("books:category_list")
     else:
@@ -246,13 +246,13 @@ def category_create_view(request):
 
 @require_http_methods(["GET", "POST"])
 @permission_required("categories.manage")
-def category_update_view(request, category_id):
-    category = get_object_or_404(Category, id=category_id)
+def category_update_view(request, slug):
+    category = get_object_or_404(Category, slug=slug)
     if request.method == "POST":
         form = CategoryForm(request.POST, instance=category)
         if form.is_valid():
             category = form.save()
-            log_action(request.user, "CATEGORY_UPDATED", "Category", category.id)
+            log_action(request.user, "CATEGORY_UPDATED", "Category", category.slug)
             messages.success(request, f"Category '{category.name}' updated.")
             return redirect("books:category_list")
     else:
@@ -262,21 +262,88 @@ def category_update_view(request, category_id):
 
 @require_http_methods(["POST"])
 @permission_required("categories.manage")
-def category_archive_view(request, category_id):
-    category = get_object_or_404(Category, id=category_id)
+def category_archive_view(request, slug):
+    category = get_object_or_404(Category, slug=slug)
     category.is_archived = True
     category.save()
-    log_action(request.user, "CATEGORY_ARCHIVED", "Category", category.id)
+    log_action(request.user, "CATEGORY_ARCHIVED", "Category", category.slug)
     messages.success(request, f"Category '{category.name}' archived.")
     return redirect("books:category_list")
 
 
 @require_http_methods(["POST"])
 @permission_required("categories.manage")
-def category_unarchive_view(request, category_id):
-    category = get_object_or_404(Category, id=category_id)
+def category_unarchive_view(request, slug):
+    category = get_object_or_404(Category, slug=slug)
     category.is_archived = False
     category.save()
-    log_action(request.user, "CATEGORY_UNARCHIVED", "Category", category.id)
+    log_action(request.user, "CATEGORY_UNARCHIVED", "Category", category.slug)
     messages.success(request, f"Category '{category.name}' unarchived.")
     return redirect("books:category_list")
+
+
+@permission_required("categories.manage")
+def category_export_csv(request):
+    response = HttpResponse(content_type="text/csv")
+    response["Content-Disposition"] = 'attachment; filename="categories.csv"'
+    writer = csv.writer(response)
+    writer.writerow(["name"])
+    for cat in Category.objects.filter(is_archived=False).order_by("name"):
+        writer.writerow([cat.name])
+    return response
+
+
+@require_http_methods(["GET", "POST"])
+@permission_required("categories.manage")
+def category_import_view(request):
+    preview_data = None
+    errors = []
+    form = None
+    if request.method == "POST":
+        if "confirm" in request.POST:
+            records = request.session.pop("category_import_preview", None)
+            if records:
+                imported, errors = _import_categories(records, request.user)
+                if imported:
+                    messages.success(request, f"Imported {imported} categories.")
+                    return redirect("books:category_list")
+                preview_data = records
+            else:
+                messages.error(request, "Import session expired. Please upload the file again.")
+                form = BookImportForm()
+        else:
+            form = BookImportForm(request.POST, request.FILES)
+            if form.is_valid():
+                records = parse_csv_upload(request.FILES["csv_file"])
+                preview_data = records
+                request.session["category_import_preview"] = records
+    else:
+        form = BookImportForm()
+        request.session.pop("category_import_preview", None)
+    return render(request, "books/category_import.html", {
+        "form": form if not preview_data else None,
+        "preview_data": preview_data,
+        "errors": errors,
+        "title": "Import Categories",
+        "columns": ["Name"],
+    })
+
+
+def _import_categories(records, actor):
+    errors = []
+    imported = 0
+    for i, r in enumerate(records, 1):
+        name = r.get("name", "").strip()
+        if not name:
+            errors.append(f"Row {i}: missing name.")
+            continue
+        if Category.objects.filter(name=name).exists():
+            errors.append(f"Row {i}: category '{name}' already exists.")
+            continue
+        try:
+            category = Category.objects.create(name=name)
+            log_action(actor, "CATEGORY_CREATED", "Category", category.slug, metadata={"source": "csv_import"})
+            imported += 1
+        except Exception as e:
+            errors.append(f"Row {i}: {name} - {str(e)}")
+    return imported, errors

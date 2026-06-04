@@ -5,6 +5,8 @@
 {% if user.is_admin or user.is_staff_user %}
 <div class="mb-4 flex gap-2" style="flex-wrap:wrap;">
   <a href="{% url 'books:category_create' %}" class="btn btn--primary btn--small">Create Category</a>
+  <a href="{% url 'books:category_import' %}" class="btn btn--secondary btn--small">Import CSV</a>
+  <a href="{% url 'books:category_export' %}" class="btn btn--outline btn--small">Export CSV</a>
   <a href="?show_archived={% if show_archived %}0{% else %}1{% endif %}" class="btn btn--outline btn--small">
     {% if show_archived %}Show Active{% else %}See Archived{% endif %}
   </a>
@@ -26,7 +28,7 @@
       {% for category in categories %}
       <tr>
         <td>
-          <a href="{% url 'books:book_list' %}?category={{ category.id }}">
+          <a href="{% url 'books:book_list' %}?category={{ category.slug }}">
             {{ category.name }}
           </a>
         </td>
@@ -37,13 +39,13 @@
         <td>
           <div class="flex gap-2" style="justify-content:flex-end;">
             {% if not category.is_archived %}
-            <a href="{% url 'books:category_edit' category.id %}" class="btn btn--outline btn--small">Edit</a>
-            <form method="post" action="{% url 'books:category_archive' category.id %}" style="display:inline;">
+            <a href="{% url 'books:category_edit' category.slug %}" class="btn btn--outline btn--small">Edit</a>
+            <form method="post" action="{% url 'books:category_archive' category.slug %}" style="display:inline;">
               {% csrf_token %}
               <button type="submit" class="btn btn--danger-outline btn--small" onclick="return confirm('Archive this category?')">Archive</button>
             </form>
             {% else %}
-            <form method="post" action="{% url 'books:category_unarchive' category.id %}" style="display:inline;">
+            <form method="post" action="{% url 'books:category_unarchive' category.slug %}" style="display:inline;">
               {% csrf_token %}
               <button type="submit" class="btn btn--outline btn--small">Unarchive</button>
             </form>

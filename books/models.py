@@ -1,10 +1,12 @@
 import hashlib
 
 from django.db import models
+from django.utils.text import slugify
 
 
 class Category(models.Model):
     name = models.CharField(max_length=200, unique=True)
+    slug = models.SlugField(max_length=200, unique=True)
     is_archived = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -14,6 +16,12 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            raw = slugify(self.name)
+            self.slug = raw.replace("-", "_")
+        super().save(*args, **kwargs)
 
     @property
     def book_count(self):

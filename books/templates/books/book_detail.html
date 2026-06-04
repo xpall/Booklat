@@ -37,7 +37,7 @@
         <span class="book-meta__label">Categories</span>
         <span class="book-meta__value">
           {% for cat in book.categories.all %}
-          <a href="{% url 'books:book_list' %}?category={{ cat.id }}" style="text-decoration:none;">
+          <a href="{% url 'books:book_list' %}?category={{ cat.slug }}" style="text-decoration:none;">
             <span class="badge" style="background-color:{{ cat.color }};color:#fff;margin-right:4px;">{{ cat.name }}</span>
           </a>
           {% empty %}
