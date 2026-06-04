@@ -10,6 +10,7 @@ ADMIN_PERMISSIONS = [
     "requests.process", "requests.view",
     "audit.view",
     "system.export_data", "system.import_data",
+    "categories.manage",
 ]
 
 STAFF_PERMISSIONS = [
@@ -18,6 +19,7 @@ STAFF_PERMISSIONS = [
     "copies.view", "copies.create", "copies.update",
     "loans.create", "loans.return",
     "requests.process", "requests.view",
+    "categories.manage",
 ]
 
 MEMBER_PERMISSIONS = [

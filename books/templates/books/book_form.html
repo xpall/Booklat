@@ -10,7 +10,7 @@
   <div class="form-group"><label for="{{ form.publisher.id_for_label }}" class="form-label">Publisher</label>{{ form.publisher }}</div>
   <div class="form-group"><label for="{{ form.publication_year.id_for_label }}" class="form-label">Publication Year</label>{{ form.publication_year }}</div>
   <div class="form-group"><label for="{{ form.description.id_for_label }}" class="form-label">Description</label>{{ form.description }}</div>
-  <div class="form-group"><label for="{{ form.categories.id_for_label }}" class="form-label">Categories</label>{{ form.categories }}</div>
+  <div class="form-group"><label for="{{ form.categories.id_for_label }}" class="form-label">Categories</label>{{ form.categories }}<p class="form-help">Hold Ctrl/Cmd to select multiple</p></div>
   <div class="form-group"><label for="{{ form.cover_image.id_for_label }}" class="form-label">Cover Image URL</label>{{ form.cover_image }}</div>
   {% if form.errors %}
   {% for field, error_list in form.errors.items %}

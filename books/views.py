@@ -3,8 +3,8 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.views.decorators.http import require_http_methods
-from .models import Book
-from .forms import BookForm, BookImportForm
+from .models import Book, Category
+from .forms import BookForm, CategoryForm, BookImportForm
 from inventory.forms import CopyForm
 from inventory.models import BookCopy, CopyHistory
 from inventory.views import _generate_copy_id
@@ -15,6 +15,7 @@ from core.utils import log_action, parse_csv_upload
 @any_permission_required("books.view")
 def book_list_view(request):
     query = request.GET.get("q", "")
+    category_id = request.GET.get("category", "")
     show_archived = request.GET.get("show_archived") == "1"
     books = Book.objects.all()
     if show_archived:
@@ -23,8 +24,14 @@ def book_list_view(request):
         books = books.filter(is_archived=False)
     if query:
         books = books.filter(title__icontains=query) | books.filter(authors__icontains=query) | books.filter(isbn__icontains=query)
-    books = books.distinct()
-    return render(request, "books/book_list.html", {"books": books, "query": query, "show_archived": show_archived})
+    if category_id:
+        books = books.filter(categories__id=category_id)
+    books = books.prefetch_related("categories").distinct()
+    all_categories = Category.objects.filter(is_archived=False)
+    return render(request, "books/book_list.html", {
+        "books": books, "query": query, "show_archived": show_archived,
+        "categories": all_categories, "selected_category": category_id,
+    })
 
 
 @any_permission_required("books.view")
@@ -168,10 +175,15 @@ def _import_books(records, actor):
                 publisher=r.get("publisher", "").strip(),
                 publication_year=r.get("publication_year") or None,
                 description=r.get("description", "").strip(),
-                categories=r.get("categories", "").strip(),
                 cover_image=r.get("cover_image", "").strip(),
             )
             book.save()
+            cat_string = r.get("categories", "").strip()
+            if cat_string:
+                cat_names = [c.strip() for c in cat_string.split(",") if c.strip()]
+                for cat_name in cat_names:
+                    category, _ = Category.objects.get_or_create(name=cat_name)
+                    book.categories.add(category)
             log_action(actor, "BOOK_CREATED", "Book", book.isbn, metadata={"source": "csv_import"})
             imported += 1
         except Exception as e:
@@ -198,3 +210,69 @@ def book_search_json(request):
     books = books.distinct()[:20]
     results = [{"id": b.pk, "isbn": b.isbn, "title": b.title, "authors": b.authors} for b in books]
     return JsonResponse({"results": results})
+
+
+@permission_required("categories.manage")
+def category_list_view(request):
+    show_archived = request.GET.get("show_archived") == "1"
+    categories = Category.objects.all()
+    if show_archived:
+        categories = categories.filter(is_archived=True)
+    else:
+        categories = categories.filter(is_archived=False)
+    return render(request, "books/category_list.html", {
+        "categories": categories, "show_archived": show_archived,
+    })
+
+
+@require_http_methods(["GET", "POST"])
+@permission_required("categories.manage")
+def category_create_view(request):
+    if request.method == "POST":
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            category = form.save()
+            log_action(request.user, "CATEGORY_CREATED", "Category", category.id)
+            messages.success(request, f"Category '{category.name}' created.")
+            return redirect("books:category_list")
+    else:
+        form = CategoryForm()
+    return render(request, "books/category_form.html", {"form": form, "title": "Create Category"})
+
+
+@require_http_methods(["GET", "POST"])
+@permission_required("categories.manage")
+def category_update_view(request, category_id):
+    category = get_object_or_404(Category, id=category_id)
+    if request.method == "POST":
+        form = CategoryForm(request.POST, instance=category)
+        if form.is_valid():
+            category = form.save()
+            log_action(request.user, "CATEGORY_UPDATED", "Category", category.id)
+            messages.success(request, f"Category '{category.name}' updated.")
+            return redirect("books:category_list")
+    else:
+        form = CategoryForm(instance=category)
+    return render(request, "books/category_form.html", {"form": form, "title": f"Edit {category.name}"})
+
+
+@require_http_methods(["POST"])
+@permission_required("categories.manage")
+def category_archive_view(request, category_id):
+    category = get_object_or_404(Category, id=category_id)
+    category.is_archived = True
+    category.save()
+    log_action(request.user, "CATEGORY_ARCHIVED", "Category", category.id)
+    messages.success(request, f"Category '{category.name}' archived.")
+    return redirect("books:category_list")
+
+
+@require_http_methods(["POST"])
+@permission_required("categories.manage")
+def category_unarchive_view(request, category_id):
+    category = get_object_or_404(Category, id=category_id)
+    category.is_archived = False
+    category.save()
+    log_action(request.user, "CATEGORY_UNARCHIVED", "Category", category.id)
+    messages.success(request, f"Category '{category.name}' unarchived.")
+    return redirect("books:category_list")

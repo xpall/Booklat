@@ -1,0 +1,68 @@
+{% extends "core/base.html" %}
+{% block content %}
+<h1 class="page-title mb-4">Categories</h1>
+
+{% if user.is_admin or user.is_staff_user %}
+<div class="mb-4 flex gap-2" style="flex-wrap:wrap;">
+  <a href="{% url 'books:category_create' %}" class="btn btn--primary btn--small">Create Category</a>
+  <a href="?show_archived={% if show_archived %}0{% else %}1{% endif %}" class="btn btn--outline btn--small">
+    {% if show_archived %}Show Active{% else %}See Archived{% endif %}
+  </a>
+</div>
+{% endif %}
+
+{% if categories %}
+<div class="table-responsive">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Books</th>
+        <th>Color</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for category in categories %}
+      <tr>
+        <td>
+          <a href="{% url 'books:book_list' %}?category={{ category.id }}">
+            {{ category.name }}
+          </a>
+        </td>
+        <td>{{ category.book_count }}</td>
+        <td>
+          <span class="badge" style="background-color:{{ category.color }};color:#fff;">{{ category.name }}</span>
+        </td>
+        <td>
+          <div class="flex gap-2" style="justify-content:flex-end;">
+            {% if not category.is_archived %}
+            <a href="{% url 'books:category_edit' category.id %}" class="btn btn--outline btn--small">Edit</a>
+            <form method="post" action="{% url 'books:category_archive' category.id %}" style="display:inline;">
+              {% csrf_token %}
+              <button type="submit" class="btn btn--danger-outline btn--small" onclick="return confirm('Archive this category?')">Archive</button>
+            </form>
+            {% else %}
+            <form method="post" action="{% url 'books:category_unarchive' category.id %}" style="display:inline;">
+              {% csrf_token %}
+              <button type="submit" class="btn btn--outline btn--small">Unarchive</button>
+            </form>
+            {% endif %}
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="empty-state">
+  <div class="empty-state__icon">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+  </div>
+  <div class="empty-state__title">No categories found</div>
+  <div class="empty-state__text">Create one to organize books.</div>
+  <a href="{% url 'books:category_create' %}" class="btn btn--primary">Create Category</a>
+</div>
+{% endif %}
+{% endblock %}

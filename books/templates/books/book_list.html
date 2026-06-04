@@ -41,7 +41,11 @@
       <div class="book-card__title">{{ book.title }}</div>
       <div class="book-card__author">{{ book.authors }}</div>
       <div class="book-card__footer">
-        <span class="badge badge--neutral">{{ book.categories|default:"Uncategorized" }}</span>
+        {% for cat in book.categories.all %}
+        <span class="badge" style="background-color:{{ cat.color }};color:#fff;">{{ cat.name }}</span>
+        {% empty %}
+        <span class="badge badge--neutral">Uncategorized</span>
+        {% endfor %}
       </div>
     </div>
   </a>

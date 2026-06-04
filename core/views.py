@@ -44,8 +44,9 @@ def export_books_csv(request):
     response["Content-Disposition"] = f'attachment; filename="booklat_books_{ts}.csv"'
     writer = csv.writer(response)
     writer.writerow(["ISBN", "Title", "Publisher", "Publication Year", "Categories"])
-    for book in Book.objects.filter(is_archived=False).iterator():
-        writer.writerow([book.isbn, book.title, book.publisher, book.publication_year or "", book.categories])
+    for book in Book.objects.filter(is_archived=False).prefetch_related("categories").iterator():
+        cats = ", ".join(c.name for c in book.categories.all())
+        writer.writerow([book.isbn, book.title, book.publisher, book.publication_year or "", cats])
     return response
 
 

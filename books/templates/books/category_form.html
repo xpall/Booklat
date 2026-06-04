@@ -1,0 +1,19 @@
+{% extends "core/base.html" %}
+{% block content %}
+<h1 class="page-title mb-4">{{ title }}</h1>
+<form method="post" style="max-width:24rem;">
+  {% csrf_token %}
+  <div class="form-group">
+    <label for="{{ form.name.id_for_label }}" class="form-label">Name</label>
+    {{ form.name }}
+  </div>
+  {% if form.errors %}
+  {% for field, error_list in form.errors.items %}
+  {% for error in error_list %}
+  <p class="form-error mb-4">{{ error }}</p>
+  {% endfor %}
+  {% endfor %}
+  {% endif %}
+  <button type="submit" class="btn btn--primary">Save</button>
+</form>
+{% endblock %}
