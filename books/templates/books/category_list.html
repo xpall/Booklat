@@ -6,7 +6,7 @@
 <div class="mb-4 flex gap-2" style="flex-wrap:wrap;">
   <a href="{% url 'books:category_create' %}" class="btn btn--primary btn--small">Create Category</a>
   <a href="{% url 'books:category_import' %}" class="btn btn--secondary btn--small">Import CSV</a>
-  <a href="{% url 'books:category_export' %}" class="btn btn--outline btn--small">Export CSV</a>
+  <a href="{% url 'books:category_import_sample' %}" class="btn btn--outline btn--small">Download Sample CSV</a>
   <a href="?show_archived={% if show_archived %}0{% else %}1{% endif %}" class="btn btn--outline btn--small">
     {% if show_archived %}Show Active{% else %}See Archived{% endif %}
   </a>

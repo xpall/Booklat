@@ -293,6 +293,16 @@ def category_export_csv(request):
     return response
 
 
+@permission_required("categories.manage")
+def category_sample_csv(request):
+    response = HttpResponse(content_type="text/csv")
+    response["Content-Disposition"] = 'attachment; filename="categories_sample.csv"'
+    writer = csv.writer(response)
+    writer.writerow(["name"])
+    writer.writerow(["Fiction"])
+    return response
+
+
 @require_http_methods(["GET", "POST"])
 @permission_required("categories.manage")
 def category_import_view(request):

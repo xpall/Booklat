@@ -11,6 +11,10 @@
     <div class="card__title">Books</div>
     <div class="card__subtitle">Export all book titles</div>
   </a>
+  <a href="{% url 'core:export_categories_csv' %}" class="card card--flat" style="text-decoration:none;color:inherit;">
+    <div class="card__title">Categories</div>
+    <div class="card__subtitle">Export all categories</div>
+  </a>
   <a href="{% url 'core:export_copies_csv' %}" class="card card--flat" style="text-decoration:none;color:inherit;">
     <div class="card__title">Copies</div>
     <div class="card__subtitle">Export all book copies</div>

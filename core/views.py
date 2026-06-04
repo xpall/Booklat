@@ -1,5 +1,6 @@
 import csv
 from datetime import datetime
+from django.db.models import Count
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from core.decorators import permission_required
@@ -14,7 +15,7 @@ def home_view(request):
     return redirect("dashboard:index")
 
 
-from books.models import Book
+from books.models import Book, Category
 from inventory.models import BookCopy
 from loans.models import Loan
 from audit.models import AuditLog
@@ -34,6 +35,18 @@ def export_users_csv(request):
     writer.writerow(["LRN", "First Name", "Last Name", "Status", "Created At"])
     for user in User.objects.iterator():
         writer.writerow([user.lrn, user.first_name, user.last_name, user.status, user.created_at.strftime("%Y-%m-%d %H:%M:%S")])
+    return response
+
+
+@permission_required("system.export_data")
+def export_categories_csv(request):
+    response = HttpResponse(content_type="text/csv")
+    ts = datetime.now().strftime("%Y-%m-%d_%H%M")
+    response["Content-Disposition"] = f'attachment; filename="booklat_categories_{ts}.csv"'
+    writer = csv.writer(response)
+    writer.writerow(["Name", "Slug", "Color", "Books", "Archived"])
+    for cat in Category.objects.annotate(num_books=Count("book_set")).iterator():
+        writer.writerow([cat.name, cat.slug, cat.color, cat.num_books, "Yes" if cat.is_archived else "No"])
     return response
 
 
