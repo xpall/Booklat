@@ -34,7 +34,7 @@ Single Django 5.1 project (Python 3.12), **not** a monorepo. 8 Django apps in on
 | `dashboard` | Admin/staff dashboard statistics |
 | `core` | Cross-cutting: middleware, permission decorators, CSV export/import utils, base template |
 
-Stack: Django 5.1 + PostgreSQL 16 + Redis 7 + Gunicorn + WhiteNoise + Pico CSS v2 (CDN).
+Stack: Django 5.1 + PostgreSQL 16 + Redis 7 + Gunicorn + WhiteNoise + Pico CSS v2 (CDN) + django-ratelimit. Python 3.12.
 
 ## Critical Gotchas
 
@@ -42,7 +42,15 @@ Stack: Django 5.1 + PostgreSQL 16 + Redis 7 + Gunicorn + WhiteNoise + Pico CSS v
 `django.contrib.admin` is **not** in INSTALLED_APPS. All user, book, and loan management is through custom views. Do not try to use or register ModelAdmin.
 
 ### Custom User Model — NOT an AbstractUser subclass
-`accounts.User` does its own password hashing (Argon2id), auth properties, and permission checks. It has an `id` property that returns `pk`. References to `request.user` will be this custom model. Use `AUTH_USER_MODEL = "accounts.User"` in ForeignKey definitions.
+`accounts.User` does its own password hashing (Argon2id), auth properties, and permission checks. References to `request.user` will be this custom model. Use `AUTH_USER_MODEL = "accounts.User"` in ForeignKey definitions.
+
+The model has `is_admin`, `is_staff_user`, `is_member` — **not** Django's `is_superuser` or `is_staff`. It also has an `id` property that returns `pk`.
+
+### Auth: LRN-based, not username/email
+`accounts.backends.LRNAuthenticationBackend` authenticates by LRN (`lrn` field) + password — the only auth backend configured. Login form must use `lrn` as the credential field name.
+
+### Password rules are unusually strict
+Custom validators in `accounts/validators.py`: **minimum 16 characters**, 1 uppercase, 1 lowercase, 1 number, 1 special character. Agents creating test users frequently get this wrong and wonder why the form rejects.
 
 ### Permission system is DB-driven, not Django's built-in
 Permissions are rows in `accounts.Permission` linked to `accounts.Role` via `RolePermission`. Use:
@@ -61,10 +69,13 @@ Permissions are rows in `accounts.Permission` linked to `accounts.Role` via `Rol
 The app is `requests_app`, not `requests`, to avoid colliding with Python's `requests` library. URL namespace is `requests:` and templates go in `templates/requests_app/`.
 
 ### `seed_data` is required
-The `manage.py seed_data` command is idempotent (uses `get_or_create`) and must run before first use. It creates three roles (Administrator, Staff, Member), all permissions, and an admin user (LRN: ADMIN, password: Booklat@Admin2026!, forced password change on first login). The Docker entrypoint runs this automatically.
+The `manage.py seed_data` command is idempotent (uses `get_or_create`) and must run before first use. It creates three roles (Administrator, Staff, Member), all permissions, and an admin user (LRN: ADMIN, password: Booklat@Admin2026!, forced password change on first login). The Docker entrypoint runs this automatically. The `.env.example` exists as a template for env vars.
 
 ### Soft deletes
 No actual DELETE operations. Users use `status=archived`, BookCopies use status choices (Available/Borrowed/Reserved/Lost/Damaged/Under Repair/Archived). Always filter by status when querying.
+
+### Ratelimit: disabled in DEBUG, active in production
+`django-ratelimit` is installed. `RATELIMIT_ENABLE = not DEBUG` — so ratelimits are off during local dev but apply in Docker/production. Test auth rate-limiting behavior with DEBUG=0.
 
 ### Session behavior
 - Sessions stored in DB + cached in Redis (`cached_db` backend)
@@ -72,7 +83,7 @@ No actual DELETE operations. Users use `status=archived`, BookCopies use status 
 - Max 24-hour cookie age (`SESSION_COOKIE_AGE = 86400`)
 
 ### Static files
-WhiteNoise with `CompressedManifestStaticFilesStorage`. Static root is `staticfiles/`. Pico CSS is loaded from CDN (not bundled).
+WhiteNoise with `CompressedManifestStaticFilesStorage`. Static root is `staticfiles/`. Pico CSS is loaded from CDN (not bundled). The `data/` directory is gitignored but used for Docker volumes (postgres + staticfiles).
 
 ### Environment & settings
 No dotenv package — env vars are read directly in `settings.py` with fallback defaults. `.env` is only used by Docker Compose. Database uses persistent connections (`CONN_MAX_AGE=600`). Timezone is `Asia/Manila`.
@@ -88,4 +99,6 @@ Mentioned in SPEC.md but not in requirements.txt and no tasks exist. Do not crea
 - `core/middleware.py` — login and password-change enforcement
 - `core/decorators.py` — permission decorators
 - `accounts/management/commands/seed_data.py` — seeds roles, permissions, admin user
+- `accounts/validators.py` — password validation rules (16-char minimum, etc.)
+- `accounts/backends.py` — LRN-based authentication backend
 - `entrypoint.sh` — Docker startup: migrate → collectstatic → seed_data → gunicorn
