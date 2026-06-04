@@ -5,11 +5,11 @@
   <div class="book-meta">
     <div class="book-meta__item">
       <span class="book-meta__label">User</span>
-      <span class="book-meta__value">{{ return_user.get_full_name }} ({{ return_user.lrn }})</span>
+      <span class="book-meta__value">{{ loan.user.get_full_name }} ({{ loan.user.lrn }})</span>
     </div>
     <div class="book-meta__item">
       <span class="book-meta__label">Copy</span>
-      <span class="book-meta__value">{{ copy.copy_id }} — {{ copy.book.title }}</span>
+      <span class="book-meta__value">{{ loan.book_copy.copy_id }} — {{ loan.book_copy.book.title }}</span>
     </div>
     <div class="book-meta__item">
       <span class="book-meta__label">Checked Out</span>

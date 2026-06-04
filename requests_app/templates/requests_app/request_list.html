@@ -13,63 +13,56 @@
   </div>
 </form>
 
-{% if requests %}
-<div class="flex flex-col gap-3">
-  {% for req in requests %}
-  <div class="card card--flat" style="padding:var(--space-4);">
-    <div class="flex items-center justify-between min-w-0 gap-4">
-      <div class="min-w-0 flex-1">
+<div class="table-responsive">
+  <table class="data-table">
+    <thead>
+      <tr>
+        {% if not user.is_member %}<th>User</th>{% endif %}
+        <th>Book</th>
+        <th>Requested</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for req in requests %}
+      <tr>
         {% if not user.is_member %}
-        <div class="card__subtitle mb-1" style="font-size:var(--font-size-caption);"><a href="{% url 'accounts:user_detail' req.user.lrn %}">{{ req.user.get_full_name }}</a></div>
+        <td><a href="{% url 'accounts:user_detail' req.user.lrn %}">{{ req.user.get_full_name }}</a></td>
         {% endif %}
-        <a href="{% url 'books:book_detail' req.book.isbn %}" class="card__title" style="font-size:var(--font-size-small);display:block;">{{ req.book.title }}</a>
-        <div class="card__subtitle" style="font-size:var(--font-size-caption);">{{ req.requested_at|date:"d M Y H:i" }}</div>
-      </div>
-      <div class="flex items-center gap-2" style="flex-shrink:0;">
-        {% if req.status == 'pending' %}
-        <span class="badge badge--warning">Pending</span>
-        {% elif req.status == 'approved' %}
-        <span class="badge badge--success">Approved</span>
-        {% elif req.status == 'rejected' %}
-        <span class="badge badge--danger">Rejected</span>
-        {% elif req.status == 'cancelled' %}
-        <span class="badge badge--neutral">Cancelled</span>
-        {% elif req.status == 'fulfilled' %}
-        <span class="badge badge--info">Fulfilled</span>
-        {% endif %}
-
-        {% if user.is_member and req.status == 'pending' %}
-        <form method="post" action="{% url 'requests_app:cancel_request' req.pk %}" style="display:inline;">
-          {% csrf_token %}
-          <button type="submit" class="btn btn--danger-outline btn--small">Cancel</button>
-        </form>
-        {% endif %}
-        {% if user.is_admin or user.is_staff_user %}
+        <td><a href="{% url 'books:book_detail' req.book.isbn %}">{{ req.book.title }}</a></td>
+        <td>{{ req.requested_at|date:"Y-m-d H:i" }}</td>
+        <td>
           {% if req.status == 'pending' %}
-          <a href="{% url 'requests_app:process_request' req.pk %}" class="btn btn--primary btn--small">Process</a>
+          <span class="badge badge--warning">Pending</span>
+          {% elif req.status == 'approved' %}
+          <span class="badge badge--success">Approved</span>
+          {% elif req.status == 'rejected' %}
+          <span class="badge badge--danger">Rejected</span>
+          {% elif req.status == 'cancelled' %}
+          <span class="badge badge--neutral">Cancelled</span>
+          {% elif req.status == 'fulfilled' %}
+          <span class="badge badge--info">Fulfilled</span>
           {% endif %}
-        {% endif %}
-      </div>
-    </div>
-  </div>
-  {% endfor %}
+        </td>
+        <td>
+          {% if user.is_member and req.status == 'pending' %}
+          <form method="post" action="{% url 'requests_app:cancel_request' req.pk %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn--danger-outline btn--small">Cancel</button>
+          </form>
+          {% endif %}
+          {% if user.is_admin or user.is_staff_user %}
+            {% if req.status == 'pending' %}
+            <a href="{% url 'requests_app:process_request' req.pk %}" class="btn btn--primary btn--small">Process</a>
+            {% endif %}
+          {% endif %}
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="{% if user.is_member %}4{% else %}5{% endif %}">No requests found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
-{% else %}
-<div class="empty-state">
-  <div class="empty-state__icon">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>
-  </div>
-  <div class="empty-state__title">No requests found</div>
-  <div class="empty-state__text">
-    {% if status_filter %}
-    No requests with this status. Try a different filter.
-    {% else %}
-    You haven't made any checkout requests yet.
-    {% endif %}
-  </div>
-  {% if user.is_member %}
-  <a href="{% url 'books:book_list' %}" class="btn btn--primary">Browse Books</a>
-  {% endif %}
-</div>
-{% endif %}
 {% endblock %}

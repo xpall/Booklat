@@ -1,0 +1,45 @@
+{% extends "core/base.html" %}
+{% block content %}
+<h1 class="page-title mb-4">Return Book</h1>
+
+<form method="get" class="mb-4">
+  <div class="search-bar" style="margin-bottom:0;">
+    <svg class="search-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="search" name="q" class="form-input" value="{{ query }}" placeholder="Search by LRN, name, copy ID, or book title...">
+  </div>
+</form>
+
+<div class="table-responsive">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>User</th>
+        <th>Copy ID</th>
+        <th>Book</th>
+        <th>Checkout</th>
+        <th>Due</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for loan in loans %}
+      <tr>
+        <td><a href="{% url 'accounts:user_detail' loan.user.lrn %}">{{ loan.user.get_full_name }}</a></td>
+        <td><a href="{% url 'inventory:copy_detail' loan.book_copy.copy_id %}">{{ loan.book_copy.copy_id }}</a></td>
+        <td>{{ loan.book_copy.book.title }}</td>
+        <td>{{ loan.checkout_date|date:"Y-m-d" }}</td>
+        <td>{% if loan.is_overdue %}<span style="color:var(--color-danger);font-weight:var(--font-weight-medium);">{{ loan.due_date|date:"Y-m-d" }} ({{ loan.days_overdue }}d)</span>{% else %}{{ loan.due_date|date:"Y-m-d" }}{% endif %}</td>
+        <td>
+          <form method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" name="loan_id" value="{{ loan.loan_id }}" class="btn btn--primary btn--small">Return</button>
+          </form>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="6">No active loans found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
