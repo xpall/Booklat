@@ -1,0 +1,144 @@
+{% extends "core/base.html" %}
+{% block content %}
+<h1 class="page-title mb-4">{{ title|default:"About" }}</h1>
+
+<div class="card card--flat mb-4">
+  <div class="card__title">Our School</div>
+  <div class="card__subtitle">Dayap National Integrated High School (DNIHS)</div>
+  <p style="margin-top:0.75rem;">Located in Calauan, Laguna, DNIHS is committed to providing quality education and fostering a love for reading among its students.</p>
+</div>
+
+<div class="card card--flat mb-4">
+  <div class="card__title">The Library</div>
+  <div class="card__subtitle">Founded in 2020</div>
+  <p style="margin-top:0.75rem;">The DNIHS Library was established in 2020 to serve the students and faculty of Dayap National Integrated High School. Through the Booklat system, we manage our growing collection of books, track loans and returns, and provide a welcoming space for reading and learning.</p>
+</div>
+
+<div class="card card--flat">
+  <div class="card__title">Library Volunteers</div>
+  <div class="card__subtitle">Student-Staff Through the Years</div>
+  <p style="margin-top:0.75rem;">Our library is supported by dedicated student volunteers who serve as library student-staff each school year. They help manage book checkouts, organize shelves, and assist fellow students.</p>
+
+  <div class="flex gap-2" style="flex-wrap:wrap;margin-top:1rem;margin-bottom:1.25rem;" id="year-tabs">
+    <button class="btn btn--small js-year-btn" data-year="2020">2020</button>
+    <button class="btn btn--small js-year-btn" data-year="2021">2021</button>
+    <button class="btn btn--small js-year-btn" data-year="2022">2022</button>
+    <button class="btn btn--small js-year-btn" data-year="2023">2023</button>
+    <button class="btn btn--small js-year-btn" data-year="2024">2024</button>
+    <button class="btn btn--small js-year-btn" data-year="2025">2025</button>
+    <button class="btn btn--small btn--primary js-year-btn" data-year="2026">2026</button>
+  </div>
+
+  <div id="volunteer-list" class="grid grid--2"></div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+(function() {
+  var volunteerData = {
+    "2020": [
+      "Angelo B. Reyes",
+      "Bianca Marie S. dela Cruz",
+      "Carlo P. Mendoza",
+      "Dianne R. Villanueva",
+      "Efraim J. Santos"
+    ],
+    "2021": [
+      "Angelo B. Reyes",
+      "Bianca Marie S. dela Cruz",
+      "Francis L. Ocampo",
+      "Gabrielle T. Rivera",
+      "Hannah F. de Guzman",
+      "Jose Mari D. Aquino"
+    ],
+    "2022": [
+      "Francis L. Ocampo",
+      "Gabrielle T. Rivera",
+      "Kimberly Anne C. Tolentino",
+      "Luis Miguel S. Rosario",
+      "Maria Sofia V. Domingo",
+      "Nathan E. Salvador",
+      "Patricia Joy L. Angeles"
+    ],
+    "2023": [
+      "Kimberly Anne C. Tolentino",
+      "Luis Miguel S. Rosario",
+      "Nathan E. Salvador",
+      "Patricia Joy L. Angeles",
+      "Rafael T. Marquez",
+      "Samantha Claire B. Enriquez",
+      "Theodore A. Gonzales",
+      "Ysabelle Rae P. Fernandez"
+    ],
+    "2024": [
+      "Rafael T. Marquez",
+      "Samantha Claire B. Enriquez",
+      "Theodore A. Gonzales",
+      "Ysabelle Rae P. Fernandez",
+      "Andrea Nicole D. Villamor",
+      "Carlos Joaquin L. Torres",
+      "Danica Marie O. Salvador",
+      "Emmanuel G. Cabrera"
+    ],
+    "2025": [
+      "Andrea Nicole D. Villamor",
+      "Carlos Joaquin L. Torres",
+      "Danica Marie O. Salvador",
+      "Emmanuel G. Cabrera",
+      "Francesca May V. Austria",
+      "Kristoffer James C. Manalo",
+      "Lorenz Andrei P. Bautista",
+      "Margaux Elise F. Dimaculangan",
+      "Paolo Victor R. Hernandez"
+    ],
+    "2026": [
+      "Francesca May V. Austria",
+      "Kristoffer James C. Manalo",
+      "Lorenz Andrei P. Bautista",
+      "Margaux Elise F. Dimaculangan",
+      "Paolo Victor R. Hernandez",
+      "Regine Anne C. Velasco",
+      "Sean Marcus T. Aguilar",
+      "Trixia Joy P. Labrador",
+      "Vincent Rafael M. Bartolome",
+      "Zara Bianca Q. Mercado"
+    ]
+  };
+
+  var listContainer = document.getElementById("volunteer-list");
+  var buttons = document.querySelectorAll(".js-year-btn");
+
+  function renderYear(year) {
+    var names = volunteerData[year] || [];
+    var html = "";
+    for (var i = 0; i < names.length; i++) {
+      html += '<div class="card card--flat"><div class="card__title">' + names[i] + '</div></div>';
+    }
+    if (names.length === 0) {
+      html = '<div class="empty-state" style="grid-column:1/-1;"><div class="empty-state__title">No volunteers listed</div><div class="empty-state__text">No student-staff records for this year.</div></div>';
+    }
+    listContainer.innerHTML = html;
+
+    for (var j = 0; j < buttons.length; j++) {
+      var btn = buttons[j];
+      if (btn.getAttribute("data-year") === year) {
+        btn.classList.add("btn--primary");
+        btn.classList.remove("btn--outline");
+      } else {
+        btn.classList.add("btn--outline");
+        btn.classList.remove("btn--primary");
+      }
+    }
+  }
+
+  for (var k = 0; k < buttons.length; k++) {
+    buttons[k].addEventListener("click", function(e) {
+      renderYear(this.getAttribute("data-year"));
+    });
+  }
+
+  renderYear("2026");
+})();
+</script>
+{% endblock %}

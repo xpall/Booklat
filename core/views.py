@@ -15,6 +15,10 @@ def home_view(request):
     return redirect("dashboard:index")
 
 
+def about_view(request):
+    return render(request, "core/about.html", {"title": "About"})
+
+
 from books.models import Book, Category
 from inventory.models import BookCopy
 from loans.models import Loan

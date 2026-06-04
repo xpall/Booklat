@@ -13,6 +13,7 @@ class LoginRequiredMiddleware:
             exempt = [
                 reverse("accounts:login").lstrip("/"),
                 reverse("accounts:password_change").lstrip("/"),
+                reverse("core:about").lstrip("/"),
                 "static/",
             ]
             if not any(path.startswith(e) for e in exempt):
