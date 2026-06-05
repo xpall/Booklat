@@ -18,4 +18,8 @@ RUN python manage.py collectstatic --no-input
 
 EXPOSE 8000
 
-CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "3", "--access-logfile", "-"]
+CMD exec gunicorn config.wsgi:application \
+    --bind 0.0.0.0:8000 \
+    --workers ${GUNICORN_WORKERS:-2} \
+    ${GUNICORN_THREADS:+--worker-class gthread --threads $GUNICORN_THREADS} \
+    --access-logfile -
