@@ -21,20 +21,21 @@ No linting, formatting, typechecking, or CI is configured. No Makefile.
 
 ## Architecture
 
-Single Django 5.1 project (Python 3.12), **not** a monorepo. 8 Django apps in one project:
+Single Django 5.1 project (Python 3.12), **not** a monorepo. 9 Django apps in one project:
 
 | App | Purpose |
 |-----|---------|
 | `accounts` | Custom User model, roles, DB-backed permissions, LRN-based auth |
-| `books` | Book title catalog |
+| `books` | Book title catalog, categories |
 | `inventory` | BookCopy (physical copies), CopyHistory (append-only, immutable) |
 | `loans` | Checkout/return workflows, overdue tracking |
 | `requests_app` | Checkout requests (named this to avoid Python stdlib clash) |
 | `audit` | Immutable audit log (JSONField metadata via `core.utils.log_action`) |
-| `dashboard` | Admin/staff dashboard statistics |
-| `core` | Cross-cutting: middleware, permission decorators, CSV export/import utils, base template |
+| `dashboard` | Admin/staff/student dashboard statistics |
+| `core` | Cross-cutting: middleware, permission decorators, CSV export/import utils, base template, about page |
+| `freedom_wall` | Sticky-note posts with upvotes, pending queue moderation, Celery midnight purge |
 
-Stack: Django 5.1 + PostgreSQL 16 + Redis 7 + Gunicorn + WhiteNoise + Pico CSS v2 (CDN) + django-ratelimit. Python 3.12.
+Stack: Django 5.1 + PostgreSQL 16 + Redis 7 + Celery + Gunicorn + WhiteNoise + custom design-system.css + django-ratelimit. Python 3.12.
 
 ## Critical Gotchas
 
@@ -60,7 +61,7 @@ Permissions are rows in `accounts.Permission` linked to `accounts.Role` via `Rol
 - Do NOT use `user.has_perm("app_label.codename")` — the codenames are strings like `"loans.create"`, not Django's `"loans.add_loan"` format
 
 ### Global login middleware — every URL is protected
-`core.middleware.LoginRequiredMiddleware` redirects all unauthenticated requests to login. Only `/accounts/login/`, `/accounts/password-change/`, and `/static/` are exempt. New public URLs must be added to the exempt list in the middleware.
+`core.middleware.LoginRequiredMiddleware` redirects all unauthenticated requests to login. Only `/accounts/login/`, `/accounts/password-change/`, `/about/`, and `/static/` are exempt. New public URLs must be added to the exempt list in the middleware.
 
 ### Must-change-password enforcement
 `core.middleware.MustChangePasswordMiddleware` forces users with `must_change_password=True` to the password change page. The admin seed user has this flag set. Only login, password_change, and logout are exempt from this redirect.
@@ -83,17 +84,17 @@ No actual DELETE operations. Users use `status=archived`, BookCopies use status 
 - Max 24-hour cookie age (`SESSION_COOKIE_AGE = 86400`)
 
 ### Static files
-WhiteNoise with `CompressedManifestStaticFilesStorage`. Static root is `staticfiles/`. Pico CSS is loaded from CDN (not bundled). The `data/` directory is gitignored but used for Docker volumes (postgres + staticfiles).
+WhiteNoise with `CompressedManifestStaticFilesStorage`. Static root is `staticfiles/`. Custom CSS design system at `core/static/core/css/design-system.css` (mobile-first, dark mode, app shell layout). The `data/` directory is gitignored but used for Docker volumes (postgres + staticfiles).
 
 ### Environment & settings
 No dotenv package — env vars are read directly in `settings.py` with fallback defaults. `.env` is only used by Docker Compose. Database uses persistent connections (`CONN_MAX_AGE=600`). Timezone is `Asia/Manila`.
 
-### Celery is NOT implemented
-Mentioned in SPEC.md but not in requirements.txt and no tasks exist. Do not create Celery tasks without adding the dependency and wiring it up.
+### Celery
+Celery 5.4 is configured with Redis as broker (db 1) and result backend (db 2). Beat schedule runs a daily midnight task (`purge-freedom-posts-midnight`) that deletes all FreedomPost records. Worker and beat services are included in docker-compose.yml. `config/__init__.py` wires the Celery app.
 
 ## Key files
 
-- `SPEC.md` — 1046-line exhaustive spec covering all features, permission model, workflows
+- `SPEC.md` — 1061-line exhaustive spec covering all features, permission model, workflows
 - `config/settings.py` — all Django settings, env loading, app registration
 - `accounts/models.py` — custom User, Role, Permission models
 - `core/middleware.py` — login and password-change enforcement
@@ -102,3 +103,4 @@ Mentioned in SPEC.md but not in requirements.txt and no tasks exist. Do not crea
 - `accounts/validators.py` — password validation rules (16-char minimum, etc.)
 - `accounts/backends.py` — LRN-based authentication backend
 - `entrypoint.sh` — Docker startup: migrate → collectstatic → seed_data → gunicorn
+- `config/celery.py` — Celery app and beat schedule

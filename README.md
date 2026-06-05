@@ -17,7 +17,7 @@ Docker Compose runs PostgreSQL 16, Redis 7, and the Django app with Gunicorn. Th
 
 ## Technology
 
-**Backend**: Django 5.1 + PostgreSQL 16 + Redis 7 + Gunicorn + WhiteNoise  
+**Backend**: Django 5.1 + PostgreSQL 16 + Redis 7 + Gunicorn + WhiteNoise + Celery  
 **Frontend**: Django Templates + custom CSS design system  
 **Auth**: LRN-based login, Argon2id password hashing, DB-driven permissions (no Django admin)  
 **Middleware**: Login-required (global), must-change-password enforcement, django-ratelimit  
@@ -34,4 +34,5 @@ Docker Compose runs PostgreSQL 16, Redis 7, and the Django app with Gunicorn. Th
 | `requests_app` | Checkout requests with staff approval |
 | `audit` | Immutable audit log (JSON metadata) |
 | `dashboard` | Statistics, pending requests, overdue loans |
-| `core` | Middleware, decorators, utils, base template |
+| `core` | Middleware, decorators, utils, base template, about page |
+| `freedom_wall` | Sticky-note posts with upvotes, moderation queue |

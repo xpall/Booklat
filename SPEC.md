@@ -54,6 +54,7 @@ The system focuses on:
 * Django
 * PostgreSQL
 * Redis
+* Celery
 * Gunicorn
 * django-ratelimit
 
@@ -63,6 +64,13 @@ The system focuses on:
 * Docker Compose
 * WhiteNoise
 * Cloudflare Tunnel (production-only, `docker-compose.prod.yml`)
+
+## Frontend
+
+* Custom mobile-first CSS design system (`design-system.css`)
+* Dark mode support
+* App shell layout (sidebar + topbar + bottom nav)
+* Django templates with partials (sidebar, topbar, bottom_nav)
 
 ## Not Used
 
@@ -83,7 +91,7 @@ Internet
 → Gunicorn
 → Django
 → PostgreSQL
-→ Redis
+→ Redis / Celery
 
 ## Django Admin
 
@@ -389,6 +397,8 @@ Represents a title.
 
 Books are not directly borrowable.
 
+Books can be organized into categories.
+
 Fields:
 
 * ISBN
@@ -398,8 +408,28 @@ Fields:
 * Publisher
 * Publication Year
 * Description
-* Categories
+* Categories (Many-to-Many with Category model)
 * Cover Image
+
+---
+
+## Categories
+
+Books may be organized into categories.
+
+### Category Management
+
+Administrators and staff can create, update, archive, and unarchive categories.
+
+### Category Fields
+
+* Name
+* Slug (auto-generated)
+* Status (active/archived)
+
+### Category Bulk Operations
+
+Categories can be imported and exported via CSV.
 
 ---
 
@@ -554,6 +584,45 @@ When approved:
 
 ---
 
+# Freedom Wall
+
+## Overview
+
+A sticky-note board where members can share messages. Posts require staff approval before appearing publicly.
+
+## Post Fields
+
+* Author (User)
+* Content
+* Color (one of several sticky note colors)
+* Status (pending/approved/rejected/deleted)
+* Created At
+
+## Member Workflow
+
+1. Create a post (limited to 1 per day per user)
+2. View approved posts on the wall
+3. Upvote posts
+4. Delete own posts (soft delete)
+
+## Staff Workflow
+
+Staff and administrators moderate the wall:
+
+1. View pending queue
+2. Approve posts (with optional notes)
+3. Reject posts (with reason)
+
+## Upvotes
+
+Each user can upvote or un-upvote any approved post. Posts can be sorted by newest or most upvotes.
+
+## Midnight Purge
+
+A Celery beat task runs daily at midnight, deleting all FreedomPost records. This provides a clean slate each day.
+
+---
+
 # Dashboard
 
 ## Statistics
@@ -606,6 +675,17 @@ Actions:
 
 * View User
 * Mark Returned
+
+---
+
+## Student Dashboard
+
+Members see a simplified dashboard showing:
+
+* Active loans
+* Pending and approved checkout requests
+* Reading history (past loans)
+* Recently added books
 
 ---
 
@@ -695,6 +775,22 @@ Examples:
 * Repaired
 * Lost
 * Archived
+
+---
+
+# Search
+
+## Overview
+
+Booklat provides AJAX-powered search endpoints for fast lookup during workflows.
+
+## Endpoints
+
+* **User search** — Returns JSON of matching users by LRN or name. Used during checkout workflow.
+* **Book search** — Returns JSON of matching books by title, ISBN, or author. Used during checkout requests and copy management.
+* **Copy search** — Returns JSON of matching copies by copy ID or book title. Filters by status (default: Available). Used during checkout and return workflows.
+
+Search results are paginated and include relevant metadata for navigation widgets.
 
 ---
 
@@ -968,6 +1064,29 @@ CSV exports are not a replacement for database backups.
 
 ---
 
+# About Page
+
+## Overview
+
+A publicly accessible page (`/about/`) displaying library information by school year.
+
+## School Year Data
+
+Each school year entry includes:
+
+* School year label (e.g., "2025-2026")
+* Teacher librarian(s)
+* Volunteers
+* Whether this is the current year
+
+Data is stored as `AboutConfig` rows (JSONField metadata) and seeded by `manage.py seed_data`.
+
+## Permissions
+
+The about page is exempt from login middleware and accessible without authentication.
+
+---
+
 # Django Applications
 
 config/
@@ -979,6 +1098,7 @@ requests_app/
 audit/
 dashboard/
 core/
+freedom_wall/
 
 ---
 
@@ -989,6 +1109,7 @@ Role
 Permission
 
 Book
+Category
 BookCopy
 CopyHistory
 
@@ -997,6 +1118,10 @@ Loan
 CheckoutRequest
 
 AuditLog
+
+AboutConfig
+FreedomPost
+FreedomPostUpvote
 
 ---
 
@@ -1045,6 +1170,14 @@ Dashboard
 * Pending requests
 * Overdue loans
 * Recent activity
+* Student dashboard
+
+Freedom Wall
+
+* Sticky-note posts
+* Staff approval queue
+* Upvotes
+* Midnight purge (Celery)
 
 Administration
 
@@ -1058,4 +1191,5 @@ Deployment
 * Docker Compose
 * PostgreSQL
 * Redis
+* Celery + Beat
 * Cloudflare Tunnel (production-only)
