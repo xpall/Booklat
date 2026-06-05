@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     "audit",
     "dashboard",
     "freedom_wall",
+    "announcements",
 ]
 
 MIDDLEWARE = [

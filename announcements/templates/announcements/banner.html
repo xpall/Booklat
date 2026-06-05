@@ -1,0 +1,104 @@
+{% load announcements_tags %}
+{% get_active_announcements as announcements %}
+{% if announcements %}
+<div class="announcement-banner-container" id="announcement-banner-container">
+  {% for announcement in announcements %}
+  <div class="announcement-banner" data-announcement-id="{{ announcement.pk }}">
+    <div class="announcement-banner__content">
+      <strong class="announcement-banner__title">{{ announcement.title }}</strong>
+      <p class="announcement-banner__text">{{ announcement.content|linebreaksbr }}</p>
+    </div>
+    <button type="button" class="announcement-banner__close" data-announcement-dismiss="{{ announcement.pk }}" title="Dismiss">&times;</button>
+  </div>
+  {% endfor %}
+</div>
+
+<style>
+.announcement-banner-container {
+  margin-bottom: var(--space-4);
+}
+.announcement-banner {
+  display: flex;
+  align-items: flex-start;
+  background: var(--color-info-bg, #e0f2fe);
+  border: 1px solid var(--color-info, #0284c7);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-2);
+  position: relative;
+}
+.announcement-banner__content {
+  flex: 1;
+  min-width: 0;
+}
+.announcement-banner__title {
+  font-size: var(--font-size-base);
+  color: var(--color-info, #0284c7);
+}
+.announcement-banner__text {
+  margin: var(--space-1) 0 0;
+  font-size: var(--font-size-small);
+  color: var(--color-text-primary);
+}
+.announcement-banner__close {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  padding: 0 var(--space-1);
+  line-height: 1;
+  margin-left: var(--space-3);
+}
+.announcement-banner__close:hover {
+  color: var(--color-text-primary);
+}
+</style>
+
+<script>
+(function() {
+  var container = document.getElementById('announcement-banner-container');
+  if (!container) return;
+
+  container.addEventListener('click', function(e) {
+    var btn = e.target.closest('[data-announcement-dismiss]');
+    if (!btn) return;
+
+    var banner = btn.closest('.announcement-banner');
+    if (!banner) return;
+
+    var announcementId = btn.getAttribute('data-announcement-dismiss');
+    banner.style.display = 'none';
+
+    try {
+      var dismissed = JSON.parse(sessionStorage.getItem('dismissed_announcements') || '[]');
+      if (dismissed.indexOf(announcementId) === -1) {
+        dismissed.push(announcementId);
+        sessionStorage.setItem('dismissed_announcements', JSON.stringify(dismissed));
+      }
+    } catch (e) {}
+
+    var remaining = container.querySelectorAll('.announcement-banner[style*="display: none"]');
+    if (remaining.length === container.querySelectorAll('.announcement-banner').length) {
+      container.style.display = 'none';
+    }
+  });
+
+  var dismissed = [];
+  try {
+    dismissed = JSON.parse(sessionStorage.getItem('dismissed_announcements') || '[]');
+  } catch (e) {}
+
+  dismissed.forEach(function(id) {
+    var banner = container.querySelector('[data-announcement-id="' + id + '"]');
+    if (banner) banner.style.display = 'none';
+  });
+
+  var visible = container.querySelectorAll('.announcement-banner:not([style*="display: none"])');
+  if (!visible.length) {
+    container.style.display = 'none';
+  }
+})();
+</script>
+{% endif %}

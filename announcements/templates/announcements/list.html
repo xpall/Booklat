@@ -1,0 +1,59 @@
+{% extends "core/base.html" %}
+{% block content %}
+<h1 class="page-title mb-4">Announcements</h1>
+
+{% if user.is_admin or user.is_staff_user %}
+<div class="mb-4">
+  <a href="{% url 'announcements:create' %}" class="btn btn--primary">New Announcement</a>
+</div>
+{% endif %}
+
+{% if announcements %}
+<div class="card mb-4">
+  <div class="table-responsive">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Status</th>
+          <th>Created By</th>
+          <th>Created</th>
+          <th>Updated</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for announcement in announcements %}
+        <tr>
+          <td>{{ announcement.title }}</td>
+          <td>
+            {% if announcement.status == "active" %}
+            <span class="badge badge--success">Active</span>
+            {% else %}
+            <span class="badge badge--neutral">Archived</span>
+            {% endif %}
+          </td>
+          <td>{{ announcement.created_by.get_full_name }}</td>
+          <td>{{ announcement.created_at|date:"Y-m-d H:i" }}</td>
+          <td>{{ announcement.updated_at|date:"Y-m-d H:i" }}</td>
+          <td class="actions-cell">
+            <a href="{% url 'announcements:update' announcement.pk %}" class="btn-icon" title="Edit">&#9998;</a>
+            {% if announcement.status == "active" %}
+            <form method="post" action="{% url 'announcements:archive' announcement.pk %}" style="display:inline;">
+              {% csrf_token %}
+              <button type="submit" class="btn-icon btn-icon--danger" title="Archive" onclick="return confirm('Archive this announcement?');">&#10005;</button>
+            </form>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% else %}
+<div class="card p-4">
+  <p class="text-secondary">No announcements yet.</p>
+</div>
+{% endif %}
+{% endblock %}

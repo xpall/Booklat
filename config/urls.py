@@ -10,4 +10,5 @@ urlpatterns = [
     path("audit/", include("audit.urls")),
     path("dashboard/", include("dashboard.urls")),
     path("freedom-wall/", include("freedom_wall.urls")),
+    path("announcements/", include("announcements.urls")),
 ]
