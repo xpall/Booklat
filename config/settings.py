@@ -127,6 +127,20 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 RATELIMIT_USE_CACHE = "default"
 RATELIMIT_ENABLE = not DEBUG
 
+REDIS_URL = os.environ.get("REDIS_URL", "redis://127.0.0.1:6379/0")
+_broker_url = os.environ.get("CELERY_BROKER_URL", "")
+if not _broker_url:
+    _base = REDIS_URL.rsplit("/", 1)[0]
+    _broker_url = f"{_base}/1"
+CELERY_BROKER_URL = _broker_url
+_result_backend = os.environ.get("CELERY_RESULT_BACKEND", "")
+if not _result_backend:
+    _base = REDIS_URL.rsplit("/", 1)[0]
+    _result_backend = f"{_base}/2"
+CELERY_RESULT_BACKEND = _result_backend
+CELERY_TIMEZONE = "Asia/Manila"
+CELERY_ENABLE_UTC = False
+
 SESSION_COOKIE_AGE = 86400
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_SECURE = not DEBUG
