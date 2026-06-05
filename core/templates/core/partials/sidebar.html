@@ -7,6 +7,8 @@
   <ul class="sidebar-nav">
     {% if user.is_admin or user.is_staff_user %}
       {% load freedom_wall_tags %}
+      {% load loans_tags %}
+      {% load requests_tags %}
       <li class="sidebar-nav__section">Main</li>
       <li class="sidebar-nav__item">
         <a href="{% url 'dashboard:index' %}" class="sidebar-nav__link">
@@ -30,16 +32,20 @@
         <a href="{% url 'loans:loan_list' %}" class="sidebar-nav__link">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
           Loans
-        </a>
-      </li>
-      <li class="sidebar-nav__item">
-        <a href="{% url 'requests_app:request_list' %}" class="sidebar-nav__link">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="9" y1="12" x2="15" y2="12"/></svg>
-          Requests
-        </a>
-      </li>
-      <li class="sidebar-nav__item">
-        <a href="{% url 'freedom_wall:post_list' %}" class="sidebar-nav__link">
+          {% loans_overdue_count as overdue_count %}
+          {% if overdue_count %}<span style="display:inline-flex;align-items:center;justify-content:center;background:#ef4444;color:#fff;font-size:0.65rem;font-weight:700;min-width:1.4rem;height:1.4rem;border-radius:999px;padding:0 0.35em;line-height:1;margin-left:auto;">{{ overdue_count }}</span>{% endif %}
+          </a>
+        </li>
+        <li class="sidebar-nav__item">
+          <a href="{% url 'requests_app:request_list' %}" class="sidebar-nav__link">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="9" y1="12" x2="15" y2="12"/></svg>
+            Requests
+          {% requests_pending_count as pending_count %}
+          {% if pending_count %}<span style="display:inline-flex;align-items:center;justify-content:center;background:#ef4444;color:#fff;font-size:0.65rem;font-weight:700;min-width:1.4rem;height:1.4rem;border-radius:999px;padding:0 0.35em;line-height:1;margin-left:auto;">{{ pending_count }}</span>{% endif %}
+          </a>
+        </li>
+        <li class="sidebar-nav__item">
+          <a href="{% url 'freedom_wall:post_list' %}" class="sidebar-nav__link">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 2v4"/><path d="M15 2v4"/><path d="M3 10h18"/></svg>
           Freedom Wall
           {% freedom_wall_pending_count as count %}
