@@ -370,13 +370,7 @@ button, input, select, textarea {
   width: 2.25rem;
   height: 2.25rem;
   border-radius: var(--radius-md);
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-weight: var(--font-weight-bold);
-  font-size: var(--font-size-small);
+  object-fit: contain;
   flex-shrink: 0;
 }
 
@@ -487,12 +481,7 @@ button, input, select, textarea {
   width: 2.5rem;
   height: 2.5rem;
   border-radius: var(--radius-md);
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-weight: var(--font-weight-bold);
+  object-fit: contain;
   flex-shrink: 0;
 }
 
@@ -1900,13 +1889,7 @@ button, input, select, textarea {
   width: 3.5rem;
   height: 3.5rem;
   border-radius: var(--radius-lg);
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-weight: var(--font-weight-bold);
-  font-size: var(--font-size-card-title);
+  object-fit: contain;
   margin: 0 auto var(--space-4);
   box-shadow: 0 4px 12px rgba(var(--color-primary-rgb), 0.4);
 }

@@ -1,4 +1,4 @@
-<header class="topbar">
+{% load static %}<header class="topbar">
   <div class="topbar__left">
     <button class="topbar__hamburger js-sidebar-toggle" aria-label="Toggle menu">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -8,7 +8,7 @@
       </svg>
     </button>
     <a href="{% url 'core:home' %}" class="topbar__brand">
-      <div class="topbar__logo">B</div>
+      <img src="{% static 'core/img/logo.png' %}" alt="Booklat" class="topbar__logo">
       <span class="topbar__title">Booklat <span class="topbar__title-label">Library</span></span>
     </a>
   </div>
