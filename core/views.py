@@ -97,10 +97,12 @@ def export_loans_csv(request):
     ts = datetime.now().strftime("%Y-%m-%d_%H%M")
     response["Content-Disposition"] = f'attachment; filename="booklat_loans_{ts}.csv"'
     writer = csv.writer(response)
-    writer.writerow(["User LRN", "Copy ID", "Book Title", "Checkout Date", "Due Date", "Return Date"])
+    writer.writerow(["User LRN", "First Name", "Last Name", "Copy ID", "Book Title", "Checkout Date", "Due Date", "Return Date"])
     for loan in Loan.objects.select_related("user", "book_copy__book").iterator():
         writer.writerow([
             loan.user.lrn,
+            loan.user.first_name,
+            loan.user.last_name,
             loan.book_copy.copy_id,
             loan.book_copy.book.title,
             str(loan.checkout_date),
