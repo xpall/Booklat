@@ -13,7 +13,7 @@ services:
       redis:
         condition: service_healthy
     volumes:
-      - ./data/staticfiles:/app/staticfiles
+      - staticfiles:/app/staticfiles
     entrypoint: ["./entrypoint.sh"]
 
   db:
@@ -73,5 +73,6 @@ services:
       - celery-beat-data:/tmp
 
 volumes:
+  staticfiles:
   celery-beat-data:
 
