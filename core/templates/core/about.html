@@ -85,8 +85,8 @@
     var html = "";
     if (tl.length > 0) {
       for (var l = 0; l < tl.length; l++) {
-        html += "<p><strong>" + tl[l].name + "</strong></p>";
-        if (tl[l].bio) html += "<p>" + tl[l].bio + "</p>";
+        html += "<p><strong>" + Booklat.escapeHtml(tl[l].name) + "</strong></p>";
+        if (tl[l].bio) html += "<p>" + Booklat.escapeHtml(tl[l].bio) + "</p>";
       }
     } else {
       html = '<div class="empty-state"><div class="empty-state__title">No teacher librarian listed</div><div class="empty-state__text">No teacher librarian record for this school year.</div></div>';
@@ -96,7 +96,7 @@
     var vols = entry.volunteers || [];
     var volHtml = "";
     for (var v = 0; v < vols.length; v++) {
-      volHtml += '<div class="card card--flat"><div class="card__title">' + vols[v] + '</div></div>';
+      volHtml += '<div class="card card--flat"><div class="card__title">' + Booklat.escapeHtml(vols[v]) + '</div></div>';
     }
     if (vols.length === 0) {
       volHtml = '<div class="empty-state" style="grid-column:1/-1;"><div class="empty-state__title">No volunteers listed</div><div class="empty-state__text">No student-staff records for this school year.</div></div>';

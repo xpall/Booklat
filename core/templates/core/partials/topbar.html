@@ -31,7 +31,10 @@
       </button>
       <div class="profile-menu">
         <a href="{% url 'accounts:password_change' %}" class="profile-menu__item">Change Password</a>
-        <a href="{% url 'accounts:logout' %}" class="profile-menu__item profile-menu__item--danger">Logout</a>
+        <form method="POST" action="{% url 'accounts:logout' %}" style="margin:0;">
+          {% csrf_token %}
+          <button type="submit" class="profile-menu__item profile-menu__item--danger" style="border:none;background:none;cursor:pointer;width:100%;text-align:left;">Logout</button>
+        </form>
       </div>
     </div>
     {% endif %}

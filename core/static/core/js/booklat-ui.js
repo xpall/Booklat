@@ -603,7 +603,8 @@
   window.Booklat = {
     showToast: showToast,
     setTheme: setTheme,
-    getTheme: getTheme
+    getTheme: getTheme,
+    escapeHtml: escapeHtml
   };
 
 })();

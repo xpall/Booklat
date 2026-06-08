@@ -10,13 +10,13 @@ class LoginRequiredMiddleware:
     def __call__(self, request):
         if not request.user.is_authenticated:
             path = request.path_info.lstrip("/")
-            exempt = [
+            exempt_exact = {
                 reverse("accounts:login").lstrip("/"),
                 reverse("accounts:password_change").lstrip("/"),
                 reverse("core:about").lstrip("/"),
-                "static/",
-            ]
-            if not any(path.startswith(e) for e in exempt):
+            }
+            exempt_prefix = ("static/",)
+            if path not in exempt_exact and not path.startswith(exempt_prefix):
                 return redirect("accounts:login")
         return self.get_response(request)
 
@@ -28,11 +28,11 @@ class MustChangePasswordMiddleware:
     def __call__(self, request):
         if request.user.is_authenticated and request.user.must_change_password:
             path = request.path_info.lstrip("/")
-            exempt = [
+            exempt_exact = {
                 reverse("accounts:login").lstrip("/"),
                 reverse("accounts:password_change").lstrip("/"),
                 reverse("accounts:logout").lstrip("/"),
-            ]
-            if not any(path.startswith(e) for e in exempt):
+            }
+            if path not in exempt_exact:
                 return redirect("accounts:password_change")
         return self.get_response(request)

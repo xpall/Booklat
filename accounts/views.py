@@ -1,5 +1,7 @@
 import csv
+import uuid
 
+from django.core.cache import cache
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
@@ -49,7 +51,9 @@ def login_view(request):
             )
             if user:
                 user.last_login = timezone.now()
-                user.save(update_fields=["last_login"])
+                user.failed_login_attempts = 0
+                user.locked_until = None
+                user.save(update_fields=["last_login", "failed_login_attempts", "locked_until"])
                 auth_login(request, user)
                 if user.must_change_password:
                     return redirect("accounts:password_change")
@@ -60,6 +64,8 @@ def login_view(request):
     return render(request, "accounts/login.html", {"form": form})
 
 
+@require_http_methods(["POST"])
+@ratelimit(key="user_or_ip", rate="5/m", method="POST")
 def logout_view(request):
     auth_logout(request)
     return redirect("accounts:login")
@@ -70,6 +76,14 @@ def password_change_view(request):
     if request.method == "POST":
         form = PasswordChangeForm(request.POST)
         if form.is_valid():
+            if not request.user.must_change_password:
+                old = form.cleaned_data.get("old_password", "")
+                if not old or not request.user.check_password(old):
+                    messages.error(request, "Current password is incorrect.")
+                    return render(request, "accounts/password_change.html", {
+                        "form": form,
+                        "is_forced": request.user.must_change_password,
+                    })
             request.user.set_password(form.cleaned_data["new_password"])
             request.user.must_change_password = False
             request.user.save()
@@ -81,7 +95,10 @@ def password_change_view(request):
             return redirect("dashboard:index")
     else:
         form = PasswordChangeForm()
-    return render(request, "accounts/password_change.html", {"form": form})
+    return render(request, "accounts/password_change.html", {
+        "form": form,
+        "is_forced": request.user.must_change_password,
+    })
 
 
 @permission_required("users.view")
@@ -129,14 +146,14 @@ def user_create_view(request):
 def user_update_view(request, lrn):
     user = get_object_or_404(User, lrn=lrn)
     if request.method == "POST":
-        form = UserUpdateForm(request.POST, instance=user)
+        form = UserUpdateForm(request.POST, instance=user, request_user=request.user)
         if form.is_valid():
             form.save()
             log_action(request.user, "USER_UPDATED", "User", user.lrn)
             messages.success(request, f"User {user.lrn} updated.")
             return redirect("accounts:user_detail", lrn=user.lrn)
     else:
-        form = UserUpdateForm(instance=user)
+        form = UserUpdateForm(instance=user, request_user=request.user)
     return render(request, "accounts/user_form.html", {"form": form, "title": f"Edit {user.get_full_name()}"})
 
 
@@ -219,7 +236,9 @@ def user_import_view(request):
             messages.error(request, "Too many requests. Please wait a minute and try again.")
             return redirect("accounts:user_list")
         if "confirm" in request.POST:
-            records = request.session.pop("import_records", None)
+            cache_key = request.session.pop("import_cache_key", None)
+            records = cache.get(cache_key, []) if cache_key else []
+            cache.delete(cache_key or "")
             if records:
                 success, errors = _import_users(records, request.user)
                 if success:
@@ -233,7 +252,9 @@ def user_import_view(request):
                 records = parse_csv_upload(request.FILES["csv_file"])
                 if "preview" in request.POST:
                     preview_data = _preview_users(records)
-                    request.session["import_records"] = records
+                    cache_key = f"import_{uuid.uuid4().hex}"
+                    cache.set(cache_key, records, timeout=300)
+                    request.session["import_cache_key"] = cache_key
     else:
         form = CSVImportForm()
     return render(request, "accounts/import.html", {
@@ -301,6 +322,7 @@ def user_sample_csv(request):
 
 
 @any_permission_required("accounts.view", "loans.create")
+@ratelimit(key="user_or_ip", rate="30/m", method="GET")
 def user_search_json(request):
     q = request.GET.get("q", "").strip()
     users = User.objects.filter(status=User.Status.ACTIVE)

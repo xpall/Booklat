@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.views.decorators.http import require_http_methods
 from django.utils import timezone
+from django.db import transaction
 from datetime import timedelta
 from django_ratelimit.decorators import ratelimit
 from .models import Loan
@@ -76,28 +77,30 @@ def checkout_confirm(request):
     user = get_object_or_404(User, pk=user_id)
     copy = get_object_or_404(BookCopy, pk=copy_id)
     if request.method == "POST":
-        if copy.status != BookCopy.Status.AVAILABLE:
-            messages.error(request, "Copy is not available.")
-            return redirect("loans:checkout")
-        today = timezone.localdate()
-        due_str = request.POST.get("due_date", "")
-        due_date = timezone.datetime.strptime(due_str, "%Y-%m-%d").date() if due_str else today + timedelta(days=7)
-        loan = Loan(
-            user=user,
-            book_copy=copy,
-            checkout_date=today,
-            due_date=due_date,
-            processed_by=request.user,
-        )
-        loan.save()
-        copy.status = BookCopy.Status.BORROWED
-        copy.save()
-        CopyHistory.objects.create(book_copy=copy, event="Borrowed", notes=f"Checked out by {user.lrn}", actor=request.user)
-        log_action(request.user, "LOAN_CREATED", "Loan", loan.loan_id, metadata={
-            "user_lrn": user.lrn,
-            "copy_id": copy.copy_id,
-            "due_date": str(loan.due_date),
-        })
+        with transaction.atomic():
+            copy = BookCopy.objects.select_for_update().get(pk=copy_id)
+            if copy.status != BookCopy.Status.AVAILABLE:
+                messages.error(request, "Copy is not available.")
+                return redirect("loans:checkout")
+            today = timezone.localdate()
+            due_str = request.POST.get("due_date", "")
+            due_date = timezone.datetime.strptime(due_str, "%Y-%m-%d").date() if due_str else today + timedelta(days=7)
+            loan = Loan(
+                user=user,
+                book_copy=copy,
+                checkout_date=today,
+                due_date=due_date,
+                processed_by=request.user,
+            )
+            loan.save()
+            copy.status = BookCopy.Status.BORROWED
+            copy.save()
+            CopyHistory.objects.create(book_copy=copy, event="Borrowed", notes=f"Checked out by {user.lrn}", actor=request.user)
+            log_action(request.user, "LOAN_CREATED", "Loan", loan.loan_id, metadata={
+                "user_lrn": user.lrn,
+                "copy_id": copy.copy_id,
+                "due_date": str(loan.due_date),
+            })
         request.session.pop("checkout_user_id", None)
         request.session.pop("checkout_copy_id", None)
         messages.success(request, f"Book checked out to {user.get_full_name()}.")
@@ -152,19 +155,21 @@ def return_confirm(request, loan_id):
             messages.error(request, "Too many requests. Please wait a minute and try again.")
             return redirect("loans:return_book")
     loan = get_object_or_404(Loan.objects.select_related("user", "book_copy__book"), loan_id=loan_id)
-    if loan.return_date:
-        messages.error(request, "This book has already been returned.")
-        return redirect("loans:return_book")
     if request.method == "POST":
-        loan.return_date = timezone.localdate()
-        loan.save()
-        loan.book_copy.status = BookCopy.Status.AVAILABLE
-        loan.book_copy.save()
-        CopyHistory.objects.create(book_copy=loan.book_copy, event="Returned", actor=request.user)
-        log_action(request.user, "LOAN_RETURNED", "Loan", loan.loan_id, metadata={
-            "user_lrn": loan.user.lrn,
-            "copy_id": loan.book_copy.copy_id,
-        })
+        with transaction.atomic():
+            loan = Loan.objects.select_for_update().get(loan_id=loan_id)
+            if loan.return_date:
+                messages.error(request, "This book has already been returned.")
+                return redirect("loans:return_book")
+            loan.return_date = timezone.localdate()
+            loan.save()
+            loan.book_copy.status = BookCopy.Status.AVAILABLE
+            loan.book_copy.save()
+            CopyHistory.objects.create(book_copy=loan.book_copy, event="Returned", actor=request.user)
+            log_action(request.user, "LOAN_RETURNED", "Loan", loan.loan_id, metadata={
+                "user_lrn": loan.user.lrn,
+                "copy_id": loan.book_copy.copy_id,
+            })
         messages.success(request, f"Book returned: {loan.book_copy.copy_id}.")
         return redirect("loans:loan_list")
     return render(request, "loans/return_confirm.html", {

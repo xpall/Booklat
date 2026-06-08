@@ -20,10 +20,12 @@ services:
     image: postgres:16-alpine
     container_name: booklat-db
     restart: unless-stopped
+    env_file:
+      - .env
     environment:
-      POSTGRES_DB: booklat
-      POSTGRES_USER: booklat
-      POSTGRES_PASSWORD: booklat
+      POSTGRES_DB: ${DB_NAME:-booklat}
+      POSTGRES_USER: ${DB_USER:-booklat}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD must be set}
     volumes:
       - ./data/postgres:/var/lib/postgresql/data
     healthcheck:

@@ -1,8 +1,10 @@
 import csv
+from django.db import IntegrityError
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.views.decorators.http import require_http_methods
+from django_ratelimit.decorators import ratelimit
 from .models import BookCopy, CopyHistory
 from books.models import Book
 from .forms import CopyForm, CopyImportForm
@@ -57,7 +59,16 @@ def copy_create_view(request):
         if form.is_valid():
             copy = form.save(commit=False)
             copy.copy_id = _generate_copy_id(copy.book.isbn)
-            copy.save()
+            max_retries = 3
+            for attempt in range(max_retries):
+                try:
+                    copy.save()
+                    break
+                except IntegrityError:
+                    if attempt < max_retries - 1:
+                        copy.copy_id = _generate_copy_id(copy.book.isbn)
+                    else:
+                        raise
             CopyHistory.objects.create(book_copy=copy, event="Created", actor=request.user)
             log_action(request.user, "COPY_CREATED", "BookCopy", copy.copy_id)
             messages.success(request, f"Copy {copy.copy_id} created.")
@@ -192,6 +203,7 @@ def _import_copies(records, actor):
 
 
 @any_permission_required("loans.create", "loans.return")
+@ratelimit(key="user_or_ip", rate="30/m", method="GET")
 def copy_search_json(request):
     q = request.GET.get("q", "").strip()
     status = request.GET.get("status", BookCopy.Status.AVAILABLE)

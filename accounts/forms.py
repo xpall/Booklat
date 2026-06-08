@@ -10,6 +10,11 @@ class LoginForm(forms.Form):
 
 
 class PasswordChangeForm(forms.Form):
+    old_password = forms.CharField(
+        label="Current Password",
+        widget=forms.PasswordInput,
+        required=False,
+    )
     new_password = forms.CharField(
         label="New Password",
         widget=forms.PasswordInput,
@@ -82,9 +87,13 @@ class UserUpdateForm(forms.ModelForm):
         model = User
         fields = ["first_name", "last_name", "role"]
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, request_user=None, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["role"].queryset = User._meta.get_field("role").remote_field.model.objects.all().order_by("name")
+        from .models import Role
+        roles = Role.objects.all()
+        if request_user and not request_user.is_admin:
+            roles = roles.exclude(name__in=["Administrator", "Staff"])
+        self.fields["role"].queryset = roles.order_by("name")
 
 
 class CSVImportForm(forms.Form):

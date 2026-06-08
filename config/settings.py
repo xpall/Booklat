@@ -1,14 +1,21 @@
 import os
 from pathlib import Path
-from django.core.management.utils import get_random_secret_key
+from django.core.exceptions import ImproperlyConfigured
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = os.environ.get("SECRET_KEY", get_random_secret_key())
-
 DEBUG = os.environ.get("DEBUG", "0") == "1"
 
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(",")
+_secret = os.environ.get("SECRET_KEY", "")
+if not _secret:
+    if not DEBUG:
+        raise ImproperlyConfigured("SECRET_KEY environment variable is required when DEBUG=False")
+    from django.core.management.utils import get_random_secret_key
+
+    _secret = get_random_secret_key()
+SECRET_KEY = _secret
+
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "localhost").split(",")
 
 CSRF_TRUSTED_ORIGINS = os.environ.get("CSRF_TRUSTED_ORIGINS", "http://localhost").split(",")
 
@@ -67,9 +74,9 @@ WSGI_APPLICATION = "config.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ.get("DB_NAME", "booklat"),
-        "USER": os.environ.get("DB_USER", "booklat"),
-        "PASSWORD": os.environ.get("DB_PASSWORD", "booklat"),
+        "NAME": os.environ.get("DB_NAME", ""),
+        "USER": os.environ.get("DB_USER", ""),
+        "PASSWORD": os.environ.get("DB_PASSWORD", ""),
         "HOST": os.environ.get("DB_HOST", "127.0.0.1"),
         "PORT": os.environ.get("DB_PORT", "5432"),
         "CONN_MAX_AGE": int(os.environ.get("DB_CONN_MAX_AGE", 600)),
@@ -145,6 +152,19 @@ CELERY_ENABLE_UTC = False
 SESSION_COOKIE_AGE = 86400
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_SECURE = not DEBUG
+SESSION_COOKIE_SAMESITE = "Lax"
+
+CSRF_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SAMESITE = "Lax"
+
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_REFERRER_POLICY = "same-origin"
+SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin"
+
+ADMIN_LRN = os.environ.get("ADMIN_LRN", "ADMIN")
+ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "Booklat@Admin2026!")
+
+MAX_CSV_UPLOAD_SIZE = int(os.environ.get("MAX_CSV_UPLOAD_SIZE", 5 * 1024 * 1024))
 
 LOGGING = {
     "version": 1,

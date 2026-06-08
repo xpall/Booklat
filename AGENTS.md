@@ -5,7 +5,7 @@
 ```bash
 # Local dev (needs PostgreSQL + Redis, or use Docker)
 python manage.py migrate
-python manage.py seed_data       # creates roles, permissions, admin user (ADMIN / Booklat@Admin2026!)
+python manage.py seed_data       # creates roles, permissions, admin user (set ADMIN_LRN + ADMIN_PASSWORD in .env)
 python manage.py runserver
 
 # Docker dev (preferred — runs migrate + seed_data + collectstatic automatically)

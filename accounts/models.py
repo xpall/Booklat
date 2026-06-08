@@ -44,6 +44,8 @@ class User(models.Model):
     role = models.ForeignKey(Role, on_delete=models.SET_NULL, null=True, blank=True, related_name="users")
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.ACTIVE)
     must_change_password = models.BooleanField(default=False)
+    failed_login_attempts = models.SmallIntegerField(default=0)
+    locked_until = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     last_login = models.DateTimeField(null=True, blank=True)

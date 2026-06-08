@@ -66,17 +66,18 @@ class Command(BaseCommand):
         for codename in MEMBER_PERMISSIONS:
             RolePermission.objects.get_or_create(role=member_role, permission=permissions[codename])
 
-        if not User.objects.filter(lrn="ADMIN").exists():
+        from django.conf import settings
+        if not User.objects.filter(lrn=settings.ADMIN_LRN).exists():
             admin = User(
-                lrn="ADMIN",
+                lrn=settings.ADMIN_LRN,
                 first_name="System",
                 last_name="Administrator",
                 role=admin_role,
                 must_change_password=True,
             )
-            admin.set_password("Booklat@Admin2026!")
+            admin.set_password(settings.ADMIN_PASSWORD)
             admin.save()
-            self.stdout.write(self.style.SUCCESS("Created admin user: ADMIN / Booklat@Admin2026!"))
+            self.stdout.write(self.style.SUCCESS(f"Created admin user: {settings.ADMIN_LRN}"))
 
         from core.models import AboutConfig
         config = AboutConfig.get_config()
