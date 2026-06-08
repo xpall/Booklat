@@ -6,6 +6,15 @@
     <title>Booklat — {{ title|default:"Library Management" }}</title>
     <link rel="icon" type="image/png" href="{% static 'core/img/logo.png' %}">
     <link rel="apple-touch-icon" href="{% static 'core/img/logo.png' %}">
+    <script>
+    (function () {
+        if (document.documentElement.hasAttribute('data-theme-locked')) return;
+        var stored = localStorage.getItem('booklat-theme');
+        if (stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        }
+    })();
+    </script>
     <link rel="stylesheet" href="{% static 'core/css/design-system.css' %}">
     {% block extra_head %}{% endblock %}
 </head>
