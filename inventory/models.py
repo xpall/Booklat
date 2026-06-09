@@ -18,6 +18,7 @@ class BookCopy(models.Model):
     acquisition_date = models.DateField(null=True, blank=True)
     shelf_location = models.CharField(max_length=200, blank=True)
     notes = models.TextField(blank=True)
+    donor = models.CharField(max_length=300, blank=True)
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.AVAILABLE)
     is_archived = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)

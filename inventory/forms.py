@@ -10,7 +10,7 @@ class CopyForm(forms.ModelForm):
 
     class Meta:
         model = BookCopy
-        fields = ["book", "acquisition_date", "shelf_location", "notes", "status"]
+        fields = ["book", "acquisition_date", "shelf_location", "notes", "donor", "status"]
 
 
 class CopyImportForm(forms.Form):

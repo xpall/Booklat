@@ -24,6 +24,10 @@
       <span class="book-meta__label">Notes</span>
       <span class="book-meta__value">{{ copy.notes|default:"—" }}</span>
     </div>
+    <div class="book-meta__item">
+      <span class="book-meta__label">Donor</span>
+      <span class="book-meta__value">{{ copy.donor|default:"—" }}</span>
+    </div>
   </div>
   <div class="flex gap-2 mt-4" style="flex-wrap:wrap;">
     <a href="{% url 'inventory:copy_edit' copy.copy_id %}" class="btn btn--secondary btn--small">Edit</a>

@@ -78,7 +78,7 @@ def export_copies_csv(request):
     ts = datetime.now().strftime("%Y-%m-%d_%H%M")
     response["Content-Disposition"] = f'attachment; filename="booklat_copies_{ts}.csv"'
     writer = csv.writer(response)
-    writer.writerow(["Copy ID", "Book ISBN", "Book Title", "Status", "Shelf Location", "Acquisition Date"])
+    writer.writerow(["Copy ID", "Book ISBN", "Book Title", "Status", "Shelf Location", "Acquisition Date", "Donor"])
     for copy in BookCopy.objects.select_related("book").filter(is_archived=False).iterator():
         writer.writerow([
             copy.copy_id,
@@ -87,6 +87,7 @@ def export_copies_csv(request):
             copy.get_status_display(),
             copy.shelf_location,
             str(copy.acquisition_date) if copy.acquisition_date else "",
+            copy.donor,
         ])
     return response
 
