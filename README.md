@@ -35,6 +35,10 @@ Your public key is at `~/.ssh/id_ed25519.pub` — copy its contents for the next
 ### 2. SSH Key Authentication
 
 ```bash
+# Create the booklat user first (also done in step 4; duplicated here for VPS setups)
+adduser booklat
+usermod -aG sudo booklat
+
 su - booklat
 mkdir -p ~/.ssh && chmod 700 ~/.ssh
 vim ~/.ssh/authorized_keys   # paste your public key
@@ -114,7 +118,7 @@ In `.env`, update the following:
 docker compose up -d
 ```
 
-### 10. Cloudflare Tunnel (Optional)
+### 10. Cloudflare Tunnel
 
 Deploy the tunnel through the [Cloudflare Zero Trust dashboard](https://one.dash.cloudflare.com/) rather than the CLI:
 
