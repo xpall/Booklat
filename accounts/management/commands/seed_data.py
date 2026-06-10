@@ -31,7 +31,6 @@ MEMBER_PERMISSIONS = [
     "loans.view",
     "requests.view",
     "freedom_wall.view", "freedom_wall.create",
-    "announcements.view",
 ]
 
 
