@@ -117,18 +117,26 @@
 
     var closeBtn = toast.querySelector('.toast__close');
     var timer = setTimeout(removeToast, 5000);
+    var removed = false;
 
-    closeBtn.addEventListener('click', function () {
-      clearTimeout(timer);
-      removeToast();
-    });
+    if (closeBtn) {
+      closeBtn.addEventListener('click', function () {
+        clearTimeout(timer);
+        removeToast();
+      });
+    }
 
     function removeToast() {
+      if (removed) return;
+      removed = true;
       clearTimeout(timer);
       toast.classList.add('toast--removing');
       toast.addEventListener('animationend', function () {
         if (toast.parentNode) toast.parentNode.removeChild(toast);
       }, { once: true });
+      setTimeout(function () {
+        if (toast.parentNode) toast.parentNode.removeChild(toast);
+      }, 100);
     }
   }
 

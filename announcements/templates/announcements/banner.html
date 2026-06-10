@@ -54,6 +54,9 @@
 .announcement-banner__close:hover {
   color: var(--color-text-primary);
 }
+.announcement-banner--dismissed {
+  display: none;
+}
 </style>
 
 <script>
@@ -69,7 +72,7 @@
     if (!banner) return;
 
     var announcementId = btn.getAttribute('data-announcement-dismiss');
-    banner.style.display = 'none';
+    banner.classList.add('announcement-banner--dismissed');
 
     try {
       var dismissed = JSON.parse(sessionStorage.getItem('dismissed_announcements') || '[]');
@@ -79,8 +82,7 @@
       }
     } catch (e) {}
 
-    var remaining = container.querySelectorAll('.announcement-banner[style*="display: none"]');
-    if (remaining.length === container.querySelectorAll('.announcement-banner').length) {
+    if (!container.querySelector('.announcement-banner:not(.announcement-banner--dismissed)')) {
       container.style.display = 'none';
     }
   });
@@ -92,11 +94,10 @@
 
   dismissed.forEach(function(id) {
     var banner = container.querySelector('[data-announcement-id="' + id + '"]');
-    if (banner) banner.style.display = 'none';
+    if (banner) banner.classList.add('announcement-banner--dismissed');
   });
 
-  var visible = container.querySelectorAll('.announcement-banner:not([style*="display: none"])');
-  if (!visible.length) {
+  if (!container.querySelector('.announcement-banner:not(.announcement-banner--dismissed)')) {
     container.style.display = 'none';
   }
 })();
