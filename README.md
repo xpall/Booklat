@@ -18,17 +18,9 @@ Docker Compose runs PostgreSQL 16, Redis 7, and the Django app with Gunicorn. Th
 ### Prerequisites
 - Fresh VPS running Ubuntu 22.04+ or Debian 12+
 - SSH access as root
-- A domain name pointing to your VPS (for Cloudflare Tunnel)
+- Target URL (e.g. `booklat.bettercalauan.org`) pointing to your VPS
 
-### 1. Update System & Create User
-
-```bash
-sudo apt update && sudo apt upgrade -y
-adduser booklat
-usermod -aG sudo booklat
-```
-
-### 2. Generate SSH Key (Local Machine)
+### 1. Generate SSH Key (Local Machine)
 
 If you don't have an SSH key pair yet, generate one on your local machine:
 
@@ -36,7 +28,15 @@ If you don't have an SSH key pair yet, generate one on your local machine:
 ssh-keygen -t ed25519 -C "your-email@example.com"
 ```
 
-Your public key is at `~/.ssh/id_ed25519.pub` — copy its contents for the next step.
+Your public key is at `~/.ssh/id_ed25519.pub` — copy its contents for step 3.
+
+### 2. Update System & Create User
+
+```bash
+sudo apt update && sudo apt upgrade -y
+adduser deploy
+usermod -aG sudo deploy
+```
 
 ### 3. SSH Key Authentication
 
