@@ -21,6 +21,16 @@
       </div>
       <button type="submit" class="btn btn--primary btn--large btn--full">Sign In</button>
     </form>
+    {% if demo_mode %}
+    <div class="login-card__demo">
+      <p class="login-card__demo-title">Demo Accounts</p>
+      <ul class="login-card__demo-list">
+        {% for account in demo_accounts %}
+        <li><strong>{{ account.lrn }}</strong> / {{ account.password }} — {{ account.role }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
   </div>
 </div>
 <script>

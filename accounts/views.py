@@ -33,13 +33,21 @@ def _get_success_redirect(user):
 @require_http_methods(["GET", "POST"])
 @ratelimit(key="ip", rate="5/m", method="POST")
 def login_view(request):
+    login_context = {
+        "demo_mode": settings.DEMO_MODE,
+        "demo_accounts": [
+            {"lrn": "admin", "password": "admin", "role": "Administrator"},
+            {"lrn": "staff", "password": "staff", "role": "Staff"},
+            {"lrn": "student", "password": "student", "role": "Student"},
+        ],
+    }
     was_limited = getattr(request, "limited", False)
     if request.user.is_authenticated and request.user.status == User.Status.ACTIVE:
         return _get_success_redirect(request.user)
     if request.method == "POST":
         if was_limited:
             messages.error(request, "Too many login attempts. Please wait a minute and try again.")
-            return render(request, "accounts/login.html", {"form": LoginForm()})
+            return render(request, "accounts/login.html", {"form": LoginForm(), **login_context})
         form = LoginForm(request.POST)
         if form.is_valid():
             from .backends import LRNAuthenticationBackend
@@ -62,7 +70,7 @@ def login_view(request):
             messages.error(request, "Invalid LRN or password.")
     else:
         form = LoginForm()
-    return render(request, "accounts/login.html", {"form": form})
+    return render(request, "accounts/login.html", {"form": form, **login_context})
 
 
 @require_http_methods(["POST"])
