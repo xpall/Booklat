@@ -186,11 +186,14 @@ def _import_copies(records, actor):
             errors.append(f"Row {i}: book with ISBN {isbn} not found.")
             continue
         try:
+            status = r.get("status", "").strip()
             copy = BookCopy(
                 copy_id=_generate_copy_id(isbn),
                 book=book,
-                shelf_location=r.get("shelf_location", "").strip(),
                 acquisition_date=r.get("acquisition_date") or None,
+                donor=r.get("donor", "").strip(),
+                status=status if status in dict(BookCopy.Status.choices) else BookCopy.Status.AVAILABLE,
+                shelf_location=r.get("shelf_location", "").strip(),
                 notes=r.get("notes", "").strip(),
             )
             copy.save()
@@ -224,6 +227,6 @@ def copy_sample_csv(request):
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = 'attachment; filename="copies_sample.csv"'
     writer = csv.writer(response)
-    writer.writerow(["isbn", "shelf_location", "acquisition_date", "notes"])
-    writer.writerow(["978-0-7475-3269-9", "A-01-02", "2024-01-15", "Good condition"])
+    writer.writerow(["isbn", "acquisition_date", "donor", "status", "shelf_location", "notes"])
+    writer.writerow(["978-0-7475-3269-9", "2024-01-15", "John Smith", "available", "A-01-02", "Good condition"])
     return response

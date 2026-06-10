@@ -41,9 +41,9 @@ def export_users_csv(request):
     ts = datetime.now().strftime("%Y-%m-%d_%H%M")
     response["Content-Disposition"] = f'attachment; filename="booklat_users_{ts}.csv"'
     writer = csv.writer(response)
-    writer.writerow(["LRN", "First Name", "Last Name", "Status", "Created At"])
+    writer.writerow(["first_name", "last_name", "lrn", "password"])
     for user in User.objects.iterator():
-        writer.writerow([user.lrn, user.first_name, user.last_name, user.status, user.created_at.strftime("%Y-%m-%d %H:%M:%S")])
+        writer.writerow([user.first_name, user.last_name, user.lrn, user.password])
     return response
 
 
@@ -65,10 +65,14 @@ def export_books_csv(request):
     ts = datetime.now().strftime("%Y-%m-%d_%H%M")
     response["Content-Disposition"] = f'attachment; filename="booklat_books_{ts}.csv"'
     writer = csv.writer(response)
-    writer.writerow(["ISBN", "Title", "Publisher", "Publication Year", "Categories"])
+    writer.writerow(["isbn", "title", "subtitle", "authors", "publisher", "publication_year", "description", "categories", "cover_image"])
     for book in Book.objects.filter(is_archived=False).prefetch_related("categories").iterator(chunk_size=1000):
         cats = ", ".join(c.name for c in book.categories.all())
-        writer.writerow([book.isbn, book.title, book.publisher, book.publication_year or "", cats])
+        writer.writerow([
+            book.isbn, book.title, book.subtitle, book.authors,
+            book.publisher, book.publication_year or "", book.description or "",
+            cats, book.cover_image or "",
+        ])
     return response
 
 
@@ -78,16 +82,16 @@ def export_copies_csv(request):
     ts = datetime.now().strftime("%Y-%m-%d_%H%M")
     response["Content-Disposition"] = f'attachment; filename="booklat_copies_{ts}.csv"'
     writer = csv.writer(response)
-    writer.writerow(["Copy ID", "Book ISBN", "Book Title", "Status", "Shelf Location", "Acquisition Date", "Donor"])
+    writer.writerow(["copy_id", "isbn", "acquisition_date", "donor", "status", "shelf_location", "notes"])
     for copy in BookCopy.objects.select_related("book").filter(is_archived=False).iterator():
         writer.writerow([
             copy.copy_id,
             copy.book.isbn,
-            copy.book.title,
-            copy.get_status_display(),
-            copy.shelf_location,
             str(copy.acquisition_date) if copy.acquisition_date else "",
             copy.donor,
+            copy.status,
+            copy.shelf_location,
+            copy.notes,
         ])
     return response
 

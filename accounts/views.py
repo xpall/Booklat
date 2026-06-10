@@ -314,14 +314,19 @@ def _import_users(records, actor):
         if User.objects.filter(lrn=lrn).exists():
             errors.append(f"Row {i}: LRN {lrn} already exists.")
             continue
-        try:
-            password_validation.validate_password(password)
-        except Exception as e:
-            errors.append(f"Row {i}: {lrn} - {e.messages[0]}")
-            continue
+        is_already_hashed = password.startswith("argon2id$")
+        if not is_already_hashed:
+            try:
+                password_validation.validate_password(password)
+            except Exception as e:
+                errors.append(f"Row {i}: {lrn} - {e.messages[0]}")
+                continue
         try:
             user = User(lrn=lrn, first_name=first_name, last_name=last_name, role=member_role, must_change_password=True)
-            user.set_password(password)
+            if is_already_hashed:
+                user.password = password
+            else:
+                user.set_password(password)
             user.save()
             log_action(actor, "USER_CREATED", "User", user.lrn, metadata={"source": "csv_import"})
             imported += 1
