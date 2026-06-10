@@ -20,6 +20,8 @@ Docker Compose runs PostgreSQL 16, Redis 7, and the Django app with Gunicorn. Th
 - SSH access as root
 - Target URL (e.g. `booklat.bettercalauan.org`) pointing to your VPS
 
+> **Steps 1–3 are for remote VPS setups only.** Skip to step 4 if you're self-hosting on a dedicated PC or laptop you have direct access to.
+
 ### 1. Generate SSH Key (Local Machine)
 
 If you don't have an SSH key pair yet, generate one on your local machine:
@@ -28,17 +30,9 @@ If you don't have an SSH key pair yet, generate one on your local machine:
 ssh-keygen -t ed25519 -C "your-email@example.com"
 ```
 
-Your public key is at `~/.ssh/id_ed25519.pub` — copy its contents for step 3.
+Your public key is at `~/.ssh/id_ed25519.pub` — copy its contents for the next step.
 
-### 2. Update System & Create User
-
-```bash
-sudo apt update && sudo apt upgrade -y
-adduser deploy
-usermod -aG sudo deploy
-```
-
-### 3. SSH Key Authentication
+### 2. SSH Key Authentication
 
 ```bash
 su - deploy
@@ -47,7 +41,7 @@ vim ~/.ssh/authorized_keys   # paste your public key
 chmod 600 ~/.ssh/authorized_keys
 ```
 
-### 4. Harden SSH
+### 3. Harden SSH
 
 ```bash
 sudo vim /etc/ssh/sshd_config
@@ -58,6 +52,14 @@ Check for override files in `/etc/ssh/sshd_config.d/` and update them too, then:
 
 ```bash
 sudo systemctl reload ssh
+```
+
+### 4. Update System & Create User
+
+```bash
+sudo apt update && sudo apt upgrade -y
+adduser deploy
+usermod -aG sudo deploy
 ```
 
 ### 5. Firewall (UFW)
