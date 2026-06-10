@@ -73,6 +73,8 @@ class UserForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields["role"].queryset = User._meta.get_field("role").remote_field.model.objects.all().order_by("name")
+        if not self.initial.get("role"):
+            self.initial["role"] = self.fields["role"].queryset.filter(name="Member").first()
 
     def clean_password(self):
         password = self.cleaned_data.get("password")
