@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, timedelta
 
 from celery import shared_task
 from django.db import transaction
@@ -26,7 +26,8 @@ def purge_old_posts():
     from core.utils import log_action
 
     today = date.today()
-    old_posts = FreedomPost.objects.filter(created_at__date__lt=today)
+    cutoff = today - timedelta(days=3)
+    old_posts = FreedomPost.objects.filter(created_at__date__lt=cutoff)
     count, _ = old_posts.delete()
     if count:
         log_action(
@@ -34,6 +35,6 @@ def purge_old_posts():
             action="FREEDOM_WALL_PURGED_OLD",
             resource_type="FreedomPost",
             resource_id="all",
-            metadata={"deleted_count": count, "before_date": str(today)},
+            metadata={"deleted_count": count, "cutoff_date": str(cutoff)},
         )
     return count
