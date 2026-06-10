@@ -9,13 +9,15 @@ class DemoConfig(AppConfig):
     name = "demo"
 
     def ready(self):
-        if not getattr(settings, "DEMO_MODE", False):
-            return
         if not _is_web_process():
             return
-        from demo.setup import create_demo_users
+        demo_enabled = getattr(settings, "DEMO_MODE", False)
+        from demo.setup import create_demo_users, deactivate_demo_users
 
-        create_demo_users()
+        if demo_enabled:
+            create_demo_users()
+        else:
+            deactivate_demo_users()
 
 
 def _is_web_process():

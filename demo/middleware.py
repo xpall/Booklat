@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.shortcuts import redirect
 from django.contrib import messages
+from django.contrib.auth import logout as auth_logout
 from django.urls import reverse
 
 
@@ -9,9 +10,6 @@ class DemoReadOnlyMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        if not settings.DEMO_MODE:
-            return self.get_response(request)
-
         if not request.user.is_authenticated:
             return self.get_response(request)
 
@@ -21,6 +19,11 @@ class DemoReadOnlyMiddleware:
             return self.get_response(request)
 
         path = request.path_info.lstrip("/")
+
+        if not settings.DEMO_MODE:
+            auth_logout(request)
+            messages.error(request, "Demo mode is currently disabled.")
+            return redirect("accounts:login")
 
         password_change_path = reverse("accounts:password_change").lstrip("/")
         if path == password_change_path:

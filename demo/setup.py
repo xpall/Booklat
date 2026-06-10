@@ -31,3 +31,13 @@ def create_demo_users():
         user.set_password(acct["password"])
         user.save(update_fields=["password"])
         DemoProfile.objects.get_or_create(user=user)
+
+
+def deactivate_demo_users():
+    from accounts.models import User
+    from demo.models import DemoProfile
+
+    for profile in DemoProfile.objects.select_related("user"):
+        user = profile.user
+        user.status = User.Status.SUSPENDED
+        user.save(update_fields=["status"])
