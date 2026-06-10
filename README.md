@@ -102,7 +102,15 @@ newgrp docker
 git clone git@github.com:xpall/Booklat.git booklat
 cd booklat
 cp .env.example .env
-vim .env   # set ADMIN_LRN, ADMIN_PASSWORD, SECRET_KEY, DB credentials, etc.
+vim .env
+```
+
+In `.env`, update the following:
+- `SECRET_KEY` — generate a strong random value (e.g. `openssl rand -base64 48`)
+- `ALLOWED_HOSTS` — set to your target URL (e.g. `booklat.bettercalauan.org`)
+- `ADMIN_LRN` and `ADMIN_PASSWORD` — change the default admin credentials
+
+```bash
 docker compose up -d
 ```
 
