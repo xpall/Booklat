@@ -13,7 +13,110 @@ docker compose up
 
 Docker Compose runs PostgreSQL 16, Redis 7, and the Django app with Gunicorn. The entrypoint runs migrations, seeds roles/permissions/admin user, and collects static files.
 
-**Default admin**: LRN `ADMIN`, password `Booklat@Admin2026!` (forced password change on first login).
+## Setup & Installation (Production VPS)
+
+### Prerequisites
+- Fresh VPS running Ubuntu 22.04+ or Debian 12+
+- SSH access as root
+- A domain name pointing to your VPS (for Cloudflare Tunnel)
+
+### 1. Update System & Create User
+
+```bash
+sudo apt update && sudo apt upgrade -y
+adduser booklat
+usermod -aG sudo booklat
+```
+
+### 2. Generate SSH Key (Local Machine)
+
+If you don't have an SSH key pair yet, generate one on your local machine:
+
+```bash
+ssh-keygen -t ed25519 -C "your-email@example.com"
+```
+
+Your public key is at `~/.ssh/id_ed25519.pub` — copy its contents for the next step.
+
+### 3. SSH Key Authentication
+
+```bash
+su - deploy
+mkdir -p ~/.ssh && chmod 700 ~/.ssh
+vim ~/.ssh/authorized_keys   # paste your public key
+chmod 600 ~/.ssh/authorized_keys
+```
+
+### 4. Harden SSH
+
+```bash
+sudo vim /etc/ssh/sshd_config
+```
+
+Set: `PasswordAuthentication no`, `PermitRootLogin no`, `UsePAM no`.
+Check for override files in `/etc/ssh/sshd_config.d/` and update them too, then:
+
+```bash
+sudo systemctl reload ssh
+```
+
+### 5. Firewall (UFW)
+
+```bash
+sudo apt install ufw
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw allow OpenSSH
+sudo ufw enable
+```
+
+### 6. Fail2ban
+
+```bash
+sudo apt install fail2ban
+sudo cp /etc/fail2ban/fail2ban.conf /etc/fail2ban/fail2ban.local
+sudo cp /etc/fail2ban/jail.conf /etc/fail2ban/jail.local
+sudo systemctl enable --now fail2ban
+```
+
+### 7. Automatic Security Updates
+
+```bash
+sudo apt install unattended-upgrades
+sudo dpkg-reconfigure unattended-upgrades   # select Yes
+```
+
+### 8. Install Docker & Docker Compose
+
+```bash
+curl -fsSL https://get.docker.com | sudo sh
+sudo usermod -aG docker $USER
+newgrp docker
+```
+
+### 9. Deploy Booklat
+
+```bash
+git clone <repo-url> booklat
+cd booklat
+cp .env.example .env
+vim .env   # set ADMIN_LRN, ADMIN_PASSWORD, SECRET_KEY, DB credentials, etc.
+docker compose up -d
+```
+
+### 10. Cloudflare Tunnel (Optional)
+
+Deploy the tunnel through the [Cloudflare Zero Trust dashboard](https://one.dash.cloudflare.com/) rather than the CLI:
+
+1. Go to **Networks → Tunnels** and click **Create a tunnel**.
+2. Name it (e.g. `booklat`), select your OS, and copy the install command.
+3. Run the installer on your VPS — it installs and authenticates the `cloudflared` daemon automatically.
+4. Back in the dashboard, configure a **Public Hostname**:
+   - **Subdomain/Domain**: your-domain.com
+   - **Service type**: HTTP
+   - **URL**: `localhost:8000` (or your Gunicorn port)
+
+The tunnel will stay connected as long as `cloudflared` is running. For persistence, see `docker-compose.prod.yml` which bundles cloudflared with the stack.
 
 ## Technology
 
