@@ -36,10 +36,10 @@ Your public key is at `~/.ssh/id_ed25519.pub` — copy its contents for the next
 
 ```bash
 # Create the booklat user first (also done in step 4; duplicated here for VPS setups)
-adduser booklat
-usermod -aG sudo booklat
+adduser booklat-demo
+usermod -aG sudo booklat-demo
 
-su - booklat
+su - booklat-demo
 mkdir -p ~/.ssh && chmod 700 ~/.ssh
 vim ~/.ssh/authorized_keys   # paste your public key
 chmod 600 ~/.ssh/authorized_keys
@@ -62,8 +62,8 @@ sudo systemctl reload ssh
 
 ```bash
 sudo apt update && sudo apt upgrade -y
-adduser booklat
-usermod -aG sudo booklat
+adduser booklat-demo
+usermod -aG sudo booklat-demo
 ```
 
 ### 5. Firewall (UFW)
