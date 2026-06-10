@@ -29,8 +29,13 @@
 
 {% if user.is_admin or user.is_staff_user %}
 <div class="flex gap-2 mb-4" style="flex-wrap:wrap;">
+  {% if profile_user.lrn != admin_lrn or user.lrn == profile_user.lrn %}
   <a href="{% url 'accounts:user_edit' profile_user.lrn %}" class="btn btn--secondary btn--small">Edit</a>
+  {% endif %}
+  {% if profile_user.lrn != admin_lrn %}
   <a href="{% url 'accounts:password_reset' profile_user.lrn %}" class="btn btn--outline btn--small">Reset Password</a>
+  {% endif %}
+  {% if profile_user.lrn != admin_lrn %}
   {% if profile_user.status == 'active' %}
   <form method="post" action="{% url 'accounts:user_suspend' profile_user.lrn %}" style="display:inline">
     {% csrf_token %}
@@ -52,6 +57,7 @@
     {% csrf_token %}
     <button type="submit" class="btn btn--danger-outline btn--small" onclick="return confirm('Archive this user?')">Archive</button>
   </form>
+  {% endif %}
   {% endif %}
 </div>
 {% endif %}

@@ -1,6 +1,7 @@
 import csv
 import uuid
 
+from django.conf import settings
 from django.core.cache import cache
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -115,7 +116,10 @@ def user_list_view(request):
 @permission_required("users.view")
 def user_detail_view(request, lrn):
     user = get_object_or_404(User, lrn=lrn)
-    return render(request, "accounts/user_detail.html", {"profile_user": user})
+    return render(request, "accounts/user_detail.html", {
+        "profile_user": user,
+        "admin_lrn": settings.ADMIN_LRN,
+    })
 
 
 @require_http_methods(["GET", "POST"])
@@ -145,9 +149,15 @@ def user_create_view(request):
 @permission_required("users.update")
 def user_update_view(request, lrn):
     user = get_object_or_404(User, lrn=lrn)
+    if user.lrn == settings.ADMIN_LRN and request.user.lrn != user.lrn:
+        messages.error(request, "The superadmin account cannot be edited by other administrators.")
+        return redirect("accounts:user_detail", lrn=user.lrn)
     if request.method == "POST":
         form = UserUpdateForm(request.POST, instance=user, request_user=request.user)
         if form.is_valid():
+            if user.lrn == settings.ADMIN_LRN and form.cleaned_data.get("role") and form.cleaned_data["role"].name != "Administrator":
+                messages.error(request, "The superadmin account cannot be demoted.")
+                return redirect("accounts:user_detail", lrn=user.lrn)
             form.save()
             log_action(request.user, "USER_UPDATED", "User", user.lrn)
             messages.success(request, f"User {user.lrn} updated.")
@@ -161,6 +171,9 @@ def user_update_view(request, lrn):
 @permission_required("users.archive")
 def user_archive_view(request, lrn):
     user = get_object_or_404(User, lrn=lrn)
+    if user.lrn == settings.ADMIN_LRN:
+        messages.error(request, "The superadmin account cannot be archived.")
+        return redirect("accounts:user_detail", lrn=user.lrn)
     user.status = User.Status.ARCHIVED
     user.save()
     log_action(request.user, "USER_ARCHIVED", "User", user.lrn)
@@ -172,6 +185,9 @@ def user_archive_view(request, lrn):
 @permission_required("users.update")
 def user_suspend_view(request, lrn):
     user = get_object_or_404(User, lrn=lrn)
+    if user.lrn == settings.ADMIN_LRN:
+        messages.error(request, "The superadmin account cannot be suspended.")
+        return redirect("accounts:user_detail", lrn=user.lrn)
     user.status = User.Status.SUSPENDED
     user.save()
     log_action(request.user, "USER_SUSPENDED", "User", user.lrn)
@@ -207,6 +223,9 @@ def user_unarchive_view(request, lrn):
 def password_reset_view(request, lrn):
     was_limited = getattr(request, "limited", False)
     user = get_object_or_404(User, lrn=lrn)
+    if user.lrn == settings.ADMIN_LRN:
+        messages.error(request, "The superadmin password cannot be reset by other administrators.")
+        return redirect("accounts:user_detail", lrn=user.lrn)
     if request.method == "POST":
         if was_limited:
             messages.error(request, "Too many requests. Please wait a minute and try again.")
