@@ -97,7 +97,7 @@ newgrp docker
 ### 9. Deploy Booklat
 
 ```bash
-git clone <repo-url> booklat
+git clone git@github.com:xpall/Booklat.git booklat
 cd booklat
 cp .env.example .env
 vim .env   # set ADMIN_LRN, ADMIN_PASSWORD, SECRET_KEY, DB credentials, etc.
