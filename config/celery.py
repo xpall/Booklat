@@ -14,7 +14,7 @@ app.conf.enable_utc = False
 
 app.conf.beat_schedule = {
     "purge-freedom-posts-midnight": {
-        "task": "freedom_wall.tasks.purge_all_posts",
+        "task": "freedom_wall.tasks.purge_old_posts",
         "schedule": crontab(hour=0, minute=0),
     },
 }
