@@ -584,6 +584,20 @@
     });
   }
 
+  /* ------------------------------------------------------
+     Service Worker
+     ------------------------------------------------------ */
+
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('/sw.js');
+    });
+  }
+
+  /* ------------------------------------------------------
+     Init
+     ------------------------------------------------------ */
+
   document.addEventListener('DOMContentLoaded', function () {
     initThemeToggle();
     initSidebar();

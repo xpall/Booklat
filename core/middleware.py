@@ -14,6 +14,7 @@ class LoginRequiredMiddleware:
                 reverse("accounts:login").lstrip("/"),
                 reverse("accounts:password_change").lstrip("/"),
                 reverse("core:about").lstrip("/"),
+                reverse("core:sw_js").lstrip("/"),
             }
             exempt_prefix = ("static/",)
             if path not in exempt_exact and not path.startswith(exempt_prefix):

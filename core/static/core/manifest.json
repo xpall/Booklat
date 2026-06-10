@@ -1,0 +1,21 @@
+{
+  "name": "Booklat",
+  "short_name": "Booklat",
+  "description": "Open-source Library Management System",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#6C63FF",
+  "background_color": "#F8F9FC",
+  "icons": [
+    {
+      "src": "/static/core/img/logo-192px.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/core/img/logo-512px.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

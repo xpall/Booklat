@@ -1,11 +1,18 @@
 import csv
 from datetime import datetime
+from django.conf import settings
 from django.db.models import Count
-from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.shortcuts import render, redirect
 from core.decorators import permission_required
 from core.models import AboutConfig
 from accounts.models import User
+
+
+def sw_js(request):
+    path = settings.BASE_DIR / "core" / "static" / "core" / "sw.js"
+    content = path.read_text()
+    return HttpResponse(content, content_type="application/javascript")
 
 
 def home_view(request):

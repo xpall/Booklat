@@ -4,6 +4,7 @@ from . import views
 app_name = "core"
 
 urlpatterns = [
+    path("sw.js", views.sw_js, name="sw_js"),
     path("", views.home_view, name="home"),
     path("about/", views.about_view, name="about"),
     path("export/", views.export_view, name="export"),
