@@ -35,7 +35,7 @@ Your public key is at `~/.ssh/id_ed25519.pub` — copy its contents for the next
 ### 2. SSH Key Authentication
 
 ```bash
-su - deploy
+su - booklat
 mkdir -p ~/.ssh && chmod 700 ~/.ssh
 vim ~/.ssh/authorized_keys   # paste your public key
 chmod 600 ~/.ssh/authorized_keys
@@ -58,8 +58,8 @@ sudo systemctl reload ssh
 
 ```bash
 sudo apt update && sudo apt upgrade -y
-adduser deploy
-usermod -aG sudo deploy
+adduser booklat
+usermod -aG sudo booklat
 ```
 
 ### 5. Firewall (UFW)
