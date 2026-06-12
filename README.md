@@ -2,10 +2,14 @@
 
 Mobile-first, open-source library management system for schools and small organizations.
 
+**Live Demo**: [booklat-demo.bettercalauan.org](https://booklat-demo.bettercalauan.org)
+
+![Booklat Mobile UI](assets/booklat-mobile-view.webp)
+
 ## Quick Start
 
 ```bash
-git clone <repo>
+git clone https://github.com/xpall/Booklat.git
 cd booklat
 cp .env.example .env   # edit as needed
 docker compose up
@@ -21,6 +25,8 @@ Docker Compose runs PostgreSQL 16, Redis 7, and the Django app with Gunicorn. Th
 - Target URL (e.g. `booklat.bettercalauan.org`) pointing to your VPS
 
 > **Steps 1–3 are for remote VPS setups only.** Skip to step 4 if you're self-hosting on a dedicated PC or laptop you have direct access to.
+
+**Video Walkthrough**: [How to Setup Booklat on a VPS](https://www.youtube.com/watch?v=Rirgmc_sLmI) (audio in Filipino)
 
 ### 1. Generate SSH Key (Local Machine)
 
