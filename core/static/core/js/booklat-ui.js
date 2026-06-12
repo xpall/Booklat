@@ -595,11 +595,39 @@
   }
 
   /* ------------------------------------------------------
+     Password Toggle
+     ------------------------------------------------------ */
+
+  function initPasswordToggles() {
+    document.querySelectorAll('.password-toggle').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var input = this.parentElement.querySelector('input[type="password"], input[type="text"]');
+        var iconOn = this.querySelector('.password-toggle__icon--on');
+        var iconOff = this.querySelector('.password-toggle__icon--off');
+        if (input.type === 'password') {
+          input.type = 'text';
+          iconOn.style.display = 'none';
+          iconOff.style.display = '';
+          this.setAttribute('aria-label', 'Hide password');
+          this.setAttribute('title', 'Hide password');
+        } else {
+          input.type = 'password';
+          iconOn.style.display = '';
+          iconOff.style.display = 'none';
+          this.setAttribute('aria-label', 'Show password');
+          this.setAttribute('title', 'Show password');
+        }
+      });
+    });
+  }
+
+  /* ------------------------------------------------------
      Init
      ------------------------------------------------------ */
 
   document.addEventListener('DOMContentLoaded', function () {
     initThemeToggle();
+    initPasswordToggles();
     initSidebar();
     initDjangoMessages();
     initSkeletonSwap();

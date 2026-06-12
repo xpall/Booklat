@@ -1317,6 +1317,34 @@ button, input, select, textarea {
   font-size: var(--font-size-body);
 }
 
+/* Password Toggle */
+.password-group {
+  position: relative;
+}
+
+.password-group .form-input {
+  padding-right: var(--space-10);
+}
+
+.password-toggle {
+  position: absolute;
+  right: var(--space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+  background: none;
+  border: none;
+  color: var(--color-text-tertiary);
+  cursor: pointer;
+  padding: var(--space-1);
+  display: flex;
+  align-items: center;
+}
+
+.password-toggle:hover {
+  color: var(--color-text-primary);
+}
+
 /* Filter Chips */
 .filter-chips {
   display: flex;
