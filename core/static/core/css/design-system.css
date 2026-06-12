@@ -379,6 +379,7 @@ button, input, select, textarea {
   border-radius: var(--radius-md);
   object-fit: contain;
   flex-shrink: 0;
+  background-color: var(--color-primary);
 }
 
 .topbar__title {
@@ -490,6 +491,7 @@ button, input, select, textarea {
   border-radius: var(--radius-md);
   object-fit: contain;
   flex-shrink: 0;
+  background-color: var(--color-primary);
 }
 
 .sidebar-logo__text {
@@ -1927,6 +1929,7 @@ button, input, select, textarea {
   object-fit: contain;
   margin: 0 auto var(--space-4);
   box-shadow: 0 4px 12px rgba(var(--color-primary-rgb), 0.4);
+  background-color: var(--color-primary);
 }
 
 .login-card__title {

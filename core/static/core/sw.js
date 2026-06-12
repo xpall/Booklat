@@ -2,6 +2,7 @@ const CACHE_NAME = 'booklat-v1';
 const STATIC_ASSETS = [
   '/',
   '/static/core/css/design-system.css',
+  '/static/core/img/logo.png',
   '/static/core/js/booklat-ui.js',
 ];
 
