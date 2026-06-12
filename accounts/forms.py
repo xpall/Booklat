@@ -7,6 +7,7 @@ from .models import User
 class LoginForm(forms.Form):
     lrn = forms.CharField(label="LRN", max_length=64, widget=forms.TextInput(attrs={"autofocus": True}))
     password = forms.CharField(label="Password", widget=forms.PasswordInput)
+    remember_me = forms.BooleanField(required=False, initial=True, label="Remember me")
 
 
 class PasswordChangeForm(forms.Form):

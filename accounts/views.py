@@ -64,6 +64,10 @@ def login_view(request):
                 user.locked_until = None
                 user.save(update_fields=["last_login", "failed_login_attempts", "locked_until"])
                 auth_login(request, user)
+                if form.cleaned_data.get("remember_me"):
+                    request.session.set_expiry(30 * 86400)
+                else:
+                    request.session.set_expiry(0)
                 if user.must_change_password:
                     return redirect("accounts:password_change")
                 return _get_success_redirect(user)
