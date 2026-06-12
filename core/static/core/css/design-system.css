@@ -30,6 +30,7 @@
   --color-danger-bg: rgba(239, 68, 68, 0.08);
   --color-info: #3B82F6;
   --color-info-rgb: 59, 130, 246;
+  --color-info-bg: rgba(59, 130, 246, 0.08);
 
   /* Colors — Neutral */
   --color-bg: #F8F9FC;
@@ -111,26 +112,32 @@
    ---------------------------------------------------------- */
 
 [data-theme="dark"] {
-  --color-bg: #0F1117;
-  --color-bg-rgb: 15, 17, 23;
-  --color-surface: #1A1D27;
-  --color-surface-elevated: #232734;
+  --color-bg: #1C1C1D;
+  --color-bg-rgb: 28, 28, 29;
+  --color-surface: #262627;
+  --color-surface-elevated: #2F2F30;
   --color-text-primary: #F3F4F6;
-  --color-text-secondary: #9CA3AF;
-  --color-text-tertiary: #6B7280;
-  --color-border: #2D3143;
-  --color-border-light: #232734;
+  --color-text-secondary: #B0B7C3;
+  --color-text-tertiary: #848B98;
+  --color-border: #3B3B3C;
+  --color-border-light: #2D2D2E;
   --color-primary-bg: rgba(108, 99, 255, 0.12);
   --color-primary-bg-strong: rgba(108, 99, 255, 0.2);
   --color-success-bg: rgba(34, 197, 94, 0.12);
   --color-warning-bg: rgba(245, 158, 11, 0.12);
   --color-danger-bg: rgba(239, 68, 68, 0.12);
+  --color-info-bg: rgba(59, 130, 246, 0.14);
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.2);
   --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
   --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.35);
   --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.4);
   --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="dark"] .announcement-banner {
+  background: var(--color-info-bg);
+  border-color: rgba(59, 130, 246, 0.28);
 }
 
 /* ----------------------------------------------------------
@@ -730,7 +737,7 @@ button, input, select, textarea {
 }
 
 [data-theme="dark"] .hero-card {
-  background: linear-gradient(135deg, #1E1B4B 0%, #1A1A2E 100%);
+  background: linear-gradient(135deg, #24214D 0%, #1C1B24 100%);
 }
 
 .hero-card__greeting {
