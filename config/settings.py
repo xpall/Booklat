@@ -82,7 +82,17 @@ DATABASES = {
         "HOST": os.environ.get("DB_HOST", "127.0.0.1"),
         "PORT": os.environ.get("DB_PORT", "5432"),
         "CONN_MAX_AGE": int(os.environ.get("DB_CONN_MAX_AGE", 600)),
-        "OPTIONS": {"sslmode": os.environ.get("DB_SSLMODE", "prefer")},
+        "CONN_HEALTH_CHECKS": True,
+        "OPTIONS": {
+            "sslmode": os.environ.get("DB_SSLMODE", "prefer"),
+            "connect_timeout": int(os.environ.get("DB_CONNECT_TIMEOUT", 10)),
+            "options": os.environ.get(
+                "DB_OPTIONS",
+                "-c lock_timeout=10000 "
+                "-c idle_in_transaction_session_timeout=60000 "
+                "-c statement_timeout=120000",
+            ),
+        },
     }
 }
 
@@ -90,6 +100,10 @@ CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
         "LOCATION": os.environ.get("REDIS_URL", "redis://127.0.0.1:6379/0"),
+        "OPTIONS": {
+            "socket_timeout": float(os.environ.get("REDIS_SOCKET_TIMEOUT", 5)),
+            "socket_connect_timeout": float(os.environ.get("REDIS_CONNECT_TIMEOUT", 5)),
+        },
     }
 }
 
@@ -136,6 +150,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 RATELIMIT_USE_CACHE = "default"
 RATELIMIT_ENABLE = not DEBUG
+RATELIMIT_FAIL_OPEN = True
 
 REDIS_URL = os.environ.get("REDIS_URL", "redis://127.0.0.1:6379/0")
 _broker_url = os.environ.get("CELERY_BROKER_URL", "")
@@ -176,6 +191,13 @@ LOGGING = {
     "handlers": {
         "console": {
             "class": "logging.StreamHandler",
+        },
+    },
+    "loggers": {
+        "django.security.DisallowedHost": {
+            "handlers": [],
+            "level": "CRITICAL",
+            "propagate": False,
         },
     },
     "root": {
