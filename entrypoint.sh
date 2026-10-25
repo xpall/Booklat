@@ -10,6 +10,8 @@ fi
 
 WORKERS=${GUNICORN_WORKERS:-3}
 
+# The container always listens on 8000 internally. The host-facing port is
+# controlled by APP_PORT in .env (see docker-compose.yml).
 exec gunicorn config.wsgi:application \
     --bind 0.0.0.0:8000 \
     --workers "$WORKERS" \

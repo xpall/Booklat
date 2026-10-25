@@ -6,6 +6,7 @@
 #   sudo bash scripts/diagnose-hang.sh /tmp/out.log
 #
 # Every command is wrapped in `timeout` so this script cannot hang.
+# APP_PORT is read from .env (default 8010); override with APP_PORT=... or BOOKLAT_ENV_FILE=...
 
 set -u
 export LANG=C
@@ -24,6 +25,25 @@ DB=booklat-db
 REDIS=booklat-redis
 CELERY_W=booklat-celery-worker
 BEAT=booklat-celery-beat
+
+SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+ENV_FILE="${BOOKLAT_ENV_FILE:-$SCRIPT_DIR/../.env}"
+
+if [ -z "${APP_PORT:-}" ] && [ -f "$ENV_FILE" ]; then
+    APP_PORT="$(
+        sed -n 's/^[[:space:]]*APP_PORT[[:space:]]*=[[:space:]]*//p' "$ENV_FILE" \
+            | tail -n 1 \
+            | tr -d '\r' \
+            | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//' \
+                  -e 's/^"//' -e 's/"$//' -e "s/^'//" -e "s/'$//"
+    )"
+fi
+
+APP_PORT="${APP_PORT:-8010}"
+case "$APP_PORT" in
+    *[!0-9]*) APP_PORT=8010 ;;
+esac
+BASE_URL="http://127.0.0.1:$APP_PORT"
 
 section() { printf '\n========== %s ==========\n' "$1"; }
 note()    { printf '  (skipped/failed: %s)\n' "$1"; }
@@ -54,16 +74,16 @@ main() {
     echo "--- dmesg tail"
     { dmesg -T 2>/dev/null || sudo dmesg -T 2>/dev/null || true; } | tail -40
 
-    section "PORT :8000 STATE (worker exhaustion?)"
-    timeout 15 ss -tnp 2>&1 | grep ':8000' | head -60 || note "ss"
+    section "PORT :$APP_PORT STATE (worker exhaustion?)"
+    timeout 15 ss -tnp 2>&1 | grep ":$APP_PORT" | head -60 || note "ss"
     echo "--- connection state counts"
     timeout 15 ss -tan 2>&1 | awk 'NR>1{print $1}' | sort | uniq -c || note "ss counts"
 
     section "HTTP PROBES (root, login, static)"
     for url in \
-        "http://localhost:8000/" \
-        "http://localhost:8000/accounts/login/" \
-        "http://localhost:8000/static/core/css/design-system.css"; do
+        "$BASE_URL/" \
+        "$BASE_URL/accounts/login/" \
+        "$BASE_URL/static/core/css/design-system.css"; do
         echo "--- $url"
         timeout 20 curl -sS -o /dev/null \
             -w 'http=%{http_code} connect=%{time_connect}s ttfb=%{time_starttransfer}s total=%{time_total}s\n' \

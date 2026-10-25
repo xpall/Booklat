@@ -1,9 +1,18 @@
 services:
   tunnel:
+    # Optional dedicated tunnel for this app:
+    #   docker compose -f docker-compose.yml -f docker-compose.prod.yml \
+    #     --profile bundled-tunnel up -d
+    # For multiple apps on one VPS, use one host-level cloudflared and a
+    # unique APP_PORT per app instead. Set CF_TUNNEL_TOKEN in .env before
+    # enabling this profile.
+    profiles: ["bundled-tunnel"]
     image: cloudflare/cloudflared:latest
     container_name: booklat-tunnel
     restart: unless-stopped
-    command: tunnel run --token ${CF_TUNNEL_TOKEN}
+    command: tunnel run --token ${CF_TUNNEL_TOKEN:-}
+    # Shares the web container's network namespace, so the tunnel ingress
+    # must target localhost:8000 (the internal port), not APP_PORT.
     network_mode: service:web
 
   celery_worker:

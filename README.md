@@ -117,7 +117,9 @@ vim .env
 
 In `.env`, update the following:
 - `SECRET_KEY` — generate a strong random value (e.g. `openssl rand -base64 48`)
-- `ALLOWED_HOSTS` — set to your target URL (e.g. `booklat.bettercalauan.org`)
+- `ALLOWED_HOSTS` — public hostname plus `127.0.0.1` for the container healthcheck (e.g. `booklat.bettercalauan.org,127.0.0.1`)
+- `CSRF_TRUSTED_ORIGINS` — set to the public HTTPS origin (e.g. `https://booklat.bettercalauan.org`)
+- `APP_PORT` — unique host port for this app (default `8010`; the container stays on `8000` internally)
 - `ADMIN_LRN` and `ADMIN_PASSWORD` — change the default admin credentials
 
 ```bash
@@ -134,9 +136,31 @@ Deploy the tunnel through the [Cloudflare Zero Trust dashboard](https://one.dash
 4. Back in the dashboard, configure a **Public Hostname**:
    - **Subdomain/Domain**: your-domain.com
    - **Service type**: HTTP
-   - **URL**: `localhost:8000` (or your Gunicorn port)
+   - **URL**: `http://127.0.0.1:<APP_PORT>` (e.g. `http://127.0.0.1:8010`)
 
-The tunnel will stay connected as long as `cloudflared` is running. For persistence, see `docker-compose.prod.yml` which bundles cloudflared with the stack.
+The tunnel will stay connected as long as `cloudflared` is running.
+
+#### Multiple apps on one VPS
+
+Run **one** `cloudflared` instance on the host and give each app a unique `APP_PORT`. Add one public hostname per app, each pointing to that app's loopback port:
+
+| App | `.env` | Public hostname service URL |
+|-----|--------|-----------------------------|
+| Booklat | `APP_PORT=8010` | `http://127.0.0.1:8010` |
+| App 2 | `APP_PORT=8011` | `http://127.0.0.1:8011` |
+| App 3 | `APP_PORT=8012` | `http://127.0.0.1:8012` |
+
+The ports stay bound to `127.0.0.1`, so the apps are only reachable through the tunnel (or locally on the VPS). If you change an app's `APP_PORT` later, update its public hostname's service URL in the dashboard to match, then recreate the container with `docker compose up -d`.
+
+`docker-compose.prod.yml` includes an optional `bundled-tunnel` profile for a **dedicated** tunnel per app. Do not enable it when using the shared host-level tunnel; it would create a second connector for the same tunnel.
+
+To verify the published port:
+
+```bash
+docker compose up -d
+docker compose port web 8000   # e.g. 127.0.0.1:8010
+curl -I http://127.0.0.1:8010/accounts/login/
+```
 
 ## Technology
 
@@ -144,7 +168,7 @@ The tunnel will stay connected as long as `cloudflared` is running. For persiste
 **Frontend**: Django Templates + custom CSS design system  
 **Auth**: LRN-based login, Argon2id password hashing, DB-driven permissions (no Django admin)  
 **Middleware**: Login-required (global), must-change-password enforcement, django-ratelimit  
-**Deployment**: Docker Compose, optional Cloudflare Tunnel (`docker-compose.prod.yml`)
+**Deployment**: Docker Compose, shared host-level Cloudflare Tunnel (optional per-app tunnel profile in `docker-compose.prod.yml`)
 
 ## Apps
 

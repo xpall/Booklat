@@ -8,7 +8,7 @@ python manage.py migrate
 python manage.py seed_data       # creates roles, permissions, admin user (set ADMIN_LRN + ADMIN_PASSWORD in .env)
 python manage.py runserver
 
-# Docker dev (preferred — runs migrate + seed_data + collectstatic automatically)
+# Docker dev (preferred — runs migrate + seed_data + collectstatic automatically; web on 127.0.0.1:8010)
 docker compose up
 
 # Run tests (all stub files — no tests written yet)

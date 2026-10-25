@@ -14,6 +14,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
+# Internal container port. Set APP_PORT in .env to change the published host port.
 EXPOSE 8000
 
 USER booklat
