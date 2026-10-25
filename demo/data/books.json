@@ -1,0 +1,1396 @@
+[
+  {
+    "isbn": "9780735211292",
+    "title": "Atomic Habits",
+    "subtitle": "An Easy & Proven Way to Build Good Habits & Break Bad Ones",
+    "authors": "James Clear",
+    "publisher": "Avery",
+    "publication_year": 2018,
+    "description": "A practical guide to building tiny habits that compound into remarkable results, built around the idea that systems beat goals.",
+    "categories": [
+      "Self-Help",
+      "Psychology"
+    ],
+    "copies": 3,
+    "shelf": "SH-01",
+    "acquisition_date": "2025-06-18",
+    "donor": "Booklat Book Drive",
+    "cover_image": "https://covers.openlibrary.org/b/id/12539702-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 18
+  },
+  {
+    "isbn": "9781982137274",
+    "title": "The 7 Habits of Highly Effective People",
+    "subtitle": "Powerful Lessons in Personal Change",
+    "authors": "Stephen R. Covey",
+    "publisher": "Simon & Schuster",
+    "publication_year": 1989,
+    "description": "A classic framework for personal and professional effectiveness, moving from dependence to independence and interdependence.",
+    "categories": [
+      "Self-Help"
+    ],
+    "copies": 2,
+    "shelf": "SH-02",
+    "acquisition_date": "2024-08-05",
+    "donor": "DNIHS Alumni Association",
+    "cover_image": "https://covers.openlibrary.org/b/id/10079937-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 95
+  },
+  {
+    "isbn": "9780671027032",
+    "title": "How to Win Friends and Influence People",
+    "subtitle": "",
+    "authors": "Dale Carnegie",
+    "publisher": "Pocket Books",
+    "publication_year": 1936,
+    "description": "Carnegie's enduring guide to building genuine relationships through empathy, listening, and appreciation.",
+    "categories": [
+      "Self-Help",
+      "Psychology"
+    ],
+    "copies": 2,
+    "shelf": "SH-03",
+    "acquisition_date": "2024-02-12",
+    "donor": "Parent-Teacher Association",
+    "cover_image": "https://covers.openlibrary.org/b/id/13314878-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 120
+  },
+  {
+    "isbn": "9781577314806",
+    "title": "The Power of Now",
+    "subtitle": "A Guide to Spiritual Enlightenment",
+    "authors": "Eckhart Tolle",
+    "publisher": "New World Library",
+    "publication_year": 1997,
+    "description": "A guide to stepping out of compulsive thinking and into the present moment.",
+    "categories": [
+      "Self-Help",
+      "Spirituality"
+    ],
+    "copies": 3,
+    "shelf": "SP-01",
+    "acquisition_date": "2025-01-22",
+    "donor": "Booklat Book Drive",
+    "cover_image": "https://covers.openlibrary.org/b/id/551262-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 60
+  },
+  {
+    "isbn": "9781501197277",
+    "title": "The Courage to Be Disliked",
+    "subtitle": "The Japanese Phenomenon That Shows You How to Change Your Life and Achieve Real Happiness",
+    "authors": "Ichiro Kishimi and Fumitake Koga",
+    "publisher": "Atria Books",
+    "publication_year": 2013,
+    "description": "A dialogue between a philosopher and a young man exploring Adlerian psychology, freedom, and the courage to live honestly.",
+    "categories": [
+      "Self-Help",
+      "Psychology"
+    ],
+    "copies": 3,
+    "shelf": "PSY-01",
+    "acquisition_date": "2025-09-03",
+    "donor": "DNIHS Library Fund",
+    "cover_image": "https://covers.openlibrary.org/b/id/10873626-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 32
+  },
+  {
+    "isbn": "9780807014295",
+    "title": "Man's Search for Meaning",
+    "subtitle": "",
+    "authors": "Viktor E. Frankl",
+    "publisher": "Beacon Press",
+    "publication_year": 1946,
+    "description": "Frankl's account of survival in the concentration camps and his argument that meaning is the central human drive.",
+    "categories": [
+      "Psychology",
+      "Biography & Memoir"
+    ],
+    "copies": 3,
+    "shelf": "PSY-02",
+    "acquisition_date": "2023-11-14",
+    "donor": "Holocaust Memorial Book Grant",
+    "cover_image": "https://covers.openlibrary.org/b/id/8516506-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 150
+  },
+  {
+    "isbn": "9780143130727",
+    "title": "Ikigai",
+    "subtitle": "The Japanese Secret to a Long and Happy Life",
+    "authors": "Héctor García and Francesc Miralles",
+    "publisher": "Penguin Books",
+    "publication_year": 2016,
+    "description": "An exploration of the Japanese concept of ikigai — a reason for being — and the habits of long-lived communities.",
+    "categories": [
+      "Self-Help",
+      "Health"
+    ],
+    "copies": 2,
+    "shelf": "SH-04",
+    "acquisition_date": "2025-07-21",
+    "donor": "Booklat Book Drive",
+    "cover_image": "https://covers.openlibrary.org/b/id/11300391-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 25
+  },
+  {
+    "isbn": "9781455586691",
+    "title": "Deep Work",
+    "subtitle": "Rules for Focused Success in a Distracted World",
+    "authors": "Cal Newport",
+    "publisher": "Grand Central Publishing",
+    "publication_year": 2016,
+    "description": "Newport argues that deep, undistracted concentration is becoming rare and valuable, and offers practical rules for cultivating it.",
+    "categories": [
+      "Self-Help",
+      "Psychology"
+    ],
+    "copies": 3,
+    "shelf": "SH-05",
+    "acquisition_date": "2024-10-08",
+    "donor": "DNIHS Alumni Association",
+    "cover_image": "https://covers.openlibrary.org/b/id/7988607-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 80
+  },
+  {
+    "isbn": "9781592408412",
+    "title": "Daring Greatly",
+    "subtitle": "How the Courage to Be Vulnerable Transforms the Way We Live, Love, Parent, and Lead",
+    "authors": "Brené Brown",
+    "publisher": "Avery",
+    "publication_year": 2012,
+    "description": "Brown's research on vulnerability, shame, and wholehearted living, with stories that make the ideas concrete.",
+    "categories": [
+      "Self-Help",
+      "Psychology"
+    ],
+    "copies": 2,
+    "shelf": "PSY-03",
+    "acquisition_date": "2024-04-19",
+    "donor": "Parent-Teacher Association",
+    "cover_image": "https://covers.openlibrary.org/b/id/7367250-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 140
+  },
+  {
+    "isbn": "9781501141119",
+    "title": "Grit",
+    "subtitle": "The Power of Passion and Perseverance",
+    "authors": "Angela Duckworth",
+    "publisher": "Scribner",
+    "publication_year": 2016,
+    "description": "Duckworth explores why sustained passion and perseverance matter more than raw talent in long-term achievement.",
+    "categories": [
+      "Self-Help",
+      "Psychology"
+    ],
+    "copies": 2,
+    "shelf": "PSY-04",
+    "acquisition_date": "2024-06-11",
+    "donor": "DNIHS Library Fund",
+    "cover_image": "https://covers.openlibrary.org/b/id/7438753-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 130
+  },
+  {
+    "isbn": "9780345472328",
+    "title": "Mindset",
+    "subtitle": "The New Psychology of Success",
+    "authors": "Carol S. Dweck",
+    "publisher": "Ballantine Books",
+    "publication_year": 2006,
+    "description": "A research-backed look at how a growth mindset changes learning, resilience, and achievement.",
+    "categories": [
+      "Psychology",
+      "Self-Help"
+    ],
+    "copies": 2,
+    "shelf": "PSY-05",
+    "acquisition_date": "2023-09-25",
+    "donor": "Booklat Book Drive",
+    "cover_image": "https://covers.openlibrary.org/b/id/746414-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 200
+  },
+  {
+    "isbn": "9781878424310",
+    "title": "The Four Agreements",
+    "subtitle": "A Practical Guide to Personal Freedom",
+    "authors": "Don Miguel Ruiz",
+    "publisher": "Amber-Allen Publishing",
+    "publication_year": 1997,
+    "description": "Four simple agreements drawn from Toltec wisdom, offered as a path to personal freedom and healthier relationships.",
+    "categories": [
+      "Self-Help",
+      "Spirituality"
+    ],
+    "copies": 3,
+    "shelf": "SP-02",
+    "acquisition_date": "2025-03-17",
+    "donor": "DNIHS Library Fund",
+    "cover_image": "https://covers.openlibrary.org/b/id/924521-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 40
+  },
+  {
+    "isbn": "9780307352156",
+    "title": "Quiet",
+    "subtitle": "The Power of Introverts in a World That Can't Stop Talking",
+    "authors": "Susan Cain",
+    "publisher": "Crown",
+    "publication_year": 2012,
+    "description": "Cain makes the case for introverts and explains how quiet strengths are undervalued in a culture of constant talk.",
+    "categories": [
+      "Psychology",
+      "Self-Help"
+    ],
+    "copies": 2,
+    "shelf": "PSY-06",
+    "acquisition_date": "2024-12-02",
+    "donor": "Parent-Teacher Association",
+    "cover_image": "https://covers.openlibrary.org/b/id/7079753-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 110
+  },
+  {
+    "isbn": "9780061339202",
+    "title": "Flow",
+    "subtitle": "The Psychology of Optimal Experience",
+    "authors": "Mihaly Csikszentmihalyi",
+    "publisher": "Harper Perennial",
+    "publication_year": 1990,
+    "description": "Csikszentmihalyi's classic study of flow: the state of complete absorption that makes challenging work feel effortless.",
+    "categories": [
+      "Psychology",
+      "Self-Help"
+    ],
+    "copies": 2,
+    "shelf": "PSY-07",
+    "acquisition_date": "2024-01-15",
+    "donor": "DNIHS Library Fund",
+    "cover_image": "https://covers.openlibrary.org/b/id/11041932-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 160
+  },
+  {
+    "isbn": "9780140449334",
+    "title": "Meditations",
+    "subtitle": "",
+    "authors": "Marcus Aurelius",
+    "publisher": "Penguin Classics",
+    "publication_year": 2006,
+    "description": "The private notes of a Roman emperor, offering a practical Stoic guide to self-discipline, duty, and tranquility.",
+    "categories": [
+      "Philosophy",
+      "Spirituality"
+    ],
+    "copies": 3,
+    "shelf": "PH-01",
+    "acquisition_date": "2025-08-12",
+    "donor": "Booklat Book Drive",
+    "cover_image": "https://covers.openlibrary.org/b/id/13202688-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 12
+  },
+  {
+    "isbn": "9780375705106",
+    "title": "The Way of Zen",
+    "subtitle": "",
+    "authors": "Alan Watts",
+    "publisher": "Vintage Books",
+    "publication_year": 1957,
+    "description": "Alan Watts introduces Zen Buddhism for Western readers, tracing its roots in Taoism and Indian thought with clarity and wit.",
+    "categories": [
+      "Philosophy",
+      "Spirituality"
+    ],
+    "copies": 2,
+    "shelf": "SP-03",
+    "acquisition_date": "2025-08-12",
+    "donor": "DNIHS Library Fund",
+    "cover_image": "https://covers.openlibrary.org/b/id/228623-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 9
+  },
+  {
+    "isbn": "9780307741202",
+    "title": "The Wisdom of Insecurity",
+    "subtitle": "A Message for an Age of Anxiety",
+    "authors": "Alan Watts",
+    "publisher": "Vintage Books",
+    "publication_year": 1951,
+    "description": "Watts argues that the search for security is itself a source of anxiety, and that accepting uncertainty opens the door to real living.",
+    "categories": [
+      "Philosophy",
+      "Spirituality"
+    ],
+    "copies": 2,
+    "shelf": "SP-04",
+    "acquisition_date": "2025-05-26",
+    "donor": "Booklat Book Drive",
+    "cover_image": "https://covers.openlibrary.org/b/id/254059-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 45
+  },
+  {
+    "isbn": "9780679723004",
+    "title": "The Book: On the Taboo Against Knowing Who You Are",
+    "subtitle": "",
+    "authors": "Alan Watts",
+    "publisher": "Vintage Books",
+    "publication_year": 1966,
+    "description": "A playful, profound inquiry into identity, the self, and the illusion of separateness.",
+    "categories": [
+      "Philosophy",
+      "Spirituality"
+    ],
+    "copies": 2,
+    "shelf": "PH-02",
+    "acquisition_date": "2024-07-30",
+    "donor": "DNIHS Library Fund",
+    "cover_image": "https://covers.openlibrary.org/b/id/6620702-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 170
+  },
+  {
+    "isbn": "9780140441314",
+    "title": "Tao Te Ching",
+    "subtitle": "",
+    "authors": "Lao Tzu",
+    "publisher": "Penguin Classics",
+    "publication_year": 1963,
+    "description": "The foundational Taoist text on simplicity, spontaneity, and the art of effortless action.",
+    "categories": [
+      "Philosophy",
+      "Spirituality"
+    ],
+    "copies": 2,
+    "shelf": "PH-03",
+    "acquisition_date": "2024-03-08",
+    "donor": "Booklat Book Drive",
+    "cover_image": "https://covers.openlibrary.org/b/id/662232-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 190
+  },
+  {
+    "isbn": "9780486425573",
+    "title": "The Art of War",
+    "subtitle": "",
+    "authors": "Sun Tzu",
+    "publisher": "Dover Publications",
+    "publication_year": 2002,
+    "description": "Sun Tzu's ancient treatise on strategy, conflict, and the importance of knowing yourself and your opponent.",
+    "categories": [
+      "Philosophy",
+      "History"
+    ],
+    "copies": 2,
+    "shelf": "PH-04",
+    "acquisition_date": "2023-08-17",
+    "donor": "DNIHS Alumni Association",
+    "cover_image": "https://covers.openlibrary.org/b/id/4849549-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 240
+  },
+  {
+    "isbn": "9780140455113",
+    "title": "The Republic",
+    "subtitle": "",
+    "authors": "Plato",
+    "publisher": "Penguin Classics",
+    "publication_year": 2003,
+    "description": "Plato's dialogue on justice, education, and the ideal city, including the allegory of the cave.",
+    "categories": [
+      "Philosophy",
+      "Classics"
+    ],
+    "copies": 2,
+    "shelf": "PH-05",
+    "acquisition_date": "2024-05-21",
+    "donor": "DNIHS Library Fund",
+    "cover_image": "https://covers.openlibrary.org/b/id/14418448-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 175
+  },
+  {
+    "isbn": "9780140449495",
+    "title": "Nicomachean Ethics",
+    "subtitle": "",
+    "authors": "Aristotle",
+    "publisher": "Penguin Classics",
+    "publication_year": 2004,
+    "description": "Aristotle's inquiry into happiness, virtue, and the good life, centered on the idea of flourishing through practice.",
+    "categories": [
+      "Philosophy",
+      "Classics"
+    ],
+    "copies": 2,
+    "shelf": "PH-06",
+    "acquisition_date": "2024-09-14",
+    "donor": "Booklat Book Drive",
+    "cover_image": "https://covers.openlibrary.org/b/id/12593945-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 155
+  },
+  {
+    "isbn": "9780525564454",
+    "title": "The Myth of Sisyphus",
+    "subtitle": "And Other Essays",
+    "authors": "Albert Camus",
+    "publisher": "Vintage Books",
+    "publication_year": 1942,
+    "description": "Camus confronts the absurd and asks whether life can be lived with meaning even without ultimate answers.",
+    "categories": [
+      "Philosophy",
+      "Classics"
+    ],
+    "copies": 2,
+    "shelf": "PH-07",
+    "acquisition_date": "2025-02-03",
+    "donor": "DNIHS Library Fund",
+    "cover_image": "https://covers.openlibrary.org/b/id/12726570-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 75
+  },
+  {
+    "isbn": "9780394404288",
+    "title": "The Prophet",
+    "subtitle": "",
+    "authors": "Kahlil Gibran",
+    "publisher": "Alfred A. Knopf",
+    "publication_year": 1923,
+    "description": "A poetic meditation on love, work, freedom, and death, told through the farewell sermons of a departing prophet.",
+    "categories": [
+      "Spirituality",
+      "Poetry"
+    ],
+    "copies": 2,
+    "shelf": "SP-05",
+    "acquisition_date": "2024-11-06",
+    "donor": "Parent-Teacher Association",
+    "cover_image": "https://covers.openlibrary.org/b/id/418324-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 100
+  },
+  {
+    "isbn": "9780553208849",
+    "title": "Siddhartha",
+    "subtitle": "",
+    "authors": "Hermann Hesse",
+    "publisher": "Bantam Classics",
+    "publication_year": 1981,
+    "description": "Hesse's novel follows a young man's spiritual journey across asceticism, desire, and finally a quiet wisdom.",
+    "categories": [
+      "Philosophy",
+      "Classics"
+    ],
+    "copies": 3,
+    "shelf": "PH-08",
+    "acquisition_date": "2023-10-30",
+    "donor": "Booklat Book Drive",
+    "cover_image": "https://covers.openlibrary.org/b/id/6562535-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 210
+  },
+  {
+    "isbn": "9780451524935",
+    "title": "1984",
+    "subtitle": "",
+    "authors": "George Orwell",
+    "publisher": "Signet Classics",
+    "publication_year": 1949,
+    "description": "Orwell's dystopian novel of surveillance, language, and the struggle for truth under totalitarian power.",
+    "categories": [
+      "Fiction",
+      "Classics"
+    ],
+    "copies": 2,
+    "shelf": "FIC-01",
+    "acquisition_date": "2023-07-12",
+    "donor": "DNIHS Library Fund",
+    "cover_image": "https://covers.openlibrary.org/b/id/9267242-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 250
+  },
+  {
+    "isbn": "9780451526342",
+    "title": "Animal Farm",
+    "subtitle": "",
+    "authors": "George Orwell",
+    "publisher": "Signet Classics",
+    "publication_year": 1945,
+    "description": "A fable about a farm taken over by its animals, and how revolutionary ideals can curdle into tyranny.",
+    "categories": [
+      "Fiction",
+      "Classics"
+    ],
+    "copies": 2,
+    "shelf": "FIC-02",
+    "acquisition_date": "2023-07-12",
+    "donor": "DNIHS Library Fund",
+    "cover_image": "https://covers.openlibrary.org/b/id/11261770-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 250
+  },
+  {
+    "isbn": "9780061120084",
+    "title": "To Kill a Mockingbird",
+    "subtitle": "",
+    "authors": "Harper Lee",
+    "publisher": "Harper Perennial",
+    "publication_year": 1960,
+    "description": "Lee's novel of childhood, conscience, and racial injustice in a small Southern town.",
+    "categories": [
+      "Fiction",
+      "Classics"
+    ],
+    "copies": 2,
+    "shelf": "FIC-03",
+    "acquisition_date": "2024-02-26",
+    "donor": "Parent-Teacher Association",
+    "cover_image": "https://covers.openlibrary.org/b/id/14351077-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 180
+  },
+  {
+    "isbn": "9780743273565",
+    "title": "The Great Gatsby",
+    "subtitle": "",
+    "authors": "F. Scott Fitzgerald",
+    "publisher": "Scribner",
+    "publication_year": 1925,
+    "description": "Fitzgerald's portrait of ambition, longing, and the fragile dream of reinvention in the Jazz Age.",
+    "categories": [
+      "Fiction",
+      "Classics"
+    ],
+    "copies": 2,
+    "shelf": "FIC-04",
+    "acquisition_date": "2023-12-05",
+    "donor": "DNIHS Alumni Association",
+    "cover_image": "https://covers.openlibrary.org/b/id/10590366-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {
+      "02": "under_repair"
+    },
+    "copy_notes": {
+      "02": "Spine repair scheduled; temporarily unavailable."
+    },
+    "arrival_days_ago": 195
+  },
+  {
+    "isbn": "9780316769488",
+    "title": "The Catcher in the Rye",
+    "subtitle": "",
+    "authors": "J. D. Salinger",
+    "publisher": "Little, Brown",
+    "publication_year": 1951,
+    "description": "Holden Caulfield's restless narration of alienation, grief, and the search for authenticity.",
+    "categories": [
+      "Fiction",
+      "Classics"
+    ],
+    "copies": 2,
+    "shelf": "FIC-05",
+    "acquisition_date": "2023-09-09",
+    "donor": "Booklat Book Drive",
+    "cover_image": "https://covers.openlibrary.org/b/id/9273490-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {
+      "02": "lost"
+    },
+    "copy_notes": {
+      "02": "Reported lost by borrower; replacement copy requested."
+    },
+    "arrival_days_ago": 220
+  },
+  {
+    "isbn": "9781451673319",
+    "title": "Fahrenheit 451",
+    "subtitle": "",
+    "authors": "Ray Bradbury",
+    "publisher": "Simon & Schuster",
+    "publication_year": 1953,
+    "description": "A future where books are burned and a fireman begins to question the order he has spent his life enforcing.",
+    "categories": [
+      "Fiction",
+      "Classics"
+    ],
+    "copies": 3,
+    "shelf": "FIC-06",
+    "acquisition_date": "2024-04-02",
+    "donor": "DNIHS Library Fund",
+    "cover_image": "https://covers.openlibrary.org/b/id/12993656-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 145
+  },
+  {
+    "isbn": "9780547928227",
+    "title": "The Hobbit",
+    "subtitle": "",
+    "authors": "J. R. R. Tolkien",
+    "publisher": "Mariner Books",
+    "publication_year": 1937,
+    "description": "Bilbo Baggins is swept into an adventure with dwarves, a wizard, and a dragon, and discovers courage he did not know he had.",
+    "categories": [
+      "Fiction",
+      "Fantasy"
+    ],
+    "copies": 3,
+    "shelf": "FA-01",
+    "acquisition_date": "2024-10-21",
+    "donor": "Booklat Book Drive",
+    "cover_image": "https://covers.openlibrary.org/b/id/14627509-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {
+      "02": "damaged"
+    },
+    "copy_notes": {
+      "02": "Water damage on the back cover; withdrawn from circulation."
+    },
+    "arrival_days_ago": 85
+  },
+  {
+    "isbn": "9780747532699",
+    "title": "Harry Potter and the Philosopher's Stone",
+    "subtitle": "",
+    "authors": "J. K. Rowling",
+    "publisher": "Bloomsbury",
+    "publication_year": 1997,
+    "description": "The first Harry Potter novel, a story of friendship, magic, and a boy discovering the world he belongs to.",
+    "categories": [
+      "Fiction",
+      "Fantasy"
+    ],
+    "copies": 3,
+    "shelf": "FA-02",
+    "acquisition_date": "2023-06-15",
+    "donor": "DNIHS Alumni Association",
+    "cover_image": "https://covers.openlibrary.org/b/id/15155833-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 300
+  },
+  {
+    "isbn": "9780156012195",
+    "title": "The Little Prince",
+    "subtitle": "",
+    "authors": "Antoine de Saint-Exupéry",
+    "publisher": "Harcourt",
+    "publication_year": 1943,
+    "description": "A pilot stranded in the desert meets a small prince whose travels reveal what is essential but invisible to the eye.",
+    "categories": [
+      "Fiction",
+      "Children's"
+    ],
+    "copies": 3,
+    "shelf": "CH-01",
+    "acquisition_date": "2024-08-27",
+    "donor": "Parent-Teacher Association",
+    "cover_image": "https://covers.openlibrary.org/b/id/10708272-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 90
+  },
+  {
+    "isbn": "9780141439518",
+    "title": "Pride and Prejudice",
+    "subtitle": "",
+    "authors": "Jane Austen",
+    "publisher": "Penguin Classics",
+    "publication_year": 1813,
+    "description": "Austen's witty novel of manners, marriage, and the slow correction of first impressions.",
+    "categories": [
+      "Fiction",
+      "Classics"
+    ],
+    "copies": 2,
+    "shelf": "CL-01",
+    "acquisition_date": "2024-01-08",
+    "donor": "Booklat Book Drive",
+    "cover_image": "https://covers.openlibrary.org/b/id/14348537-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 205
+  },
+  {
+    "isbn": "9780553296983",
+    "title": "The Diary of a Young Girl",
+    "subtitle": "",
+    "authors": "Anne Frank",
+    "publisher": "Bantam",
+    "publication_year": 1947,
+    "description": "Anne Frank's diary, written in hiding during the Nazi occupation of the Netherlands.",
+    "categories": [
+      "Biography & Memoir",
+      "History"
+    ],
+    "copies": 3,
+    "shelf": "BIO-01",
+    "acquisition_date": "2023-08-01",
+    "donor": "Holocaust Memorial Book Grant",
+    "cover_image": "https://covers.openlibrary.org/b/id/8584021-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 280
+  },
+  {
+    "isbn": "9780399501487",
+    "title": "Lord of the Flies",
+    "subtitle": "",
+    "authors": "William Golding",
+    "publisher": "Perigee Books",
+    "publication_year": 1954,
+    "description": "A group of boys stranded on an island slowly lose the rules that held their society together.",
+    "categories": [
+      "Fiction",
+      "Classics"
+    ],
+    "copies": 3,
+    "shelf": "FIC-07",
+    "acquisition_date": "2023-11-28",
+    "donor": "DNIHS Library Fund",
+    "cover_image": "https://covers.openlibrary.org/b/id/8684447-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {
+      "02": "lost"
+    },
+    "copy_notes": {
+      "02": "Reported lost by borrower."
+    },
+    "arrival_days_ago": 215
+  },
+  {
+    "isbn": "9780684801223",
+    "title": "The Old Man and the Sea",
+    "subtitle": "",
+    "authors": "Ernest Hemingway",
+    "publisher": "Scribner",
+    "publication_year": 1952,
+    "description": "An aging fisherman's struggle with a giant marlin becomes a meditation on endurance, pride, and loss.",
+    "categories": [
+      "Fiction",
+      "Classics"
+    ],
+    "copies": 2,
+    "shelf": "FIC-08",
+    "acquisition_date": "2024-03-19",
+    "donor": "Booklat Book Drive",
+    "cover_image": "https://covers.openlibrary.org/b/id/463307-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {
+      "02": "lost"
+    },
+    "copy_notes": {
+      "02": "Reported lost by borrower."
+    },
+    "arrival_days_ago": 165
+  },
+  {
+    "isbn": "9780061122415",
+    "title": "The Alchemist",
+    "subtitle": "",
+    "authors": "Paulo Coelho",
+    "publisher": "HarperOne",
+    "publication_year": 1988,
+    "description": "A shepherd boy's journey toward a treasure becomes a parable about listening to your heart and following your personal legend.",
+    "categories": [
+      "Fiction",
+      "Self-Help"
+    ],
+    "copies": 3,
+    "shelf": "FIC-09",
+    "acquisition_date": "2024-07-07",
+    "donor": "DNIHS Alumni Association",
+    "cover_image": "https://covers.openlibrary.org/b/id/7414780-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 125
+  },
+  {
+    "isbn": "9780143039693",
+    "title": "Noli Me Tangere",
+    "subtitle": "",
+    "authors": "José Rizal",
+    "publisher": "Penguin Classics",
+    "publication_year": 2006,
+    "description": "Rizal's novel of colonial Philippines, following Crisóstomo Ibarra as he confronts corruption, injustice, and forbidden love.",
+    "categories": [
+      "Philippine Literature",
+      "Classics"
+    ],
+    "copies": 3,
+    "shelf": "PL-01",
+    "acquisition_date": "2023-06-19",
+    "donor": "DNIHS Library Fund",
+    "cover_image": "https://covers.openlibrary.org/b/id/5738053-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 320
+  },
+  {
+    "isbn": "9780143039686",
+    "title": "El Filibusterismo",
+    "subtitle": "",
+    "authors": "José Rizal",
+    "publisher": "Penguin Classics",
+    "publication_year": 2011,
+    "description": "The darker sequel to Noli Me Tangere, exploring revenge, revolution, and the cost of colonial rule.",
+    "categories": [
+      "Philippine Literature",
+      "Classics"
+    ],
+    "copies": 3,
+    "shelf": "PL-02",
+    "acquisition_date": "2023-06-19",
+    "donor": "DNIHS Library Fund",
+    "cover_image": "https://covers.openlibrary.org/b/id/1054329-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 320
+  },
+  {
+    "isbn": "9781544953717",
+    "title": "Florante at Laura",
+    "subtitle": "",
+    "authors": "Francisco Balagtas",
+    "publisher": "Anvil Publishing",
+    "publication_year": 2008,
+    "description": "Balagtas's epic poem of love, betrayal, and heroism, a cornerstone of Filipino literature.",
+    "categories": [
+      "Philippine Literature",
+      "Poetry"
+    ],
+    "copies": 3,
+    "shelf": "PL-03",
+    "acquisition_date": "2024-01-30",
+    "donor": "DNIHS Alumni Association",
+    "cover_image": "https://covers.openlibrary.org/b/id/13881653-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 230
+  },
+  {
+    "isbn": "9789711790233",
+    "title": "Dekada '70",
+    "subtitle": "",
+    "authors": "Lualhati Bautista",
+    "publisher": "Cacho Publishing",
+    "publication_year": 1983,
+    "description": "A family's story set during martial law, showing how political repression enters ordinary homes.",
+    "categories": [
+      "Philippine Literature",
+      "Fiction"
+    ],
+    "copies": 3,
+    "shelf": "PL-04",
+    "acquisition_date": "2024-06-04",
+    "donor": "DNIHS Library Fund",
+    "cover_image": "https://covers.openlibrary.org/b/id/9149401-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 185
+  },
+  {
+    "isbn": "9780374532786",
+    "title": "Ilustrado",
+    "subtitle": "",
+    "authors": "Miguel Syjuco",
+    "publisher": "Farrar, Straus and Giroux",
+    "publication_year": 2008,
+    "description": "A metafictional mystery about a young Filipino writer tracing the life and death of his famous mentor.",
+    "categories": [
+      "Philippine Literature",
+      "Fiction"
+    ],
+    "copies": 2,
+    "shelf": "PL-05",
+    "acquisition_date": "2025-01-12",
+    "donor": "Booklat Book Drive",
+    "cover_image": "https://covers.openlibrary.org/b/id/6463536-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 70
+  },
+  {
+    "isbn": "9781616955274",
+    "title": "Smaller and Smaller Circles",
+    "subtitle": "",
+    "authors": "F. H. Batacan",
+    "publisher": "Soho Crime",
+    "publication_year": 2002,
+    "description": "Two Jesuit priests investigate a string of murders in a Manila slum in this landmark Filipino crime novel.",
+    "categories": [
+      "Philippine Literature",
+      "Fiction"
+    ],
+    "copies": 3,
+    "shelf": "PL-06",
+    "acquisition_date": "2025-09-15",
+    "donor": "DNIHS Library Fund",
+    "cover_image": "https://covers.openlibrary.org/b/id/10628972-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 7
+  },
+  {
+    "isbn": "9780062316097",
+    "title": "Sapiens",
+    "subtitle": "A Brief History of Humankind",
+    "authors": "Yuval Noah Harari",
+    "publisher": "Harper",
+    "publication_year": 2011,
+    "description": "A sweeping history of Homo sapiens, from foraging bands to global empires and the stories that hold societies together.",
+    "categories": [
+      "History",
+      "Science"
+    ],
+    "copies": 2,
+    "shelf": "HIS-01",
+    "acquisition_date": "2024-09-23",
+    "donor": "DNIHS Alumni Association",
+    "cover_image": "https://covers.openlibrary.org/b/id/8634250-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 75
+  },
+  {
+    "isbn": "9780553380163",
+    "title": "A Brief History of Time",
+    "subtitle": "From the Big Bang to Black Holes",
+    "authors": "Stephen Hawking",
+    "publisher": "Bantam",
+    "publication_year": 1988,
+    "description": "Hawking's accessible tour of cosmology, black holes, time, and the origins of the universe.",
+    "categories": [
+      "Science"
+    ],
+    "copies": 2,
+    "shelf": "SCI-01",
+    "acquisition_date": "2023-10-16",
+    "donor": "DNIHS Library Fund",
+    "cover_image": "https://covers.openlibrary.org/b/id/10432365-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {
+      "02": "under_repair"
+    },
+    "copy_notes": {
+      "02": "Binding repair scheduled."
+    },
+    "arrival_days_ago": 225
+  },
+  {
+    "isbn": "9780345539434",
+    "title": "Cosmos",
+    "subtitle": "",
+    "authors": "Carl Sagan",
+    "publisher": "Ballantine Books",
+    "publication_year": 1980,
+    "description": "Sagan's exploration of the universe and humanity's place in it, written with wonder and clarity.",
+    "categories": [
+      "Science",
+      "History"
+    ],
+    "copies": 2,
+    "shelf": "SCI-02",
+    "acquisition_date": "2024-11-19",
+    "donor": "Booklat Book Drive",
+    "cover_image": "https://covers.openlibrary.org/b/id/8283901-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 105
+  },
+  {
+    "isbn": "9780198788607",
+    "title": "The Selfish Gene",
+    "subtitle": "",
+    "authors": "Richard Dawkins",
+    "publisher": "Oxford University Press",
+    "publication_year": 1976,
+    "description": "Dawkins's influential account of evolution from the perspective of the gene, including the origin of the term meme.",
+    "categories": [
+      "Science"
+    ],
+    "copies": 2,
+    "shelf": "SCI-03",
+    "acquisition_date": "2024-02-06",
+    "donor": "DNIHS Library Fund",
+    "cover_image": "https://covers.openlibrary.org/b/id/133936-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 175
+  },
+  {
+    "isbn": "9781400052189",
+    "title": "The Immortal Life of Henrietta Lacks",
+    "subtitle": "",
+    "authors": "Rebecca Skloot",
+    "publisher": "Crown",
+    "publication_year": 2010,
+    "description": "The story of Henrietta Lacks, whose cells transformed medical research, and the family affected by that legacy.",
+    "categories": [
+      "Science",
+      "Biography & Memoir"
+    ],
+    "copies": 2,
+    "shelf": "SCI-04",
+    "acquisition_date": "2025-03-05",
+    "donor": "Parent-Teacher Association",
+    "cover_image": "https://covers.openlibrary.org/b/id/8364866-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 55
+  },
+  {
+    "isbn": "9780618249060",
+    "title": "Silent Spring",
+    "subtitle": "",
+    "authors": "Rachel Carson",
+    "publisher": "Mariner Books",
+    "publication_year": 1962,
+    "description": "Carson's landmark investigation of pesticides and their environmental consequences, which helped launch the modern environmental movement.",
+    "categories": [
+      "Science",
+      "History"
+    ],
+    "copies": 2,
+    "shelf": "SCI-05",
+    "acquisition_date": "2024-04-22",
+    "donor": "DNIHS Library Fund",
+    "cover_image": "https://covers.openlibrary.org/b/id/3825693-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {
+      "02": "damaged"
+    },
+    "copy_notes": {
+      "02": "Pages water-damaged; replacement requested."
+    },
+    "arrival_days_ago": 165
+  },
+  {
+    "isbn": "9780393317558",
+    "title": "Guns, Germs, and Steel",
+    "subtitle": "The Fates of Human Societies",
+    "authors": "Jared Diamond",
+    "publisher": "W. W. Norton",
+    "publication_year": 1997,
+    "description": "Diamond argues that geography, crops, and disease shaped the unequal development of human societies.",
+    "categories": [
+      "History",
+      "Science"
+    ],
+    "copies": 2,
+    "shelf": "HIS-02",
+    "acquisition_date": "2024-08-13",
+    "donor": "DNIHS Alumni Association",
+    "cover_image": "https://covers.openlibrary.org/b/id/7884018-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 130
+  },
+  {
+    "isbn": "9780767908184",
+    "title": "A Short History of Nearly Everything",
+    "subtitle": "",
+    "authors": "Bill Bryson",
+    "publisher": "Broadway Books",
+    "publication_year": 2003,
+    "description": "A lively tour of scientific discovery, from the Big Bang to the evolution of life, told with Bryson's characteristic humor.",
+    "categories": [
+      "Science",
+      "History"
+    ],
+    "copies": 2,
+    "shelf": "SCI-06",
+    "acquisition_date": "2024-05-27",
+    "donor": "Booklat Book Drive",
+    "cover_image": "https://covers.openlibrary.org/b/id/12725620-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 150
+  },
+  {
+    "isbn": "9781524763138",
+    "title": "Becoming",
+    "subtitle": "",
+    "authors": "Michelle Obama",
+    "publisher": "Crown",
+    "publication_year": 2018,
+    "description": "Michelle Obama's memoir of childhood, family, public service, and life in the White House.",
+    "categories": [
+      "Biography & Memoir"
+    ],
+    "copies": 2,
+    "shelf": "BIO-02",
+    "acquisition_date": "2025-02-18",
+    "donor": "Parent-Teacher Association",
+    "cover_image": "https://covers.openlibrary.org/b/isbn/9781524763138-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 50
+  },
+  {
+    "isbn": "9780399590504",
+    "title": "Educated",
+    "subtitle": "A Memoir",
+    "authors": "Tara Westover",
+    "publisher": "Random House",
+    "publication_year": 2018,
+    "description": "A memoir of growing up in a survivalist family and finding a way into education, independence, and self-knowledge.",
+    "categories": [
+      "Biography & Memoir",
+      "History"
+    ],
+    "copies": 2,
+    "shelf": "BIO-03",
+    "acquisition_date": "2025-07-08",
+    "donor": "Booklat Book Drive",
+    "cover_image": "https://covers.openlibrary.org/b/id/8314077-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {
+      "02": "reserved"
+    },
+    "copy_notes": {
+      "02": "Reserved for the Grade 11 reading circle."
+    },
+    "arrival_days_ago": 15
+  },
+  {
+    "isbn": "9780812988406",
+    "title": "When Breath Becomes Air",
+    "subtitle": "",
+    "authors": "Paul Kalanithi",
+    "publisher": "Random House",
+    "publication_year": 2016,
+    "description": "A neurosurgeon's memoir of facing terminal cancer and asking what makes a life meaningful.",
+    "categories": [
+      "Biography & Memoir",
+      "Science"
+    ],
+    "copies": 2,
+    "shelf": "BIO-04",
+    "acquisition_date": "2025-04-14",
+    "donor": "DNIHS Library Fund",
+    "cover_image": "https://covers.openlibrary.org/b/id/11463139-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 35
+  },
+  {
+    "isbn": "9781476728759",
+    "title": "The Wright Brothers",
+    "subtitle": "",
+    "authors": "David McCullough",
+    "publisher": "Simon & Schuster",
+    "publication_year": 2015,
+    "description": "The story of the Wright brothers and the patient, practical work that led to the first powered flight.",
+    "categories": [
+      "Biography & Memoir",
+      "History"
+    ],
+    "copies": 1,
+    "shelf": "BIO-05",
+    "acquisition_date": "2023-07-25",
+    "donor": "DNIHS Alumni Association",
+    "cover_image": "https://covers.openlibrary.org/b/id/7317364-L.jpg",
+    "is_archived": true,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 260
+  },
+  {
+    "isbn": "9780064400558",
+    "title": "Charlotte's Web",
+    "subtitle": "",
+    "authors": "E. B. White",
+    "publisher": "HarperCollins",
+    "publication_year": 1952,
+    "description": "A barn spider, a pig, and a girl named Fern in a gentle story about friendship and loss.",
+    "categories": [
+      "Children's",
+      "Fiction"
+    ],
+    "copies": 2,
+    "shelf": "CH-02",
+    "acquisition_date": "2024-09-30",
+    "donor": "Parent-Teacher Association",
+    "cover_image": "https://covers.openlibrary.org/b/id/8461797-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 115
+  },
+  {
+    "isbn": "9780142410370",
+    "title": "Matilda",
+    "subtitle": "",
+    "authors": "Roald Dahl",
+    "publisher": "Puffin Books",
+    "publication_year": 1988,
+    "description": "A brilliant girl with terrible parents and a fearsome headmistress discovers that books and courage can change everything.",
+    "categories": [
+      "Children's",
+      "Fantasy"
+    ],
+    "copies": 3,
+    "shelf": "CH-03",
+    "acquisition_date": "2024-12-16",
+    "donor": "Booklat Book Drive",
+    "cover_image": "https://covers.openlibrary.org/b/id/12889769-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 95
+  },
+  {
+    "isbn": "9780060256654",
+    "title": "The Giving Tree",
+    "subtitle": "",
+    "authors": "Shel Silverstein",
+    "publisher": "HarperCollins",
+    "publication_year": 1964,
+    "description": "A simple, enduring story about a tree, a boy, and the meaning of generosity.",
+    "categories": [
+      "Children's",
+      "Poetry"
+    ],
+    "copies": 2,
+    "shelf": "CH-04",
+    "acquisition_date": "2025-05-12",
+    "donor": "DNIHS Library Fund",
+    "cover_image": "https://covers.openlibrary.org/b/id/655727-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {
+      "02": "reserved"
+    },
+    "copy_notes": {
+      "02": "Reserved for the Grade 4 reading circle."
+    },
+    "arrival_days_ago": 40
+  },
+  {
+    "isbn": "9780205309023",
+    "title": "The Elements of Style",
+    "subtitle": "",
+    "authors": "William Strunk Jr. and E. B. White",
+    "publisher": "Longman",
+    "publication_year": 1918,
+    "description": "A concise guide to clear English prose, still widely used by students and writers.",
+    "categories": [
+      "Reference"
+    ],
+    "copies": 2,
+    "shelf": "REF-01",
+    "acquisition_date": "2023-08-29",
+    "donor": "DNIHS Library Fund",
+    "cover_image": "https://covers.openlibrary.org/b/id/10515358-L.jpg",
+    "is_archived": false,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 275
+  },
+  {
+    "isbn": "9780877799306",
+    "title": "Merriam-Webster's Collegiate Dictionary",
+    "subtitle": "",
+    "authors": "Merriam-Webster",
+    "publisher": "Merriam-Webster",
+    "publication_year": 2003,
+    "description": "A standard desk dictionary for spelling, meaning, pronunciation, and usage.",
+    "categories": [
+      "Reference"
+    ],
+    "copies": 1,
+    "shelf": "REF-02",
+    "acquisition_date": "2022-11-08",
+    "donor": "DNIHS Library Fund",
+    "cover_image": "https://covers.openlibrary.org/b/id/671515-L.jpg",
+    "is_archived": true,
+    "copy_statuses": {},
+    "copy_notes": {},
+    "arrival_days_ago": 400
+  }
+]

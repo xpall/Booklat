@@ -13,12 +13,12 @@
       {% csrf_token %}
       <div class="form-group">
         <label for="lrn" class="form-label">LRN</label>
-        <input type="text" name="lrn" id="lrn" class="form-input" required autofocus placeholder="Enter your LRN">
+        <input type="text" name="lrn" id="lrn" class="form-input" required autofocus placeholder="Enter your LRN" autocomplete="username" autocapitalize="none" spellcheck="false">
       </div>
       <div class="form-group">
         <label for="password" class="form-label">Password</label>
         <div class="password-group">
-          <input type="password" name="password" id="password" class="form-input" required placeholder="Enter your password">
+          <input type="password" name="password" id="password" class="form-input" required placeholder="Enter your password" autocomplete="current-password">
           <button type="button" class="password-toggle" aria-label="Show password" title="Show password">
             <svg class="password-toggle__icon password-toggle__icon--on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
               <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>

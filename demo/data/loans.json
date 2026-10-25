@@ -1,0 +1,308 @@
+[
+  {
+    "id": "DEMO-LOAN-001",
+    "user": "student",
+    "book": "Meditations",
+    "copy": 1,
+    "checkout_days_ago": 21,
+    "loan_days": 14,
+    "processed_by": "staff"
+  },
+  {
+    "id": "DEMO-LOAN-002",
+    "user": "202600000003",
+    "book": "The Way of Zen",
+    "copy": 1,
+    "checkout_days_ago": 18,
+    "loan_days": 14,
+    "processed_by": "staff"
+  },
+  {
+    "id": "DEMO-LOAN-003",
+    "user": "202600000005",
+    "book": "1984",
+    "copy": 1,
+    "checkout_days_ago": 30,
+    "loan_days": 14,
+    "processed_by": "admin"
+  },
+  {
+    "id": "DEMO-LOAN-004",
+    "user": "student",
+    "book": "Atomic Habits",
+    "copy": 1,
+    "checkout_days_ago": 12,
+    "loan_days": 14,
+    "processed_by": "staff"
+  },
+  {
+    "id": "DEMO-LOAN-005",
+    "user": "202600000001",
+    "book": "The Wisdom of Insecurity",
+    "copy": 1,
+    "checkout_days_ago": 10,
+    "loan_days": 14,
+    "processed_by": "staff"
+  },
+  {
+    "id": "DEMO-LOAN-006",
+    "user": "202600000002",
+    "book": "Sapiens",
+    "copy": 1,
+    "checkout_days_ago": 9,
+    "loan_days": 14,
+    "processed_by": "admin"
+  },
+  {
+    "id": "DEMO-LOAN-007",
+    "user": "202600000004",
+    "book": "Deep Work",
+    "copy": 1,
+    "checkout_days_ago": 4,
+    "loan_days": 14,
+    "processed_by": "staff"
+  },
+  {
+    "id": "DEMO-LOAN-008",
+    "user": "202600000006",
+    "book": "The Hobbit",
+    "copy": 1,
+    "checkout_days_ago": 3,
+    "loan_days": 14,
+    "processed_by": "staff"
+  },
+  {
+    "id": "DEMO-LOAN-009",
+    "user": "202600000007",
+    "book": "To Kill a Mockingbird",
+    "copy": 1,
+    "checkout_days_ago": 2,
+    "loan_days": 14,
+    "processed_by": "admin"
+  },
+  {
+    "id": "DEMO-LOAN-010",
+    "user": "202600000008",
+    "book": "The Alchemist",
+    "copy": 1,
+    "checkout_days_ago": 1,
+    "loan_days": 14,
+    "processed_by": "staff"
+  },
+  {
+    "id": "DEMO-LOAN-011",
+    "user": "202600000009",
+    "book": "Noli Me Tangere",
+    "copy": 1,
+    "checkout_days_ago": 6,
+    "loan_days": 14,
+    "processed_by": "staff"
+  },
+  {
+    "id": "DEMO-LOAN-012",
+    "user": "202600000010",
+    "book": "The Little Prince",
+    "copy": 1,
+    "checkout_days_ago": 7,
+    "loan_days": 14,
+    "processed_by": "staff"
+  },
+  {
+    "id": "DEMO-LOAN-013",
+    "user": "202600000011",
+    "book": "Cosmos",
+    "copy": 1,
+    "checkout_days_ago": 8,
+    "loan_days": 14,
+    "processed_by": "admin"
+  },
+  {
+    "id": "DEMO-LOAN-014",
+    "user": "202600000012",
+    "book": "The Prophet",
+    "copy": 1,
+    "checkout_days_ago": 11,
+    "loan_days": 14,
+    "processed_by": "staff"
+  },
+  {
+    "id": "DEMO-LOAN-015",
+    "user": "student",
+    "book": "The Book: On the Taboo Against Knowing Who You Are",
+    "copy": 1,
+    "checkout_days_ago": 60,
+    "loan_days": 14,
+    "returned_days_ago": 40,
+    "processed_by": "staff"
+  },
+  {
+    "id": "DEMO-LOAN-016",
+    "user": "student",
+    "book": "Tao Te Ching",
+    "copy": 1,
+    "checkout_days_ago": 45,
+    "loan_days": 14,
+    "returned_days_ago": 35,
+    "processed_by": "staff"
+  },
+  {
+    "id": "DEMO-LOAN-017",
+    "user": "student",
+    "book": "Man's Search for Meaning",
+    "copy": 1,
+    "checkout_days_ago": 35,
+    "loan_days": 14,
+    "returned_days_ago": 28,
+    "processed_by": "admin"
+  },
+  {
+    "id": "DEMO-LOAN-018",
+    "user": "student",
+    "book": "The Courage to Be Disliked",
+    "copy": 1,
+    "checkout_days_ago": 25,
+    "loan_days": 14,
+    "returned_days_ago": 20,
+    "processed_by": "staff"
+  },
+  {
+    "id": "DEMO-LOAN-019",
+    "user": "202600000001",
+    "book": "Ikigai",
+    "copy": 1,
+    "checkout_days_ago": 50,
+    "loan_days": 14,
+    "returned_days_ago": 42,
+    "processed_by": "staff"
+  },
+  {
+    "id": "DEMO-LOAN-020",
+    "user": "202600000002",
+    "book": "Quiet",
+    "copy": 1,
+    "checkout_days_ago": 40,
+    "loan_days": 14,
+    "returned_days_ago": 30,
+    "processed_by": "admin"
+  },
+  {
+    "id": "DEMO-LOAN-021",
+    "user": "202600000003",
+    "book": "Flow",
+    "copy": 1,
+    "checkout_days_ago": 38,
+    "loan_days": 14,
+    "returned_days_ago": 30,
+    "processed_by": "staff"
+  },
+  {
+    "id": "DEMO-LOAN-022",
+    "user": "202600000004",
+    "book": "Daring Greatly",
+    "copy": 1,
+    "checkout_days_ago": 36,
+    "loan_days": 14,
+    "returned_days_ago": 28,
+    "processed_by": "staff"
+  },
+  {
+    "id": "DEMO-LOAN-023",
+    "user": "202600000005",
+    "book": "Grit",
+    "copy": 1,
+    "checkout_days_ago": 34,
+    "loan_days": 14,
+    "returned_days_ago": 27,
+    "processed_by": "admin"
+  },
+  {
+    "id": "DEMO-LOAN-024",
+    "user": "202600000006",
+    "book": "Mindset",
+    "copy": 1,
+    "checkout_days_ago": 32,
+    "loan_days": 14,
+    "returned_days_ago": 25,
+    "processed_by": "staff"
+  },
+  {
+    "id": "DEMO-LOAN-025",
+    "user": "202600000007",
+    "book": "The Four Agreements",
+    "copy": 1,
+    "checkout_days_ago": 30,
+    "loan_days": 14,
+    "returned_days_ago": 24,
+    "processed_by": "staff"
+  },
+  {
+    "id": "DEMO-LOAN-026",
+    "user": "202600000008",
+    "book": "The Republic",
+    "copy": 1,
+    "checkout_days_ago": 28,
+    "loan_days": 14,
+    "returned_days_ago": 21,
+    "processed_by": "admin"
+  },
+  {
+    "id": "DEMO-LOAN-027",
+    "user": "202600000009",
+    "book": "Nicomachean Ethics",
+    "copy": 1,
+    "checkout_days_ago": 26,
+    "loan_days": 14,
+    "returned_days_ago": 20,
+    "processed_by": "staff"
+  },
+  {
+    "id": "DEMO-LOAN-028",
+    "user": "202600000010",
+    "book": "The Myth of Sisyphus",
+    "copy": 1,
+    "checkout_days_ago": 24,
+    "loan_days": 14,
+    "returned_days_ago": 18,
+    "processed_by": "staff"
+  },
+  {
+    "id": "DEMO-LOAN-029",
+    "user": "202600000011",
+    "book": "Siddhartha",
+    "copy": 1,
+    "checkout_days_ago": 22,
+    "loan_days": 14,
+    "returned_days_ago": 16,
+    "processed_by": "admin"
+  },
+  {
+    "id": "DEMO-LOAN-030",
+    "user": "202600000012",
+    "book": "Animal Farm",
+    "copy": 1,
+    "checkout_days_ago": 20,
+    "loan_days": 14,
+    "returned_days_ago": 14,
+    "processed_by": "staff"
+  },
+  {
+    "id": "DEMO-LOAN-031",
+    "user": "202600000013",
+    "book": "Fahrenheit 451",
+    "copy": 1,
+    "checkout_days_ago": 18,
+    "loan_days": 14,
+    "returned_days_ago": 12,
+    "processed_by": "staff"
+  },
+  {
+    "id": "DEMO-LOAN-032",
+    "user": "202600000001",
+    "book": "The Great Gatsby",
+    "copy": 1,
+    "checkout_days_ago": 16,
+    "loan_days": 14,
+    "returned_days_ago": 10,
+    "processed_by": "admin"
+  }
+]

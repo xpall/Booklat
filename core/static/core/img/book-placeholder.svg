@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400" role="img" aria-label="Book cover placeholder">
+  <rect width="300" height="400" fill="#eceff5"/>
+  <rect x="26" y="26" width="248" height="348" rx="18" fill="#f8f9fc" stroke="#d8dce6" stroke-width="3"/>
+  <g fill="none" stroke="#9aa3b2" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M92 128h58a28 28 0 0 1 28 28v132H120a28 28 0 0 0-28 28z"/>
+    <path d="M208 128h-58a28 28 0 0 0-28 28v132h58a28 28 0 0 1 28 28z"/>
+    <path d="M92 128h58a28 28 0 0 1 28 28v132"/>
+  </g>
+  <text x="150" y="334" text-anchor="middle" font-family="system-ui, -apple-system, Segoe UI, sans-serif" font-size="18" font-weight="600" fill="#7c8597" letter-spacing="2">BOOKLAT</text>
+</svg>

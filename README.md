@@ -17,6 +17,33 @@ docker compose up
 
 Docker Compose runs PostgreSQL 16, Redis 7, and the Django app with Gunicorn. The entrypoint runs migrations, seeds roles/permissions/admin user, and collects static files.
 
+## Demo Mode
+
+Set `DEMO_MODE=1` in `.env` to run a fully populated, read-only demo library:
+
+```bash
+DEMO_MODE=1
+DEMO_PASSWORD=Booklat@Demo2026!
+```
+
+On startup, `seed_demo` seeds books, copies, loans, checkout requests, Freedom Wall posts, announcements, categories, users, and audit logs. Demo accounts can browse everything but cannot change data.
+
+All three accounts use `DEMO_PASSWORD` (default `Booklat@Demo2026!`).
+
+| Account | Role | Password |
+|---------|------|----------|
+| `admin` | Administrator | `DEMO_PASSWORD` |
+| `staff` | Staff | `DEMO_PASSWORD` |
+| `student` | Member | `DEMO_PASSWORD` |
+
+The demo dataset lives in [`demo/data/`](demo/data/) and is safe to re-run. To remove and rebuild only demo-owned records:
+
+```bash
+docker compose exec web python manage.py seed_demo --reset
+```
+
+See [`demo/README.md`](demo/README.md) for the full dataset and reset details.
+
 ## Setup & Installation (Production VPS)
 
 ### Prerequisites
@@ -183,3 +210,4 @@ curl -I http://127.0.0.1:8010/accounts/login/
 | `dashboard` | Statistics, pending requests, overdue loans |
 | `core` | Middleware, decorators, utils, base template, about page |
 | `freedom_wall` | Sticky-note posts with upvotes, moderation queue |
+| `demo` | Demo dataset, demo accounts, read-only mode, reset command |

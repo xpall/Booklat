@@ -30,6 +30,11 @@ class DemoReadOnlyMiddleware:
             messages.error(request, "Demo accounts cannot change their password.")
             return redirect(request.META.get("HTTP_REFERER", "dashboard:index"))
 
+        users_export_path = reverse("core:export_users_csv").lstrip("/")
+        if path == users_export_path:
+            messages.error(request, "User exports are disabled in demo mode.")
+            return redirect("core:export")
+
         if request.method in ("POST", "PUT", "PATCH", "DELETE"):
             exempt_exact = {
                 reverse("accounts:login").lstrip("/"),

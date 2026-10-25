@@ -33,13 +33,11 @@ def _get_success_redirect(user):
 @require_http_methods(["GET", "POST"])
 @ratelimit(key="ip", rate="5/m", method="POST")
 def login_view(request):
+    from demo.setup import demo_login_accounts
+
     login_context = {
         "demo_mode": settings.DEMO_MODE,
-        "demo_accounts": [
-            {"lrn": "admin", "password": "admin", "role": "Administrator"},
-            {"lrn": "staff", "password": "staff", "role": "Staff"},
-            {"lrn": "student", "password": "student", "role": "Student"},
-        ],
+        "demo_accounts": demo_login_accounts(),
     }
     was_limited = getattr(request, "limited", False)
     if request.user.is_authenticated and request.user.status == User.Status.ACTIVE:

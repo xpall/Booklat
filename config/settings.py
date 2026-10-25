@@ -182,6 +182,7 @@ ADMIN_LRN = os.environ.get("ADMIN_LRN", "ADMIN")
 ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "Booklat@Admin2026!")
 
 DEMO_MODE = os.environ.get("DEMO_MODE", "0") == "1"
+DEMO_PASSWORD = os.environ.get("DEMO_PASSWORD", "Booklat@Demo2026!")
 
 MAX_CSV_UPLOAD_SIZE = int(os.environ.get("MAX_CSV_UPLOAD_SIZE", 5 * 1024 * 1024))
 

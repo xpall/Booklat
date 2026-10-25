@@ -1,13 +1,16 @@
 from datetime import date, timedelta
 
 from celery import shared_task
-from django.db import transaction
+from django.conf import settings
 
 
 @shared_task
 def purge_all_posts():
     from freedom_wall.models import FreedomPost
     from core.utils import log_action
+
+    if getattr(settings, "DEMO_MODE", False):
+        return 0
 
     count, _ = FreedomPost.objects.all().delete()
     log_action(
@@ -24,6 +27,9 @@ def purge_all_posts():
 def purge_old_posts():
     from freedom_wall.models import FreedomPost
     from core.utils import log_action
+
+    if getattr(settings, "DEMO_MODE", False):
+        return 0
 
     today = date.today()
     cutoff = today - timedelta(days=3)

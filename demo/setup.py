@@ -1,43 +1,39 @@
+"""Public entry points for demo-mode setup."""
+
+from __future__ import annotations
+
 from django.conf import settings
 
 
 def create_demo_users():
-    from accounts.models import User, Role
-    from demo.models import DemoProfile
+    from demo.seeders.people import seed_users
 
-    admin_role = Role.objects.get(name="Administrator")
-    staff_role = Role.objects.get(name="Staff")
-    member_role = Role.objects.get(name="Member")
+    return seed_users()
 
-    demo_accounts = [
-        {"lrn": "admin", "password": "admin", "first_name": "Demo", "last_name": "Administrator", "role": admin_role},
-        {"lrn": "staff", "password": "staff", "first_name": "Demo", "last_name": "Staff", "role": staff_role},
-        {"lrn": "student", "password": "student", "first_name": "Demo", "last_name": "Student", "role": member_role},
-    ]
 
-    for acct in demo_accounts:
-        user, _ = User.objects.update_or_create(
-            lrn=acct["lrn"],
-            defaults={
-                "first_name": acct["first_name"],
-                "last_name": acct["last_name"],
-                "role": acct["role"],
-                "status": User.Status.ACTIVE,
-                "must_change_password": False,
-                "failed_login_attempts": 0,
-                "locked_until": None,
-            },
-        )
-        user.set_password(acct["password"])
-        user.save(update_fields=["password"])
-        DemoProfile.objects.get_or_create(user=user)
+def seed_demo_data():
+    from demo.seeders import seed_all
+
+    return seed_all()
+
+
+def reset_demo_data():
+    from demo.seeders.reset import reset_demo_data as _reset_demo_data
+
+    return _reset_demo_data()
 
 
 def deactivate_demo_users():
-    from accounts.models import User
-    from demo.models import DemoProfile
+    from demo.seeders.people import deactivate_demo_users as _deactivate
 
-    for profile in DemoProfile.objects.select_related("user"):
-        user = profile.user
-        user.status = User.Status.SUSPENDED
-        user.save(update_fields=["status"])
+    return _deactivate()
+
+
+def demo_login_accounts():
+    """Credentials shown on the login page when demo mode is enabled."""
+    password = settings.DEMO_PASSWORD
+    return [
+        {"lrn": "admin", "password": password, "role": "Administrator"},
+        {"lrn": "staff", "password": password, "role": "Staff"},
+        {"lrn": "student", "password": password, "role": "Member"},
+    ]

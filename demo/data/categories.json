@@ -1,0 +1,18 @@
+[
+  { "name": "Self-Help", "is_archived": false },
+  { "name": "Psychology", "is_archived": false },
+  { "name": "Health", "is_archived": false },
+  { "name": "Poetry", "is_archived": false },
+  { "name": "Philosophy", "is_archived": false },
+  { "name": "Spirituality", "is_archived": false },
+  { "name": "Fiction", "is_archived": false },
+  { "name": "Classics", "is_archived": false },
+  { "name": "Fantasy", "is_archived": false },
+  { "name": "Philippine Literature", "is_archived": false },
+  { "name": "Science", "is_archived": false },
+  { "name": "History", "is_archived": false },
+  { "name": "Biography & Memoir", "is_archived": false },
+  { "name": "Children's", "is_archived": false },
+  { "name": "Reference", "is_archived": false },
+  { "name": "Archived Collection", "is_archived": true }
+]

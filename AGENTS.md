@@ -21,7 +21,7 @@ No linting, formatting, typechecking, or CI is configured. No Makefile.
 
 ## Architecture
 
-Single Django 5.1 project (Python 3.12), **not** a monorepo. 9 Django apps in one project:
+Single Django 5.1 project (Python 3.12), **not** a monorepo. 10 Django apps in one project:
 
 | App | Purpose |
 |-----|---------|
@@ -34,6 +34,7 @@ Single Django 5.1 project (Python 3.12), **not** a monorepo. 9 Django apps in on
 | `dashboard` | Admin/staff/student dashboard statistics |
 | `core` | Cross-cutting: middleware, permission decorators, CSV export/import utils, base template, about page |
 | `freedom_wall` | Sticky-note posts with upvotes, pending queue moderation, Celery midnight purge |
+| `demo` | Demo dataset, demo accounts, read-only middleware, `seed_demo --reset` |
 
 Stack: Django 5.1 + PostgreSQL 16 + Redis 7 + Celery + Gunicorn + WhiteNoise + custom design-system.css + django-ratelimit. Python 3.12.
 
@@ -89,8 +90,11 @@ WhiteNoise with `CompressedManifestStaticFilesStorage`. Static root is `staticfi
 ### Environment & settings
 No dotenv package — env vars are read directly in `settings.py` with fallback defaults. `.env` is only used by Docker Compose. Database uses persistent connections (`CONN_MAX_AGE=600`). Timezone is `Asia/Manila`.
 
+### Demo mode
+`DEMO_MODE=1` makes the Docker entrypoint run `seed_demo`, which seeds the full demo catalog (books, copies, loans, requests, freedom wall, announcements, categories, users, audit logs) from `demo/data/*.json`. Demo users are tagged with `DemoProfile`; `demo.middleware.DemoReadOnlyMiddleware` blocks all writes, password changes, and the user-password CSV export for them. `DEMO_PASSWORD` is the shared password for all demo accounts (default `Booklat@Demo2026!`; must satisfy the 16-character policy). `seed_demo --reset` deletes only demo-owned records and requires `DEMO_MODE=1`; without `--reset`, seeding is idempotent. `demo/data/` is committed even though `.gitignore` ignores generic `data/` directories. Demo mode also skips the Celery Freedom Wall purge so the seeded wall is not deleted overnight.
+
 ### Celery
-Celery 5.4 is configured with Redis as broker (db 1) and result backend (db 2). Beat schedule runs a daily midnight task (`purge-freedom-posts-midnight`) that deletes all FreedomPost records. Worker and beat services are included in docker-compose.yml. `config/__init__.py` wires the Celery app.
+Celery 5.4 is configured with Redis as broker (db 1) and result backend (db 2). Beat schedule runs a daily midnight task (`purge-freedom-posts-midnight`) that deletes FreedomPost records older than 3 days; it is skipped when `DEMO_MODE=1`. Worker and beat services are included in docker-compose.yml. `config/__init__.py` wires the Celery app.
 
 ## Key files
 
@@ -100,6 +104,8 @@ Celery 5.4 is configured with Redis as broker (db 1) and result backend (db 2). 
 - `core/middleware.py` — login and password-change enforcement
 - `core/decorators.py` — permission decorators
 - `accounts/management/commands/seed_data.py` — seeds roles, permissions, admin user
+- `demo/data/` — JSON demo catalog, users, loans, requests, posts, announcements
+- `demo/management/commands/seed_demo.py` — seeds/resets the full demo dataset
 - `accounts/validators.py` — password validation rules (16-char minimum, etc.)
 - `accounts/backends.py` — LRN-based authentication backend
 - `entrypoint.sh` — Docker startup: migrate → collectstatic → seed_data → gunicorn
